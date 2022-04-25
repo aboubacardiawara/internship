@@ -8,12 +8,14 @@ to write, something is probably wrong with the design"".
 "
 Class {
 	#name : #SUnitTest,
-	#superclass : #TestCase,
+	#superclass : #ParametrizedTestCase,
 	#instVars : [
 		'hasRun',
 		'hasSetup',
 		'hasRanOnce',
-		'forkedProcesses'
+		'forkedProcesses',
+		'defaultExecutionEnvironmentClass',
+		'testExecutionEnvironmentClass'
 	],
 	#category : #'SUnit-Tests-Core'
 }
@@ -21,6 +23,16 @@ Class {
 { #category : #history }
 SUnitTest class >> lastStoredRun [
 	^ ((Dictionary new) add: (#passed->((Set new) add: #testWithExceptionDo; add: #testAssert; add: #testRanOnlyOnce; add: #testDialectLocalizedException; add: #testFail; add: #testDefects; add: #testIsNotRerunOnDebug; add: #testResult; add: #testRunning; add: #testError; add: #testException; add: #testShould; add: #testSuite; yourself)); add: (#timeStamp->'22 November 2008 10:11:35 pm'); add: (#failures->((Set new))); add: (#errors->((Set new))); yourself)
+]
+
+{ #category : #tests }
+SUnitTest class >> testParameters [
+	^ ParametrizedTestMatrix new
+		addCase: {
+			#testExecutionEnvironmentClass -> TestExecutionEnvironment. 
+			#defaultExecutionEnvironmentClass -> DefaultExecutionEnvironment
+			};
+		yourself
 ]
 
 { #category : #private }
@@ -48,6 +60,12 @@ SUnitTest >> assertTerminationOfFailedChildProcesses [
 	failedProcesses := self failedChildProcesses.
 	self assert: failedProcesses notEmpty.
 	self assert: (failedProcesses allSatisfy: #isTerminated)
+]
+
+{ #category : #accessing }
+SUnitTest >> defaultExecutionEnvironmentClass: anObject [
+
+	defaultExecutionEnvironmentClass := anObject
 ]
 
 { #category : #helpers }
@@ -257,8 +275,8 @@ SUnitTest >> testErrorShouldResetWatchDog [
 
 	| case result |
 	
-	DefaultExecutionEnvironment beActive.
-	TestExecutionEnvironment new beActiveDuring: [ 
+	defaultExecutionEnvironmentClass beActive.
+	testExecutionEnvironmentClass  new beActiveDuring: [ 
 		case := self newTestCase: #fail.
 		result := case run.
 		1 seconds wait]. 
@@ -279,13 +297,19 @@ SUnitTest >> testException [
 		raise: self defaultTestError
 ]
 
+{ #category : #accessing }
+SUnitTest >> testExecutionEnvironmentClass: anObject [
+
+	testExecutionEnvironmentClass := anObject
+]
+
 { #category : #testing }
 SUnitTest >> testExecutionEnvironmentShouldBeInstalled [
 
 	| env |
 	env := self executionEnvironment.
 
-	self assert: env class equals: TestExecutionEnvironment.
+	self assert: env class equals: testExecutionEnvironmentClass.
 	self assert: env testCase equals: self
 ]
 
@@ -347,7 +371,7 @@ SUnitTest >> testFail [
 SUnitTest >> testFailedChildProcessTest [
 
 	| case result |
-	DefaultExecutionEnvironment beActive.
+	defaultExecutionEnvironmentClass beActive.
 	case := self newTestCase: #failedChildProcessTest.	
 	result := case run.
 
@@ -364,8 +388,8 @@ SUnitTest >> testFailedChildProcessTest [
 SUnitTest >> testFailedChildProcessTestShouldNotEffectFollowingAnotherTest [
 
 	| result case1 case2 |
-	DefaultExecutionEnvironment beActive.
-	TestExecutionEnvironment new beActiveDuring: [ 
+	defaultExecutionEnvironmentClass beActive.
+	testExecutionEnvironmentClass new beActiveDuring: [ 
 		case1 := self newTestCase: #failedChildProcessTest.	
 		result := case1 run.
 		
@@ -385,8 +409,8 @@ SUnitTest >> testFailedChildProcessTestShouldNotEffectFollowingAnotherTest [
 SUnitTest >> testFailedTestWithFailedChildProcessTestShouldNotEffectFollowingAnotherTest [
 
 	| result case1 case2 |
-	DefaultExecutionEnvironment beActive.
-	TestExecutionEnvironment new beActiveDuring: [ 
+	defaultExecutionEnvironmentClass beActive.
+	testExecutionEnvironmentClass new beActiveDuring: [ 
 		case1 := self newTestCase: #failedTestWithFailedChildProcessTest.	
 		result := case1 run.
 		
@@ -428,7 +452,7 @@ SUnitTest>>#error
 SUnitTest >> testGreenTestThenLongRunningTest [
 
 	| case result |
-	DefaultExecutionEnvironment beActive.
+	defaultExecutionEnvironmentClass beActive.
 	case := self newTestCase: #noop.
 	result := case run.
 	case := self newTestCase: #longRunningTest.
@@ -483,7 +507,7 @@ SUnitTest >> testHangedChildProcessTestWhenLeftProcessIsConsideredAsFailure [
 SUnitTest >> testHangedTestDueToFailedChildProcess [
 
 	| case result |
-	DefaultExecutionEnvironment beActive.
+	defaultExecutionEnvironmentClass beActive.
 	case := self newTestCase: #hangedTestDueToFailedChildProcess.	
 	result := case run.
 
@@ -521,7 +545,7 @@ SUnitTest >> testIsNotRerunOnDebug [
 SUnitTest >> testLongRunningTest [
 
 	| case result |
-	DefaultExecutionEnvironment beActive.
+	defaultExecutionEnvironmentClass beActive.
 	case := self newTestCase: #longRunningTest.
 	result := case run.
 
@@ -537,7 +561,7 @@ SUnitTest >> testLongRunningTest [
 SUnitTest >> testLongRunningTestThenGreenTest [
 
 	| case result |
-	DefaultExecutionEnvironment beActive.
+	defaultExecutionEnvironmentClass beActive.
 	case := self newTestCase: #longRunningTest.
 	result := case run.
 	case := self newTestCase: #noop.
