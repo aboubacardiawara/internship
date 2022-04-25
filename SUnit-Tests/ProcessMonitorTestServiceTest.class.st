@@ -10,6 +10,11 @@ ProcessMonitorTestServiceTest >> createTestService [
 	^ testMonitorServiceClass new
 ]
 
+{ #category : #tests }
+ProcessMonitorTestServiceTest >> defaultUnhandledErrorClass [
+	^ UnhandledError
+]
+
 { #category : #running }
 ProcessMonitorTestServiceTest >> fork: aBlock [
 	"Here we simulate fork under TestExecutionEnvironment 
@@ -428,7 +433,7 @@ ProcessMonitorTestServiceTest >> testPassBackgroundFailuresWhenSuspensionLogicIs
 	testService disableBackgroudFailuresSuspension.
 	self deny: testService shouldSuspendBackgroundFailures.
 	
-	process on: UnhandledError do: [ :err | errorWasPassed := true ].
+	process on: self defaultUnhandledErrorClass do: [ :err | errorWasPassed := true ].
 	process resume.
 	
 	self assert: errorWasPassed.
@@ -452,7 +457,7 @@ ProcessMonitorTestServiceTest >> testRecordMainTestProcessError [
 ProcessMonitorTestServiceTest >> testRecordMainTestProcessUnhandledError [
 
 	| error |
-	error := UnhandledError new.
+	error := self defaultUnhandledErrorClass new.
 	
 	testService handleException: error.
 
@@ -471,7 +476,7 @@ ProcessMonitorTestServiceTest >> testResumeFailedProcessWhenItFailsTestWithUnhan
 	self assert: failedProcess isSuspended.
 	
 	self runWithNoHandlers: [
-		[testService handleCompletedTest] on: UnhandledError do: [ :err |
+		[testService handleCompletedTest] on: self defaultUnhandledErrorClass do: [ :err |
 			self deny: failedProcess isSuspended]
 	].
 
@@ -512,7 +517,7 @@ ProcessMonitorTestServiceTest >> testResumeFailedProcessesWhenTestFailureIsUnhan
 	self deny: executed.	
 
 	testService handleException: Error new. "UnhandledError always started with original error signal"
-	testService handleException: UnhandledError new.
+	testService handleException: self defaultUnhandledErrorClass new.
 	self assert: executed.
 	"Unhandled exception opens debugger and therefore any new errors should not be suspended"
 	self deny: testService shouldSuspendBackgroundFailures
@@ -543,7 +548,7 @@ ProcessMonitorTestServiceTest >> testSuspendBackgroundError [
 	
 	self assert: process isSuspended.
 	suspendedError := testService suspendedBackgroundFailures at: process.
-	self assert: suspendedError class equals: UnhandledError. 
+	self assert: suspendedError class equals: self defaultUnhandledErrorClass. 
 	self assert: suspendedError exception identicalTo: error.
 ]
 
@@ -556,6 +561,6 @@ ProcessMonitorTestServiceTest >> testSuspendBackgroundWarning [
 	
 	self assert: process isSuspended.
 	suspendedError := testService suspendedBackgroundFailures at: process.
-	self assert: suspendedError class equals: UnhandledError. 
+	self assert: suspendedError class equals: self defaultUnhandledErrorClass. 
 	self assert: suspendedError exception identicalTo: warning.
 ]
