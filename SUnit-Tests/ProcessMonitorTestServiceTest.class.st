@@ -15,6 +15,11 @@ ProcessMonitorTestServiceTest >> defaultUnhandledErrorClass [
 	^ UnhandledError
 ]
 
+{ #category : #tests }
+ProcessMonitorTestServiceTest >> failedByForkedProcessClass [
+	^ TestFailedByForkedProcess
+]
+
 { #category : #running }
 ProcessMonitorTestServiceTest >> fork: aBlock [
 	"Here we simulate fork under TestExecutionEnvironment 
@@ -24,6 +29,11 @@ ProcessMonitorTestServiceTest >> fork: aBlock [
 	testService handleNewProcess: newProcess.
 	newProcess resume.
 	^newProcess
+]
+
+{ #category : #tests }
+ProcessMonitorTestServiceTest >> leftRunningProcessClass [
+	^ TestLeftRunningProcess
 ]
 
 { #category : #running }
@@ -63,7 +73,7 @@ ProcessMonitorTestServiceTest >> testAllowRunningBackgroundProcessesToFinishButF
 	semaphore signal.
 	self deny: wasResumed.
 	
-	self should: [testService handleCompletedTest] raise: TestLeftRunningProcess.
+	self should: [testService handleCompletedTest] raise: self leftRunningProcessClass.
 	self assert: wasResumed
 ]
 
@@ -183,7 +193,7 @@ ProcessMonitorTestServiceTest >> testDoesNotRaiseForkedProcessFailureWhenFailure
 	testService passBackgroundFailures.
 	testService recordTestFailure: Error new.	
 		
-	self shouldnt: [testService handleCompletedTest] raise: TestFailedByForkedProcess
+	self shouldnt: [testService handleCompletedTest] raise: self defaultUnhandledErrorClass 
 ]
 
 { #category : #tests }
@@ -197,7 +207,7 @@ ProcessMonitorTestServiceTest >> testDoesNotRaiseForkedProcessFailureWhenFailure
 	testService passBackgroundFailures.
 	
 	self assert: process isTerminated description: 'process should be terminated now'.
-	self shouldnt: [testService handleCompletedTest] raise: TestFailedByForkedProcess
+	self shouldnt: [testService handleCompletedTest] raise: self failedByForkedProcessClass
 ]
 
 { #category : #tests }
@@ -205,7 +215,7 @@ ProcessMonitorTestServiceTest >> testDoesNotRaiseForkedProcessFailureWhenThereWa
 
 	testService handleException: Error new.
 	
-	self shouldnt: [testService handleCompletedTest] raise: TestFailedByForkedProcess
+	self shouldnt: [testService handleCompletedTest] raise: self failedByForkedProcessClass
 ]
 
 { #category : #tests }
@@ -216,7 +226,7 @@ ProcessMonitorTestServiceTest >> testDoesNotRaiseLeftRunningProcessWhenItAllowsT
 	self deny: process isTerminated.
 
 	testService allowTestToLeaveProcesses.	
-	self shouldnt: [testService handleCompletedTest] raise: TestLeftRunningProcess.
+	self shouldnt: [testService handleCompletedTest] raise: self leftRunningProcessClass.
 	self deny: process isTerminated.
 ]
 
@@ -225,7 +235,7 @@ ProcessMonitorTestServiceTest >> testDoesNotRaiseLeftRunningProcessWhenProcessWa
 
 	testService handleNewProcess: [  ] newProcess.
 	
-	self shouldnt: [testService handleCompletedTest] raise: TestLeftRunningProcess
+	self shouldnt: [testService handleCompletedTest] raise: self leftRunningProcessClass
 ]
 
 { #category : #tests }
@@ -235,7 +245,7 @@ ProcessMonitorTestServiceTest >> testDoesNotRaiseLeftRunningProcessWhenThereWasM
 	
 	testService handleException: Error new.
 	
-	self shouldnt: [testService handleCompletedTest] raise: TestLeftRunningProcess
+	self shouldnt: [testService handleCompletedTest] raise: self leftRunningProcessClass
 ]
 
 { #category : #tests }
@@ -246,7 +256,7 @@ ProcessMonitorTestServiceTest >> testFailTestWhenBackgroundFailureWasPassedButMa
 	
 	testService passBackgroundFailures.
 	
-	self should: [testService handleCompletedTest] raise: TestFailedByForkedProcess
+	self should: [testService handleCompletedTest] raise: self failedByForkedProcessClass
 ]
 
 { #category : #tests }
@@ -267,9 +277,9 @@ ProcessMonitorTestServiceTest >> testFailTestWhenBackgroundProcessWasFailedDurin
 	
 	self should: [
 		[	
-			[testService handleCompletedTest] on: TestLeftRunningProcess do: [ :err | err retry ].
+			[testService handleCompletedTest] on: self leftRunningProcessClass do: [ :err | err retry ].
 			self assert: false description: 'should fail with error'.
-		] on: TestFailedByForkedProcess do: [:err | ]
+		] on: self failedByForkedProcessClass do: [:err | ]
 	] notTakeMoreThan: 2 seconds.	
 	self assert: processIsDone.
 ]
@@ -279,7 +289,7 @@ ProcessMonitorTestServiceTest >> testFailTestWhenItIsCompletedWithBackgroundFail
 
 	self fork: [ testService suspendBackgroundFailure: Error new ].
 	
-	self should: [testService handleCompletedTest] raise: TestFailedByForkedProcess
+	self should: [testService handleCompletedTest] raise: self failedByForkedProcessClass
 ]
 
 { #category : #tests }
@@ -291,8 +301,8 @@ ProcessMonitorTestServiceTest >> testFailTestWhenItIsCompletedWithBackgroundFail
 	self 
 		should: [
 			[testService handleCompletedTest] 
-				on: TestFailedByForkedProcess do: [ :err | err resumeUnchecked: true ]]
-		raise: TestLeftRunningProcess
+				on: self failedByForkedProcessClass do: [ :err | err resumeUnchecked: true ]]
+		raise: self leftRunningProcessClass
 ]
 
 { #category : #tests }
@@ -300,7 +310,7 @@ ProcessMonitorTestServiceTest >> testFailTestWhenItIsCompletedWithRunningProcess
 
 	self fork: [ 10 seconds wait ].
 	
-	self should: [testService handleCompletedTest] raise: TestLeftRunningProcess
+	self should: [testService handleCompletedTest] raise: self leftRunningProcessClass
 ]
 
 { #category : #tests }
@@ -387,10 +397,10 @@ ProcessMonitorTestServiceTest >> testHasEmptySuspendedBackgroundFailuresByDefaul
 { #category : #tests }
 ProcessMonitorTestServiceTest >> testIgnoreDirtyTestErrors [
 	
-	testService handleException: TestLeftRunningProcess new.
+	testService handleException: self leftRunningProcessClass new.
 	self assert: testService testFailures isEmpty.
 	
-	testService handleException: TestFailedByForkedProcess new.
+	testService handleException: self failedByForkedProcessClass new.
 	self assert: testService testFailures isEmpty
 ]
 
