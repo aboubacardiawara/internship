@@ -50,10 +50,6 @@ RunnerTest >> testOnRunnerResultWithGreenTest [
 	
 	runner testSuiteFromClass: GreenTest.
 	result := runner run.
-	self
-		assert: result tests size
-		equals: 2.
-	
 	self 
 		assert: result passedCount 
 		equals: 2.
