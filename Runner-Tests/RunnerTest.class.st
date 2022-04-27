@@ -118,10 +118,20 @@ RunnerTest >> testSuiteCreation [
 
 { #category : #tests }
 RunnerTest >> testSuitePreparator [
+	|runnerWithShuffleSuitePrep runnerWithZeroEffectSuitePrep|
 	
-	self halt.
-	"move this kind of test in every suitePreparator"
-	runner testSuitesFromClasses: { GreenTest. YellowTest. RedTest }
+	runnerWithShuffleSuitePrep := Runner new.
+	runnerWithZeroEffectSuitePrep := Runner new.
+	
+	runnerWithShuffleSuitePrep addSuitePreparator: AnyEffectSuitePreparator.
+	runnerWithZeroEffectSuitePrep addSuitePreparator: AnyEffectSuitePreparator.
+	
+	runnerWithShuffleSuitePrep testSuitesFromClasses: { GreenTest. YellowTest. RedTest }.
+	runnerWithZeroEffectSuitePrep testSuitesFromClasses: { GreenTest. YellowTest. RedTest }.
+	
+	self 
+		deny:  runnerWithShuffleSuitePrep suites
+		equals: runnerWithZeroEffectSuitePrep suites
 	
 	
 ]

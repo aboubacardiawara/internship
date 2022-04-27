@@ -38,11 +38,12 @@ Runner >> initialize [
 
 { #category : #running }
 Runner >> run [
+	"run the building suite of test"
 	self runTestsSuites.
 	^ result.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #running }
 Runner >> runSuite [
 	self shouldBeImplemented.
 ]
@@ -52,7 +53,7 @@ Runner >> runSuite: aTestSuite [
 	self executeSuite: aTestSuite as: [ :aSuite :aResult | aSuite run: aResult ].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #running }
 Runner >> runTestsSuites [
 	self defaultExecutionEnvironmentClass runTestsBy: [ 
 		self suites
