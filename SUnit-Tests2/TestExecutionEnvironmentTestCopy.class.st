@@ -15,7 +15,22 @@ TestExecutionEnvironmentTestCopy class >> defaultTimeLimit [
 
 { #category : #running }
 TestExecutionEnvironmentTestCopy >> createTestService [
-	^TestServiceExample new
+	^ self defaultTestServiceExampleClass new
+]
+
+{ #category : #'as yet unclassified' }
+TestExecutionEnvironmentTestCopy >> defaultTestServiceExampleClass [
+	^ TestServiceExample
+]
+
+{ #category : #'as yet unclassified' }
+TestExecutionEnvironmentTestCopy >> defaultTestTookTooMuchTime [
+	^ TestTookTooMuchTime
+]
+
+{ #category : #'as yet unclassified' }
+TestExecutionEnvironmentTestCopy >> defaultUnhandledErrorClass [
+	^ UnhandledError
 ]
 
 { #category : #helpers }
@@ -47,12 +62,12 @@ TestExecutionEnvironmentTestCopy >> runTestWith: aBlock [
 TestExecutionEnvironmentTestCopy >> testActivationShouldRegisterDefaultServices [
 
 	[
-		TestServiceExample isEnabled: true.
+		self defaultTestServiceExampleClass isEnabled: true.
 		executionEnvironment removeAllServices.
 		
 		executionEnvironment activated.
 		self assert: (executionEnvironment services 
-						anySatisfy: [:each | each class = TestServiceExample ])
+						anySatisfy: [:each | each class = self defaultTestServiceExampleClass ])
 
 	] ensure: [TestServiceExample isEnabled: false]
 ]
@@ -127,7 +142,7 @@ TestExecutionEnvironmentTestCopy >> testDeactivation [
 { #category : #tests }
 TestExecutionEnvironmentTestCopy >> testDisableGivenServiceWhenItExists [
 
-	executionEnvironment disableService: TestServiceExample.
+	executionEnvironment disableService: self defaultTestServiceExampleClass.
 
 	self deny: testService isEnabled
 ]
@@ -137,7 +152,7 @@ TestExecutionEnvironmentTestCopy >> testDisableGivenServiceWhenItIsNotRegistered
 
 	executionEnvironment removeAllServices.
 	
-	executionEnvironment disableService: TestServiceExample
+	executionEnvironment disableService: self defaultTestServiceExampleClass
 ]
 
 { #category : #tests }
@@ -145,7 +160,7 @@ TestExecutionEnvironmentTestCopy >> testDoesNotCleanUpTestServicesUntilTestError
 
 	self runWithNoHandlers: [ 
 		[ self runTestWith: [ self error: 'test error'] ]
-			on: UnhandledError do: [:exc | 
+			on: self defaultUnhandledErrorClass do: [:exc | 
 				self deny: testService isCleanUpDone.
 	]].
 
@@ -168,7 +183,7 @@ TestExecutionEnvironmentTestCopy >> testEnableGivenServiceWhenItExists [
 	| actual |
 	testService disable.
 	
-	actual := executionEnvironment enableService: TestServiceExample.
+	actual := executionEnvironment enableService: self defaultTestServiceExampleClass.
 
 	self assert: actual identicalTo: testService.
 	self assert: testService isEnabled
@@ -179,9 +194,9 @@ TestExecutionEnvironmentTestCopy >> testEnableGivenServiceWhenItIsNotRegistered 
 
 	executionEnvironment removeAllServices.
 	
-	testService := executionEnvironment enableService: TestServiceExample.
+	testService := executionEnvironment enableService: self defaultTestServiceExampleClass.
 
-	self assert: testService identicalTo: (executionEnvironment findService: TestServiceExample).
+	self assert: testService identicalTo: (executionEnvironment findService: self defaultTestServiceExampleClass).
 	self assert: testService isEnabled
 ]
 
@@ -189,7 +204,7 @@ TestExecutionEnvironmentTestCopy >> testEnableGivenServiceWhenItIsNotRegistered 
 TestExecutionEnvironmentTestCopy >> testEnableGivenServiceWithConfigurationBlock [
 
 	| actual |
-	executionEnvironment enableService: TestServiceExample using: [:service | actual := service] .
+	executionEnvironment enableService: self defaultTestServiceExampleClass using: [:service | actual := service] .
 
 	self assert: actual identicalTo: testService
 ]
@@ -197,7 +212,7 @@ TestExecutionEnvironmentTestCopy >> testEnableGivenServiceWithConfigurationBlock
 { #category : #tests }
 TestExecutionEnvironmentTestCopy >> testFindService [
 
-	self assert: (executionEnvironment findService: TestServiceExample) identicalTo: testService
+	self assert: (executionEnvironment findService: self defaultTestServiceExampleClass) identicalTo: testService
 ]
 
 { #category : #tests }
@@ -239,7 +254,7 @@ TestExecutionEnvironmentTestCopy >> testIgnoreLongTestWhenItIsSuspendedAsUnderDe
 		[ self runTestWith: [ 
 				executionEnvironment maxTimeForTest: 10 milliSeconds.
 				Processor activeProcess suspend "it simulates the under debugger condition"]
-		] on: TestTookTooMuchTime do: [ :err | timeOutSignaled := true ]		
+		] on: self defaultTestTookTooMuchTime do: [ :err | timeOutSignaled := true ]		
 	] forkAt: Processor activePriority + 1.
 
 	self deny: timeOutSignaled
@@ -348,7 +363,7 @@ TestExecutionEnvironmentTestCopy >> testNotifyTestServicesAboutUnhandledError [
 	expectedException := Error new messageText: 'test error'.
 	
 	self runWithNoHandlers: [	
-		[self runTestWith: [ expectedException signal]] on: UnhandledError do: [:actualException | 
+		[self runTestWith: [ expectedException signal]] on: self defaultUnhandledErrorClass do: [:actualException | 
 			errorPassed := true.
 			self assert: actualException exception equals: expectedException.
 			self assert: (testService signaledExceptions includes: actualException)].
@@ -428,5 +443,5 @@ TestExecutionEnvironmentTestCopy >> testRunningTooLongTest [
 			self runTestWith: [ 
 				executionEnvironment maxTimeForTest: 10 milliSeconds.
 				20 milliSeconds wait]]
-		raise: TestTookTooMuchTime
+		raise:  self defaultTestTookTooMuchTime
 ]

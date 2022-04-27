@@ -1,6 +1,6 @@
 Class {
 	#name : #TestCaseTestCopy,
-	#superclass : #ParametrizedTestCase,
+	#superclass : #ParametrizedTestCaseCopy,
 	#instVars : [
 		'factoryForTestCaseTestClass',
 		'testCaseClass'
@@ -13,7 +13,7 @@ TestCaseTestCopy class >> testParameters [
 	^ ParametrizedTestMatrix new
 		addCase: {
 			#factoryForTestCaseTestClass -> ClassFactoryForTestCaseTestCopy. 
-			#testCaseClass -> TestCase
+			#testCaseClass -> TestCaseCopy
 			};
 		yourself
 ]
@@ -42,7 +42,7 @@ TestCaseTestCopy >> testAnnouncement [
 	"We run SUnitTest"
 	suite := unitTest buildSuite.
 	suite run.
-
+	
 	self assert: collection size equals: suite tests size * 2.
 	self assert: (collection select: [ :c | c isKindOf: TestCaseStarted ]) size equals: collection size / 2.
 	self assert: (collection select: [ :c | c isKindOf: TestCaseEnded ]) size equals: collection size / 2.
@@ -61,7 +61,7 @@ TestCaseTestCopy >> testAssertEqualsActualAndExpectedOrder [
 		should: [
 			self assert: 'actual' equals: 'expected with fairly long print string'
 		]
-		raise: TestFailure 
+		raise: TestFailureCopy
 		whoseDescriptionIncludes: 'Got ''actual'' instead of ''expected with fairly long print string''.' 
 		description: 'In #assert:equals: the first argument is the actual value and the second one is the expected.'.
 ]

@@ -1,6 +1,6 @@
 Class {
 	#name : #SUnitTestCopy,
-	#superclass : #ParametrizedTestCase,
+	#superclass : #ParametrizedTestCaseCopy,
 	#instVars : [
 		'hasRun',
 		'hasSetup',
@@ -21,7 +21,7 @@ SUnitTestCopy class >> lastStoredRun [
 SUnitTestCopy class >> testParameters [
 	^ ParametrizedTestMatrix new
 		addCase: {
-			#testExecutionEnvironmentClass -> TestExecutionEnvironment. 
+			#testExecutionEnvironmentClass -> TestExecutionEnvironment.
 			#defaultExecutionEnvironmentClass -> DefaultExecutionEnvironment
 			};
 		yourself
@@ -291,7 +291,7 @@ SUnitTestCopy >> testException [
 
 { #category : #accessing }
 SUnitTestCopy >> testExecutionEnvironmentClass: anObject [
-
+	
 	testExecutionEnvironmentClass := anObject
 ]
 
@@ -300,7 +300,6 @@ SUnitTestCopy >> testExecutionEnvironmentShouldBeInstalled [
 
 	| env |
 	env := self executionEnvironment.
-
 	self assert: env class equals: testExecutionEnvironmentClass.
 	self assert: env testCase equals: self
 ]
@@ -433,10 +432,10 @@ SUnitTestCopy >> testFileOutResult [
 		equals:
 			'3 ran, 1 passed, 0 skipped, 0 expected failures, 1 failure, 1 error, 0 passed unexpected
 Failures:
-SUnitTest(TestAsserter)>>#fail
+SUnitTestCopy(TestAsserterCopy)>>#fail
 
 Errors:
-SUnitTest>>#error
+SUnitTestCopy>>#error
 '
 ]
 
