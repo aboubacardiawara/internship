@@ -39,7 +39,7 @@ RunnerTest >> testOnCoverage [
 	uncoveredClass := MyClassCovered50 new.
 	coveredClass := MyClassCovered100 new.
 	
-	self halt. 
+	self assert: false
 	"Is it possible to determine the coverage rate 
 	with any precision on some tests"
 ]
@@ -118,20 +118,24 @@ RunnerTest >> testSuiteCreation [
 
 { #category : #tests }
 RunnerTest >> testSuitePreparator [
-	|runnerWithShuffleSuitePrep runnerWithZeroEffectSuitePrep|
 	
-	runnerWithShuffleSuitePrep := Runner new.
-	runnerWithZeroEffectSuitePrep := Runner new.
+	|initialSuite suiteWithShufflePreparation|
+	runner testSuitesFromClasses: { GreenTest. YellowTest. RedTest }.
+	initialSuite := runner suites.
 	
-	runnerWithShuffleSuitePrep addSuitePreparator: AnyEffectSuitePreparator.
-	runnerWithZeroEffectSuitePrep addSuitePreparator: AnyEffectSuitePreparator.
-	
-	runnerWithShuffleSuitePrep testSuitesFromClasses: { GreenTest. YellowTest. RedTest }.
-	runnerWithZeroEffectSuitePrep testSuitesFromClasses: { GreenTest. YellowTest. RedTest }.
-	
+	"applying a zeron effect preparation to suites"
+	runner addSuitePreparator: AnyEffectSuitePreparator.
+	runner applyPrepationToSuite.
 	self 
-		deny:  runnerWithShuffleSuitePrep suites
-		equals: runnerWithZeroEffectSuitePrep suites
+		assert:  runner suites
+		equals: initialSuite.
+	
+	"applying a zeron effect preparation to suites"
+	runner addSuitePreparator: ShuffleSuitePreparator.
+	runner applyPrepationToSuite.
+	self 
+		deny  runner suites
+		equals: initialSuite.
 	
 	
 ]

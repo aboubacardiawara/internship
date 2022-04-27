@@ -3,10 +3,16 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'suites',
-		'result'
+		'result',
+		'suitePreparator'
 	],
 	#category : #'Runner-Core-Kernel'
 }
+
+{ #category : #adding }
+Runner >> addSuitePreparator: aClass [
+	suitePreparator := aClass
+]
 
 { #category : #'as yet unclassified' }
 Runner >> defaultExecutionEnvironmentClass [
