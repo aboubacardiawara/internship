@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #applying }
-AnyEffectSuitePreparator >> applyOn: testSuite [
+AnyEffectSuitePreparator class >> applyOn: testSuite [
 	
 	"do nothing"
 ]

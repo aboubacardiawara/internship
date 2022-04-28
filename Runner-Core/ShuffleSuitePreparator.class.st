@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #applying }
-ShuffleSuitePreparator >> applyOn: testSuite [
+ShuffleSuitePreparator class >> applyOn: testSuite [
 	
 	"shuffle the suite. It could be useful for tests dependency detection"
 	testSuite tests shuffle.

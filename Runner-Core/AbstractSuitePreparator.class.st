@@ -5,7 +5,13 @@ Class {
 }
 
 { #category : #applying }
-AbstractSuitePreparator >> applyOn: testSuite [
+AbstractSuitePreparator class >> applyOn: testSuite [
 	
 	self subclassResponsibility.
+]
+
+{ #category : #applying }
+AbstractSuitePreparator class >> applyOnSuites: aCol [
+	
+	aCol do: [ :suite | self applyOn: suite ]
 ]

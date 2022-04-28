@@ -15,8 +15,18 @@ Runner >> addSuitePreparator: aClass [
 ]
 
 { #category : #'as yet unclassified' }
+Runner >> applyPrepationToSuite [
+	self suitePreparator applyOnSuites: suites
+]
+
+{ #category : #'as yet unclassified' }
 Runner >> defaultExecutionEnvironmentClass [
 	^ CurrentExecutionEnvironment
+]
+
+{ #category : #running }
+Runner >> defaultSuitePreparator [
+	suitePreparator := AnyEffectSuitePreparator
 ]
 
 { #category : #running }
@@ -40,6 +50,7 @@ Runner >> hasTestsToRun [
 { #category : #running }
 Runner >> initialize [
 	result := self defaultTestResultClass new.
+	suitePreparator := self defaultSuitePreparator
 ]
 
 { #category : #running }
@@ -65,6 +76,11 @@ Runner >> runTestsSuites [
 		self suites
 			do: [ :testSuite | self runSuite: testSuite ]
 	]
+]
+
+{ #category : #accessing }
+Runner >> suitePreparator [
+	^ suitePreparator
 ]
 
 { #category : #'instance creation' }

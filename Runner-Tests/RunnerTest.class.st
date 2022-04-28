@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'runner'
 	],
-	#category : #'Runner-Tests'
+	#category : #'Runner-Tests-Kernel'
 }
 
 { #category : #tests }
@@ -27,21 +27,10 @@ RunnerTest >> testGivingTestToTheRunner [
 RunnerTest >> testNewCreatedRunnerHasAnyTestsToRun [
 	"test that a runner has initialy any test to run.
 	that ensure when running a tests that the result contain
-	only the user tests stats.
+	only the tests added by user.
 	"
 	runner := Runner new.
 	self deny: runner hasTestsToRun.
-]
-
-{ #category : #tests }
-RunnerTest >> testOnCoverage [
-	|uncoveredClass coveredClass|
-	uncoveredClass := MyClassCovered50 new.
-	coveredClass := MyClassCovered100 new.
-	
-	self assert: false
-	"Is it possible to determine the coverage rate 
-	with any precision on some tests"
 ]
 
 { #category : #tests }
@@ -114,30 +103,6 @@ RunnerTest >> testSuiteCreation [
 	runner testSuiteFromClass: GreenTest.
 	
 	self deny: runner suites isEmpty.
-]
-
-{ #category : #tests }
-RunnerTest >> testSuitePreparator [
-	
-	|initialSuite suiteWithShufflePreparation|
-	runner testSuitesFromClasses: { GreenTest. YellowTest. RedTest }.
-	initialSuite := runner suites.
-	
-	"applying a zeron effect preparation to suites"
-	runner addSuitePreparator: AnyEffectSuitePreparator.
-	runner applyPrepationToSuite.
-	self 
-		assert:  runner suites
-		equals: initialSuite.
-	
-	"applying a zeron effect preparation to suites"
-	runner addSuitePreparator: ShuffleSuitePreparator.
-	runner applyPrepationToSuite.
-	self 
-		deny  runner suites
-		equals: initialSuite.
-	
-	
 ]
 
 { #category : #tests }
