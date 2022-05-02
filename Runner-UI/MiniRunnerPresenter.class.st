@@ -32,7 +32,7 @@ MiniRunnerPresenter >> connectPackagesPresenter [
 { #category : #initialization }
 MiniRunnerPresenter >> connectPresenters [
 
-	self connectPackagesPresenter
+	self connectPackagesPresenter.
 ]
 
 { #category : #'presenters-initialization' }
@@ -100,7 +100,7 @@ MiniRunnerPresenter >> execute: aClass [
 		result := self runner
 			          testSuiteFromClass: aClass;
 			          run. ].
-		result inspect.
+		resultPresenter text: result asString.
 ]
 
 { #category : #'buttons-presenters-initialization' }
@@ -165,11 +165,7 @@ MiniRunnerPresenter >> initializeWindow: aWindowPresenter [
 { #category : #'presenters-initialization' }
 MiniRunnerPresenter >> initializeresultPresenter [
 
-	resultPresenter := self newPresenter
-		layout: (SpBoxLayout newTopToBottom
-			add: self newList;
-			yourself);
-		yourself.
+	resultPresenter := SpTextPresenter new beNotEditable
 ]
 
 { #category : #'presenters-initialization' }
