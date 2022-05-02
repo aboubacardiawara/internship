@@ -4,15 +4,22 @@ Class {
 	#instVars : [
 		'suites',
 		'result',
-		'suitePreparator'
+		'suitePreparator',
+		'shouldAccumulate'
 	],
 	#category : #'Runner-Core-Kernel'
 }
 
-{ #category : #adding }
-Runner >> addSuitePreparator: aSuitePreparator [
+{ #category : #running }
+Runner class >> run: aTestCase [
+	^ self new
+		run: aTestCase
+]
 
-	suitePreparator := aSuitePreparator
+{ #category : #'as yet unclassified' }
+Runner >> accumulateResult [
+
+	self shouldAccumulate: true
 ]
 
 { #category : #'as yet unclassified' }
@@ -31,6 +38,12 @@ Runner >> defaultSuitePreparator [
 Runner >> defaultTestResultClass [
 
 	^ TestResult
+]
+
+{ #category : #'as yet unclassified' }
+Runner >> doNotAccumulateResult [
+
+	self shouldAccumulate: false
 ]
 
 { #category : #processing }
@@ -62,7 +75,9 @@ Runner >> hasTestsToRun [
 Runner >> initialize [
 
 	super initialize.
-	result := self defaultTestResultClass new.
+	self resetSuite.
+	self doNotAccumulateResult.
+	self resetResult.
 	suitePreparator := self defaultSuitePreparator
 ]
 
@@ -76,19 +91,38 @@ Runner >> preProcessOnSuites [
 ]
 
 { #category : #running }
+Runner >> resetResult [
+
+	result := self defaultTestResultClass new
+]
+
+{ #category : #tests }
+Runner >> resetSuite [
+	suites := OrderedCollection new.
+]
+
+{ #category : #running }
 Runner >> run [
 
-	"run all the suite then return the result"
-
+	"run all the suite then return the result" 
+	"self shouldNotAccumulate ifTrue: [ self resetSuite ]."
 	self preProcessOnSuites.
 	self runTestsSuites.
 	^ result
 ]
 
 { #category : #running }
-Runner >> runSuite [
+Runner >> run: aTestCase [
 
-	self shouldBeImplemented
+	"self shouldAccumulate ifFalse: [ self resetSuite. self resetResult]."
+
+	self shouldAccumulate
+		ifTrue: [  self resetResult ]
+		ifFalse: [ 
+			self resetSuite.
+			self resetResult ].
+	self testSuiteFromClass: aTestCase.
+	^ self run
 ]
 
 { #category : #running }
@@ -106,16 +140,32 @@ Runner >> runTestsSuites [
 		self suites do: [ :testSuite | self runSuite: testSuite ] ]
 ]
 
+{ #category : #tests }
+Runner >> shouldAccumulate [
+	^ shouldAccumulate
+]
+
+{ #category : #asserting }
+Runner >> shouldAccumulate: aBoolean [ 
+	shouldAccumulate := aBoolean
+]
+
 { #category : #accessing }
 Runner >> suitePreparator [
 
 	^ suitePreparator
 ]
 
+{ #category : #adding }
+Runner >> suitePreparator: aSuitePreparator [
+
+	suitePreparator := aSuitePreparator
+]
+
 { #category : #'instance creation' }
 Runner >> suites [
 
-	^ suites ifNil: [ suites := OrderedCollection new ]
+	^ suites ifNil: [ self resetSuite ]
 ]
 
 { #category : #tests }
