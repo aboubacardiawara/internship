@@ -125,14 +125,9 @@ MiniRunnerPresenter >> initializeActionBarPresenter [
 { #category : #'presenters-initialization' }
 MiniRunnerPresenter >> initializeClassesPresenter [
 
-	classes := self newList.
+	classes := self instantiate: SpFilteringListPresenter.
 	classes
-		display: [ :class | 
-			| label |
-			label := class isTestCase
-				         ifTrue: ' +'
-				         ifFalse: ' -'.
-			class name , label ];
+		display: [ :class | class name ];
 		displayIcon: [ :class | class systemIcon ];
 		whenSelectionChangedDo: [ :selectionItemMode | 
 			selectionItemMode isEmpty ifFalse: [ 
@@ -147,8 +142,6 @@ MiniRunnerPresenter >> initializePackagesPresenter [
 		display: [ :package | package name ];
 		displayIcon: [ self iconNamed: #package ];
 		items: self packagesWithTests;
-		itemFilter: [ :item :string | 
-			item asString includesSubstring: string ];
 		whenSelectionChangedDo: [ :selectionMode |
 			selectionMode isEmpty ifFalse: [self inform: 'oooh a package is selected'] ]
 ]
