@@ -21,23 +21,18 @@ MiniRunnerPresenter class >> open [
 ]
 
 { #category : #'presenters-connection' }
-MiniRunnerPresenter >> connectClassesPresenter [
-]
-
-{ #category : #'presenters-connection' }
 MiniRunnerPresenter >> connectPackagesPresenter [
-	packages
-		transmitTo: classes
-		transform: [ :aPackage | 
-			aPackage
-				ifNotNil: [ self definedTestCases: aPackage ]
-				ifNil: [ #(  ) ] ].
+
+	packages transmitTo: classes transform: [ :aPackage | 
+		aPackage
+			ifNotNil: [ self definedTestCases: aPackage ]
+			ifNil: [ #(  ) ] ]
 ]
 
 { #category : #initialization }
 MiniRunnerPresenter >> connectPresenters [
 
-	self connectPackagesPresenter.
+	self connectPackagesPresenter
 ]
 
 { #category : #'presenters-initialization' }
@@ -95,7 +90,7 @@ MiniRunnerPresenter >> definedTestCases: aPackage [
 
 	"return all the defined test cases from the giving pavkage"
 
-	^ aPackage definedClasses select: [ :class | class isTestCase ]
+	^ aPackage definedClasses asOrderedCollection select: [ :class | class isTestCase ].
 ]
 
 { #category : #'buttons-presenters-initialization' }
@@ -141,22 +136,21 @@ MiniRunnerPresenter >> initializeClassesPresenter [
 		displayIcon: [ :class | class systemIcon ];
 		whenSelectionChangedDo: [ :selectionItemMode | 
 			selectionItemMode isEmpty ifFalse: [ 
-					self selectedClass: selectionItemMode selectedItem ] ];
-		sortingBlock: [ :a :b | a name < b name ]
+					self selectedClass: selectionItemMode selectedItem ] ]
 ]
 
 { #category : #'presenters-initialization' }
 MiniRunnerPresenter >> initializePackagesPresenter [
 
-	packages := self newList.
+	packages := self instantiate: SpFilteringListPresenter.
 	packages
 		display: [ :package | package name ];
 		displayIcon: [ self iconNamed: #package ];
-		sortingBlock: [ :a :b | a name < b name ];
-		whenSelectionChangedDo: [ :selectionMode | 
-			selectionMode isEmpty ifFalse: [ 
-					self inform: 'oooh a package is selected' ] ];
-		items: self packagesWithTests
+		items: self packagesWithTests;
+		itemFilter: [ :item :string | 
+			item asString includesSubstring: string ];
+		whenSelectionChangedDo: [ :selectionMode |
+			selectionMode isEmpty ifFalse: [self inform: 'oooh a package is selected'] ]
 ]
 
 { #category : #'presenters-initialization' }
@@ -216,9 +210,4 @@ MiniRunnerPresenter >> runner: aRunner [
 MiniRunnerPresenter >> selectedClass: aClass [
 
 	selectedClass := aClass
-]
-
-{ #category : #initialization }
-MiniRunnerPresenter >> updatePresenter [
-
 ]
