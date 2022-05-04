@@ -98,8 +98,7 @@ MiniRunnerPresenter >> execute: aClass [
 
 	aClass isTestCase ifTrue: [ 
 		result := self runner
-			          testSuiteFromClass: aClass;
-			          run. ].
+			          run: aClass].
 		resultPresenter text: result asString.
 ]
 
