@@ -2,8 +2,8 @@ Class {
 	#name : #MiniRunnerPresenter,
 	#superclass : #SpPresenter,
 	#instVars : [
-		'packages',
-		'classes',
+		'packagesPresenter',
+		'classesPresenter',
 		'actionBarPresenter',
 		'resultPresenter',
 		'selectedClass',
@@ -21,11 +21,20 @@ MiniRunnerPresenter class >> open [
 ]
 
 { #category : #'presenters-connection' }
+MiniRunnerPresenter >> allDefinedTestCases: aCollectionOfPackage [
+
+	"return all the defined test cases from the giving pavkage"
+	^ aCollectionOfPackage
+		  inject: OrderedCollection new
+		  into: [ :res :package | res addAll: (self definedTestCases: package) ]
+]
+
+{ #category : #'presenters-connection' }
 MiniRunnerPresenter >> connectPackagesPresenter [
 
-	packages transmitTo: classes transform: [ :aPackage | 
-		aPackage
-			ifNotNil: [ self definedTestCases: aPackage ]
+	packagesPresenter transmitTo: classesPresenter transform: [ :aCollectionOfPackage | 
+		aCollectionOfPackage
+			ifNotNil: [ self allDefinedTestCases: aCollectionOfPackage ]
 			ifNil: [ #(  ) ] ]
 ]
 
@@ -46,12 +55,12 @@ MiniRunnerPresenter >> defaultLayout [
 	| packagesLayout classesLayout resultLayout |
 	packagesLayout := SpBoxLayout newTopToBottom
 		                  add: 'Packages' expand: false;
-		                  add: packages;
+		                  add: packagesPresenter;
 		                  yourself.
 
 	classesLayout := SpBoxLayout newTopToBottom
 		                 add: 'Classes' expand: false;
-		                 add: classes;
+		                 add: classesPresenter;
 		                 yourself.
 
 	resultLayout := SpBoxLayout newTopToBottom
@@ -81,14 +90,12 @@ MiniRunnerPresenter >> definedClasses: aPackage [
 
 	"return all the defined classes from the package either 
 	their are test case or not"
-
+	
 	^ aPackage definedClasses
 ]
 
 { #category : #'presenters-connection' }
 MiniRunnerPresenter >> definedTestCases: aPackage [
-
-	"return all the defined test cases from the giving pavkage"
 
 	^ aPackage definedClasses asOrderedCollection select: [ :class | class isTestCase ].
 ]
@@ -124,8 +131,8 @@ MiniRunnerPresenter >> initializeActionBarPresenter [
 { #category : #'presenters-initialization' }
 MiniRunnerPresenter >> initializeClassesPresenter [
 
-	classes := self instantiate: SpFilteringListPresenter.
-	classes
+	classesPresenter := self instantiate: SpFilteringListPresenter.
+	classesPresenter
 		display: [ :class | class name ];
 		displayIcon: [ :class | class systemIcon ];
 		whenSelectionChangedDo: [ :selectionItemMode | 
@@ -136,13 +143,15 @@ MiniRunnerPresenter >> initializeClassesPresenter [
 { #category : #'presenters-initialization' }
 MiniRunnerPresenter >> initializePackagesPresenter [
 
-	packages := self instantiate: SpFilteringListPresenter.
-	packages
+	packagesPresenter := self instantiate: SpFilteringListPresenter.
+	packagesPresenter listPresenter beMultipleSelection.
+	packagesPresenter
 		display: [ :package | package name ];
 		displayIcon: [ self iconNamed: #package ];
 		items: self packagesWithTests;
-		whenSelectionChangedDo: [ :selectionMode |
-			selectionMode isEmpty ifFalse: [self inform: 'oooh a package is selected'] ]
+		whenSelectionChangedDo: [ :selectionMode | 
+			selectionMode isEmpty ifFalse: [ 
+					self inform: selectionMode selectedItems size asString ] ]
 ]
 
 { #category : #'presenters-initialization' }
