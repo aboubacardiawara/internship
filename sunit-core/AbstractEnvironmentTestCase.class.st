@@ -1,6 +1,6 @@
 Class {
 	#name : #AbstractEnvironmentTestCase,
-	#superclass : #ParametrizedTestCase,
+	#superclass : #TestCase,
 	#instVars : [
 		'testingEnvironment'
 	],
@@ -11,13 +11,6 @@ Class {
 AbstractEnvironmentTestCase class >> isAbstract [
 
 	^self = AbstractEnvironmentTestCase
-]
-
-{ #category : #tests }
-AbstractEnvironmentTestCase class >> testParameters [
-	^ ParametrizedTestMatrix new
-		addCase: {  };
-		yourself 
 ]
 
 { #category : #accessing }
