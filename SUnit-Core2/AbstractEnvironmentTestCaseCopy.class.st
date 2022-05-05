@@ -10,14 +10,7 @@ Class {
 { #category : #testing }
 AbstractEnvironmentTestCaseCopy class >> isAbstract [
 
-	^self = AbstractEnvironmentTestCaseCopy
-]
-
-{ #category : #tests }
-AbstractEnvironmentTestCaseCopy class >> testParameters [
-	^ ParametrizedTestMatrix new
-		addCase: {  };
-		yourself 
+	^self = TestCaseCopy
 ]
 
 { #category : #accessing }
