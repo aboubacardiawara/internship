@@ -1,6 +1,6 @@
 Class {
 	#name : #TestFailureTestCaseCopy,
-	#superclass : #TestCase,
+	#superclass : #TestCaseCopy,
 	#category : #'SUnit-Tests2'
 }
 

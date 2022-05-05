@@ -1,6 +1,6 @@
 Class {
 	#name : #TestResourceWithForkedProcessTestCaseCopy,
-	#superclass : #TestCase,
+	#superclass : #TestCaseCopy,
 	#category : #'SUnit-Tests2'
 }
 

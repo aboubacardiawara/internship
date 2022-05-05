@@ -5,6 +5,9 @@ Class {
 		'name',
 		'description'
 	],
+	#classInstVars : [
+		'current'
+	],
 	#category : #'SUnit-Core2'
 }
 

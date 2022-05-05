@@ -10,6 +10,11 @@ Class {
 	#category : #'SUnit-Tests-Core'
 }
 
+{ #category : #accessing }
+ClassFactoryWithOrganizationTest class >> defaultTimeLimit [ 
+	^10 seconds
+]
+
 { #category : #testing }
 ClassFactoryWithOrganizationTest >> assertEnvironmentOf: aBehavior [
 	self assert: aBehavior environment equals: self testedEnvironment
@@ -21,6 +26,7 @@ ClassFactoryWithOrganizationTest >> setUp [
 	super setUp.
 	environment := SystemDictionary withOrganizer: SystemOrganizer new.
 	factory := ClassFactoryWithOrganization newWithOrganization: environment organization.
+	
 ]
 
 { #category : #testing }
@@ -66,6 +72,7 @@ ClassFactoryWithOrganizationTest >> testDefaultCategoryCleanUp [
 	self deny: (self testedOrganization categories includes: factory defaultCategory). 
 	self class environment at: #ChangeSet ifPresent: [:changeSet |
 		self deny: (changeSet current changedClassNames includesAnyOf: createdClassNames) ].
+
 ]
 
 { #category : #testing }

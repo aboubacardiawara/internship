@@ -1,6 +1,6 @@
 Class {
 	#name : #WithForkedProcessTestResourceCopy,
-	#superclass : #TestResource,
+	#superclass : #TestResourceCopy,
 	#instVars : [
 		'forkedProcess'
 	],

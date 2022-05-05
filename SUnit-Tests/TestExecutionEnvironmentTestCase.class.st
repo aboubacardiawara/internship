@@ -1,35 +1,23 @@
 Class {
 	#name : #TestExecutionEnvironmentTestCase,
-	#superclass : #ParametrizedTestCase,
+	#superclass : #TestCase,
 	#instVars : [
 		'testService',
 		'executionEnvironment',
-		'processes',
-		'testExecutionEnv',
-		'testMonitorServiceClass'
+		'processes'
 	],
 	#category : #'SUnit-Tests-Core'
 }
 
 { #category : #testing }
 TestExecutionEnvironmentTestCase class >> isAbstract [ 
-	^self = TestExecutionEnvironmentTestCase
-]
-
-{ #category : #tests }
-TestExecutionEnvironmentTestCase class >> testParameters [
-	^ ParametrizedTestMatrix new
-		addCase: {
-			#testExecutionEnv -> TestExecutionEnvironment.
-			#testMonitorServiceClass -> ProcessMonitorTestService
-		};
-		yourself
+	^self = TestExecutionEnvironmentTestCase 
 ]
 
 { #category : #running }
 TestExecutionEnvironmentTestCase >> createTestService [
 
-	self subclassResponsibility
+	self subclassResponsibility 
 ]
 
 { #category : #running }
@@ -46,7 +34,8 @@ TestExecutionEnvironmentTestCase >> newProcess: aName toImmediatelyExecute: aBlo
 TestExecutionEnvironmentTestCase >> runCaseManaged [
 	"Here we are testing the test environment logic.
 	So we should disable it for ourselves"
-	^ DefaultExecutionEnvironment beActiveDuring: [ self runCase]
+	
+	^DefaultExecutionEnvironment beActiveDuring: [ self runCase]
 ]
 
 { #category : #running }
@@ -67,10 +56,12 @@ TestExecutionEnvironmentTestCase >> runWithNoHandlers: aBlock [
 TestExecutionEnvironmentTestCase >> setUp [
 	super setUp.
 	processes := OrderedCollection new.
+	
 	testService := self createTestService.	
 	testService enable.
-	executionEnvironment := testExecutionEnv new.
+	executionEnvironment := TestExecutionEnvironment new.
 	executionEnvironment registerService: testService.
+
 ]
 
 { #category : #running }
@@ -92,16 +83,6 @@ TestExecutionEnvironmentTestCase >> testCleanUpShouldRevertServiceToBeEnabledByD
 	self assert: testService isEnabled equals: testService isEnabledByDefault
 ]
 
-{ #category : #accessing }
-TestExecutionEnvironmentTestCase >> testExecutionEnv [
-	^ testExecutionEnv
-]
-
-{ #category : #accessing }
-TestExecutionEnvironmentTestCase >> testExecutionEnv: anObject [
-	testExecutionEnv := anObject
-]
-
 { #category : #tests }
 TestExecutionEnvironmentTestCase >> testIsEnabledByDefault [
 
@@ -109,14 +90,4 @@ TestExecutionEnvironmentTestCase >> testIsEnabledByDefault [
 	
 	self assert: testService isEnabled equals: testService isEnabledByDefault.
 	self assert: testService isEnabledByDefault equals: testService class isEnabled
-]
-
-{ #category : #running }
-TestExecutionEnvironmentTestCase >> testMonitorServiceClass [
-	^ testMonitorServiceClass 
-]
-
-{ #category : #running }
-TestExecutionEnvironmentTestCase >> testMonitorServiceClass: anObject [
-	testMonitorServiceClass := anObject
 ]

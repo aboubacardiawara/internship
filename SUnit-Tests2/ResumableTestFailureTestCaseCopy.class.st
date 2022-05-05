@@ -1,6 +1,6 @@
 Class {
 	#name : #ResumableTestFailureTestCaseCopy,
-	#superclass : #TestCase,
+	#superclass : #TestCaseCopy,
 	#instVars : [
 		'duplicateFailureLog'
 	],

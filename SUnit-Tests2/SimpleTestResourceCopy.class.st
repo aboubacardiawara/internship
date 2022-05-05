@@ -1,10 +1,13 @@
 Class {
 	#name : #SimpleTestResourceCopy,
-	#superclass : #TestResource,
+	#superclass : #TestResourceCopy,
 	#instVars : [
 		'runningState',
 		'hasRun',
 		'hasSetup'
+	],
+	#classInstVars : [
+		'preventAvailability'
 	],
 	#category : #'SUnit-Tests2'
 }

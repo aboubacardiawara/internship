@@ -1,6 +1,6 @@
 Class {
 	#name : #TestExecutionEnvironmentTestCaseCopy,
-	#superclass : #ParametrizedTestCase,
+	#superclass : #ParametrizedTestCaseCopy,
 	#instVars : [
 		'testService',
 		'executionEnvironment',

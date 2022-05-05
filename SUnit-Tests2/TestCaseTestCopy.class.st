@@ -34,7 +34,7 @@ TestCaseTestCopy >> testAnnouncement [
 	self deny: unitTest shouldAnnounce.
 	self deny: unitTest new shouldAnnounce.
 
-	unitTest announcer when: TestCaseAnnouncement do: [ :ann | collection add: ann ].
+	unitTest announcer when: TestCaseAnnouncementCopy do: [ :ann | collection add: ann ].
 
 	self assert: unitTest shouldAnnounce.
 	self assert: unitTest new shouldAnnounce.
@@ -44,8 +44,8 @@ TestCaseTestCopy >> testAnnouncement [
 	suite run.
 	
 	self assert: collection size equals: suite tests size * 2.
-	self assert: (collection select: [ :c | c isKindOf: TestCaseStarted ]) size equals: collection size / 2.
-	self assert: (collection select: [ :c | c isKindOf: TestCaseEnded ]) size equals: collection size / 2.
+	self assert: (collection select: [ :c | c isKindOf: TestCaseStartedCopy ]) size equals: collection size / 2.
+	self assert: (collection select: [ :c | c isKindOf: TestCaseEndedCopy ]) size equals: collection size / 2.
 	self assert: (collection allSatisfy: #hasPassed).
 	self deny: (collection anySatisfy: #hasFailures).
 

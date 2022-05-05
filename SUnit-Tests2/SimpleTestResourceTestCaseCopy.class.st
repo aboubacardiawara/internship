@@ -1,6 +1,6 @@
 Class {
 	#name : #SimpleTestResourceTestCaseCopy,
-	#superclass : #TestCase,
+	#superclass : #TestCaseCopy,
 	#instVars : [
 		'resource'
 	],

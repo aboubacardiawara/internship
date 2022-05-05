@@ -15,22 +15,7 @@ TestExecutionEnvironmentTest class >> defaultTimeLimit [
 
 { #category : #running }
 TestExecutionEnvironmentTest >> createTestService [
-	^ self defaultTestServiceExampleClass new
-]
-
-{ #category : #'as yet unclassified' }
-TestExecutionEnvironmentTest >> defaultTestServiceExampleClass [
-	^ TestServiceExample
-]
-
-{ #category : #'as yet unclassified' }
-TestExecutionEnvironmentTest >> defaultTestTookTooMuchTime [
-	^ TestTookTooMuchTime
-]
-
-{ #category : #'as yet unclassified' }
-TestExecutionEnvironmentTest >> defaultUnhandledErrorClass [
-	^ UnhandledError
+	^TestServiceExample new
 ]
 
 { #category : #helpers }
@@ -62,12 +47,12 @@ TestExecutionEnvironmentTest >> runTestWith: aBlock [
 TestExecutionEnvironmentTest >> testActivationShouldRegisterDefaultServices [
 
 	[
-		self defaultTestServiceExampleClass isEnabled: true.
+		TestServiceExample isEnabled: true.
 		executionEnvironment removeAllServices.
 		
 		executionEnvironment activated.
 		self assert: (executionEnvironment services 
-						anySatisfy: [:each | each class = self defaultTestServiceExampleClass ])
+						anySatisfy: [:each | each class = TestServiceExample ])
 
 	] ensure: [TestServiceExample isEnabled: false]
 ]
@@ -126,7 +111,7 @@ TestExecutionEnvironmentTest >> testCleanUpTestServicesAfterTerminatedTest [
 	self runWithNoHandlers: [
 		self runTestWith: [ Processor terminateActive]].
 
-	self assert: testService isCleanUpDone
+	self assert: testService isCleanUpDone 
 ]
 
 { #category : #tests }
@@ -142,7 +127,7 @@ TestExecutionEnvironmentTest >> testDeactivation [
 { #category : #tests }
 TestExecutionEnvironmentTest >> testDisableGivenServiceWhenItExists [
 
-	executionEnvironment disableService: self defaultTestServiceExampleClass.
+	executionEnvironment disableService: TestServiceExample.
 
 	self deny: testService isEnabled
 ]
@@ -152,7 +137,7 @@ TestExecutionEnvironmentTest >> testDisableGivenServiceWhenItIsNotRegistered [
 
 	executionEnvironment removeAllServices.
 	
-	executionEnvironment disableService: self defaultTestServiceExampleClass
+	executionEnvironment disableService: TestServiceExample
 ]
 
 { #category : #tests }
@@ -160,7 +145,7 @@ TestExecutionEnvironmentTest >> testDoesNotCleanUpTestServicesUntilTestErrorIsNo
 
 	self runWithNoHandlers: [ 
 		[ self runTestWith: [ self error: 'test error'] ]
-			on: self defaultUnhandledErrorClass do: [:exc | 
+			on: UnhandledError do: [:exc | 
 				self deny: testService isCleanUpDone.
 	]].
 
@@ -183,7 +168,7 @@ TestExecutionEnvironmentTest >> testEnableGivenServiceWhenItExists [
 	| actual |
 	testService disable.
 	
-	actual := executionEnvironment enableService: self defaultTestServiceExampleClass.
+	actual := executionEnvironment enableService: TestServiceExample.
 
 	self assert: actual identicalTo: testService.
 	self assert: testService isEnabled
@@ -194,9 +179,9 @@ TestExecutionEnvironmentTest >> testEnableGivenServiceWhenItIsNotRegistered [
 
 	executionEnvironment removeAllServices.
 	
-	testService := executionEnvironment enableService: self defaultTestServiceExampleClass.
+	testService := executionEnvironment enableService: TestServiceExample.
 
-	self assert: testService identicalTo: (executionEnvironment findService: self defaultTestServiceExampleClass).
+	self assert: testService identicalTo: (executionEnvironment findService: TestServiceExample).
 	self assert: testService isEnabled
 ]
 
@@ -204,15 +189,15 @@ TestExecutionEnvironmentTest >> testEnableGivenServiceWhenItIsNotRegistered [
 TestExecutionEnvironmentTest >> testEnableGivenServiceWithConfigurationBlock [
 
 	| actual |
-	executionEnvironment enableService: self defaultTestServiceExampleClass using: [:service | actual := service] .
+	executionEnvironment enableService: TestServiceExample using: [:service | actual := service] .
 
-	self assert: actual identicalTo: testService
+	self assert: actual identicalTo: testService 
 ]
 
 { #category : #tests }
 TestExecutionEnvironmentTest >> testFindService [
 
-	self assert: (executionEnvironment findService: self defaultTestServiceExampleClass) identicalTo: testService
+	self assert: (executionEnvironment findService: TestServiceExample) identicalTo: testService 
 ]
 
 { #category : #tests }
@@ -223,7 +208,7 @@ TestExecutionEnvironmentTest >> testGettingEnvironmentFromTestCase [
 		actual := self executionEnvironment.
 	].
 
-	self assert: actual identicalTo: executionEnvironment
+	self assert: actual identicalTo: executionEnvironment 
 ]
 
 { #category : #tests }
@@ -241,7 +226,8 @@ TestExecutionEnvironmentTest >> testHandleForkedProcessesByAllServices [
 { #category : #tests }
 TestExecutionEnvironmentTest >> testHasEmptyServicesByDefault [
 
-	executionEnvironment := testExecutionEnv new.
+	executionEnvironment := TestExecutionEnvironment new.
+	
 	self assert: executionEnvironment services isEmpty
 ]
 
@@ -254,9 +240,11 @@ TestExecutionEnvironmentTest >> testIgnoreLongTestWhenItIsSuspendedAsUnderDebug 
 		[ self runTestWith: [ 
 				executionEnvironment maxTimeForTest: 10 milliSeconds.
 				Processor activeProcess suspend "it simulates the under debugger condition"]
-		] on: self defaultTestTookTooMuchTime do: [ :err | timeOutSignaled := true ]		
+		] on: TestTookTooMuchTime do: [ :err | timeOutSignaled := true ]		
 	] forkAt: Processor activePriority + 1.
 
+	200 milliSeconds wait.
+	testProcess resume.
 	self deny: timeOutSignaled
 ]
 
@@ -294,7 +282,7 @@ TestExecutionEnvironmentTest >> testIsMainTestProcessActive [
 TestExecutionEnvironmentTest >> testIsMainTestProcessFailed [
 
 	| processMonitor |
-	processMonitor := testMonitorServiceClass new.
+	processMonitor := ProcessMonitorTestService new.
 	executionEnvironment registerService: processMonitor.		
 	executionEnvironment activated.
 	
@@ -363,7 +351,7 @@ TestExecutionEnvironmentTest >> testNotifyTestServicesAboutUnhandledError [
 	expectedException := Error new messageText: 'test error'.
 	
 	self runWithNoHandlers: [	
-		[self runTestWith: [ expectedException signal]] on: self defaultUnhandledErrorClass do: [:actualException | 
+		[self runTestWith: [ expectedException signal]] on: UnhandledError do: [:actualException | 
 			errorPassed := true.
 			self assert: actualException exception equals: expectedException.
 			self assert: (testService signaledExceptions includes: actualException)].
@@ -443,5 +431,5 @@ TestExecutionEnvironmentTest >> testRunningTooLongTest [
 			self runTestWith: [ 
 				executionEnvironment maxTimeForTest: 10 milliSeconds.
 				20 milliSeconds wait]]
-		raise:  self defaultTestTookTooMuchTime
+		raise: TestTookTooMuchTime 
 ]

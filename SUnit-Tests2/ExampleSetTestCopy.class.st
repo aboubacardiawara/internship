@@ -1,6 +1,6 @@
 Class {
 	#name : #ExampleSetTestCopy,
-	#superclass : #TestCase,
+	#superclass : #TestCaseCopy,
 	#instVars : [
 		'full',
 		'empty'

@@ -3,34 +3,14 @@ SUnit test for TestCase class
 "
 Class {
 	#name : #TestCaseTest,
-	#superclass : #ParametrizedTestCase,
-	#instVars : [
-		'factoryForTestCaseTestClass',
-		'testCaseClass'
-	],
+	#superclass : #TestCase,
 	#category : #'SUnit-Tests-Core'
 }
-
-{ #category : #tests }
-TestCaseTest class >> testParameters [
-	^ ParametrizedTestMatrix new
-		addCase: {
-			#factoryForTestCaseTestClass -> ClassFactoryForTestCaseTest. 
-			#testCaseClass -> TestCase
-			};
-		yourself
-]
-
-{ #category : #accessing }
-TestCaseTest >> factoryForTestCaseTestClass: anObject [
-
-	factoryForTestCaseTestClass := anObject
-]
 
 { #category : #events }
 TestCaseTest >> testAnnouncement [
 	| collection oldCollection suite unitTest |
-	unitTest := factoryForTestCaseTestClass.
+	unitTest := ClassFactoryForTestCaseTest.
 	collection := OrderedCollection new.
 	unitTest resetAnnouncer.
 
@@ -69,14 +49,8 @@ TestCaseTest >> testAssertEqualsActualAndExpectedOrder [
 		description: 'In #assert:equals: the first argument is the actual value and the second one is the expected.'.
 ]
 
-{ #category : #accessing }
-TestCaseTest >> testCaseClass: anObject [
-
-	testCaseClass := anObject
-]
-
 { #category : #testing }
 TestCaseTest >> testIsUnitTest [
 
-	self assert: testCaseClass isUnitTest
+	self assert: TestCase isUnitTest
 ]

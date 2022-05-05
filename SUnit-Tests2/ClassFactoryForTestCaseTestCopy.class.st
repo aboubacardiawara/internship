@@ -1,6 +1,6 @@
 Class {
 	#name : #ClassFactoryForTestCaseTestCopy,
-	#superclass : #AbstractEnvironmentTestCase,
+	#superclass : #AbstractEnvironmentTestCaseCopy,
 	#instVars : [
 		'factory',
 		'testCaseClass'

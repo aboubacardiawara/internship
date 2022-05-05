@@ -1,6 +1,6 @@
 Class {
 	#name : #SUnitExtensionsTestCopy,
-	#superclass : #TestCase,
+	#superclass : #TestCaseCopy,
 	#instVars : [
 		'stream'
 	],

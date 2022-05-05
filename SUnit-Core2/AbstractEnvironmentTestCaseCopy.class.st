@@ -1,6 +1,6 @@
 Class {
 	#name : #AbstractEnvironmentTestCaseCopy,
-	#superclass : #ParametrizedTestCase,
+	#superclass : #ParametrizedTestCaseCopy,
 	#instVars : [
 		'testingEnvironment'
 	],

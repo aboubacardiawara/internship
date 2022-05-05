@@ -1,6 +1,6 @@
 Class {
 	#name : #ClassFactoryWithOrganizationTestCopy,
-	#superclass : #TestCase,
+	#superclass : #TestCaseCopy,
 	#instVars : [
 		'factory'
 	],
