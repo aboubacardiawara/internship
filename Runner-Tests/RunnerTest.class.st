@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'runner'
 	],
-	#category : #'Runner-Tests-Kernel'
+	#category : #'Runner-Tests-Core'
 }
 
 { #category : #tests }
@@ -93,14 +93,33 @@ RunnerTest >> testOnRunnerResultWithYellowTest [
 ]
 
 { #category : #tests }
+RunnerTest >> testRerunningFailedTest [
+
+	"we will run a test who fail only during the first execution"
+
+	| firstRunningResult secondRunningResult |
+	FailThenPass reset.
+	"first execution"
+	firstRunningResult := runner runCase: FailThenPass.
+	self assert: firstRunningResult runCount equals: 1.
+	self assert: firstRunningResult failureCount equals: 1.
+
+	"second execution"
+	runner rerunFailures.
+	secondRunningResult := runner result.
+	self assert: secondRunningResult runCount equals: 1.
+	self assert: secondRunningResult failureCount equals: 0
+]
+
+{ #category : #tests }
 RunnerTest >> testRunnerCanAccumulateResult [
 
 	| result firstRunningCount secondRunningCount |
 	runner accumulateResult.
-	result := runner run: GreenTest. "2 tests"
+	result := runner runCase: GreenTest. "2 tests"
 	firstRunningCount := result runCount.
 
-	result := runner run: YellowTest. "2 tests"
+	result := runner runCase: YellowTest. "2 tests"
 	secondRunningCount := result runCount.
 	self assert: secondRunningCount equals: firstRunningCount + 2
 ]
@@ -109,10 +128,10 @@ RunnerTest >> testRunnerCanAccumulateResult [
 RunnerTest >> testRunnerDoesNotAccumulateRsultByDefault [
 
 	| result firstRunningCount secondRunningCount |
-	result := Runner run: GreenTest.
+	result := Runner runCase: GreenTest.
 	firstRunningCount := result runCount.
 
-	result := Runner run: GreenTest.
+	result := Runner runCase: GreenTest.
 	secondRunningCount := result runCount.
 	self assert: secondRunningCount equals: firstRunningCount
 ]
@@ -120,7 +139,7 @@ RunnerTest >> testRunnerDoesNotAccumulateRsultByDefault [
 { #category : #tests }
 RunnerTest >> testRunningTestClassSide [
 	| result |
-	result := Runner run: GreenTest.
+	result := Runner runCase: GreenTest.
 	self assert: result passedCount equals: 2.
 
 	self assert: result failureCount equals: 0
@@ -129,7 +148,7 @@ RunnerTest >> testRunningTestClassSide [
 { #category : #tests }
 RunnerTest >> testRunningTestInstanceSide [
 	| result |
-	result := runner run: GreenTest.
+	result := runner runCase: GreenTest.
 	self assert: result passedCount equals: 2.
 
 	self assert: result failureCount equals: 0

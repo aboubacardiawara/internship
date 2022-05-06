@@ -1,7 +1,7 @@
 Class {
 	#name : #RedTest,
 	#superclass : #TestCase,
-	#category : #'Runner-Core-Utilities-Test'
+	#category : #'Runner-Tests-Utilities-Test'
 }
 
 { #category : #tests }

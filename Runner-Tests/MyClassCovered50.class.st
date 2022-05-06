@@ -4,7 +4,7 @@ I am a simple class with 50% code coverage
 Class {
 	#name : #MyClassCovered50,
 	#superclass : #Object,
-	#category : #'Runner-Core-Utilities-Class'
+	#category : #'Runner-Tests-Utilities-Class'
 }
 
 { #category : #'as yet unclassified' }

@@ -7,13 +7,13 @@ Class {
 		'suitePreparator',
 		'shouldAccumulate'
 	],
-	#category : #'Runner-Core-Kernel'
+	#category : #'Runner-Core-Core'
 }
 
 { #category : #running }
-Runner class >> run: aTestCase [
+Runner class >> runCase: aTestCase [
 	^ self new
-		run: aTestCase
+		runCase: aTestCase
 ]
 
 { #category : #'as yet unclassified' }
@@ -90,6 +90,16 @@ Runner >> preProcessOnSuites [
 	self suitePreparator applyOnSuites: suites
 ]
 
+{ #category : #'as yet unclassified' }
+Runner >> rerunFailures [
+
+	| failures aResult|
+	failures := self result failures.
+	result failures: Set new.
+	aResult := failures collect: [ :failure | failure run ].
+	aResult do: [ :testResult | self updateResultForFailure: testResult ]
+]
+
 { #category : #running }
 Runner >> resetResult [
 
@@ -99,6 +109,11 @@ Runner >> resetResult [
 { #category : #tests }
 Runner >> resetSuite [
 	suites := OrderedCollection new.
+]
+
+{ #category : #accessing }
+Runner >> result [
+	^ result
 ]
 
 { #category : #running }
@@ -112,7 +127,7 @@ Runner >> run [
 ]
 
 { #category : #running }
-Runner >> run: aTestCase [
+Runner >> runCase: aTestCase [
 
 	"self shouldAccumulate ifFalse: [ self resetSuite. self resetResult]."
 
@@ -190,4 +205,11 @@ Runner >> testsCount [
 	^ self suites
 		  inject: 0
 		  into: [ :sum :suite | sum + suite tests size ]
+]
+
+{ #category : #'as yet unclassified' }
+Runner >> updateResultForFailure: testResult [
+
+	"updtade the current test result"
+	testResult passed do: [ :testCase | result addPass: testCase ]
 ]

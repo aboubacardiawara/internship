@@ -8,7 +8,9 @@ Class {
 		'resultPresenter',
 		'selectedClass',
 		'runner',
-		'result'
+		'result',
+		'selectedPackages',
+		'selectedClasses'
 	],
 	#category : #'Runner-UI'
 }

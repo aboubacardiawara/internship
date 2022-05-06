@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'aMyClassCovered100'
 	],
-	#category : #'Runner-Core-Utilities-Test'
+	#category : #'Runner-Tests-Utilities-Test'
 }
 
 { #category : #initialization }

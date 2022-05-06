@@ -1,7 +1,7 @@
 Class {
 	#name : #YellowTest,
 	#superclass : #TestCase,
-	#category : #'Runner-Core-Utilities-Test'
+	#category : #'Runner-Tests-Utilities-Test'
 }
 
 { #category : #tests }
