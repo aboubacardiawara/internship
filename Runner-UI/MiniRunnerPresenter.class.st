@@ -26,14 +26,11 @@ MiniRunnerPresenter class >> open [
 MiniRunnerPresenter >> allDefinedTestCases: aCollectionOfPackage [
 
 	"return all the defined test cases from the giving pavkage"
-	^ aCollectionOfPackage
-		  inject: OrderedCollection new
-		  into: [ :res :package | res addAll: (self definedTestCases: package) ]
+	^ aCollectionOfPackage collectAll: [ :package | self definedTestCases: package ].
 ]
 
 { #category : #'presenters-connection' }
 MiniRunnerPresenter >> connectPackagesPresenter [
-
 	packagesPresenter transmitTo: classesPresenter transform: [ :aCollectionOfPackage | 
 		aCollectionOfPackage
 			ifNotNil: [ self allDefinedTestCases: aCollectionOfPackage ]
@@ -107,7 +104,7 @@ MiniRunnerPresenter >> execute: aClass [
 
 	aClass isTestCase ifTrue: [ 
 		result := self runner
-			          run: aClass].
+			          runCase: aClass].
 		resultPresenter text: result asString.
 ]
 
@@ -150,10 +147,7 @@ MiniRunnerPresenter >> initializePackagesPresenter [
 	packagesPresenter
 		display: [ :package | package name ];
 		displayIcon: [ self iconNamed: #package ];
-		items: self packagesWithTests;
-		whenSelectionChangedDo: [ :selectionMode | 
-			selectionMode isEmpty ifFalse: [ 
-					self inform: selectionMode selectedItems size asString ] ]
+		items: self packagesWithTests.
 ]
 
 { #category : #'presenters-initialization' }
@@ -209,4 +203,9 @@ MiniRunnerPresenter >> runner: aRunner [
 MiniRunnerPresenter >> selectedClass: aClass [
 
 	selectedClass := aClass
+]
+
+{ #category : #'presenters-initialization' }
+MiniRunnerPresenter >> updateClassPresenter: aCollectionOfPackages [
+	classesPresenter items: (aCollectionOfPackages collectAll: [:package | self definedTestCases: package])
 ]
