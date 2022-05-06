@@ -131,6 +131,7 @@ MiniRunnerPresenter >> initializeActionBarPresenter [
 MiniRunnerPresenter >> initializeClassesPresenter [
 
 	classesPresenter := self instantiate: SpFilteringListPresenter.
+	classesPresenter listPresenter beMultipleSelection.
 	classesPresenter
 		display: [ :class | class name ];
 		displayIcon: [ :class | class systemIcon ];
