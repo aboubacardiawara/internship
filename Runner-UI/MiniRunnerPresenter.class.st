@@ -6,7 +6,6 @@ Class {
 		'classesPresenter',
 		'actionBarPresenter',
 		'resultPresenter',
-		'selectedClass',
 		'runner',
 		'result',
 		'selectedPackages',
@@ -100,12 +99,14 @@ MiniRunnerPresenter >> definedTestCases: aPackage [
 ]
 
 { #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenter >> execute: aClass [
+MiniRunnerPresenter >> execute: aCollectionOfClasses [
 
-	aClass isTestCase ifTrue: [ 
-		result := self runner
-			          runCase: aClass].
-		resultPresenter text: result asString.
+		|aRunner|
+		aRunner := self defaultRunnerClass new
+						accumulateResult.
+		aCollectionOfClasses do: [ :testCase | aRunner runCase: testCase ].
+		
+		resultPresenter text: aRunner result asString.
 ]
 
 { #category : #'buttons-presenters-initialization' }
@@ -137,7 +138,7 @@ MiniRunnerPresenter >> initializeClassesPresenter [
 		displayIcon: [ :class | class systemIcon ];
 		whenSelectionChangedDo: [ :selectionItemMode | 
 			selectionItemMode isEmpty ifFalse: [ 
-					self selectedClass: selectionItemMode selectedItem ] ]
+					self selectedClasses: selectionItemMode selectedItems ] ]
 ]
 
 { #category : #'presenters-initialization' }
@@ -184,9 +185,9 @@ MiniRunnerPresenter >> packagesWithTests [
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> runTestsButtonPresenter [
 	^ self newButton
-		label: 'Start';
+		label: 'Run';
 		help: 'Run the selected tests';
-		action: [self informUser: selectedClass name. self execute: selectedClass];
+		action: [self informUser: selectedClasses asString. self execute: selectedClasses];
 		yourself.
 ]
 
@@ -201,9 +202,9 @@ MiniRunnerPresenter >> runner: aRunner [
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenter >> selectedClass: aClass [
+MiniRunnerPresenter >> selectedClasses: aCollectionOfClasses [
 
-	selectedClass := aClass
+	selectedClasses := aCollectionOfClasses
 ]
 
 { #category : #'presenters-initialization' }
