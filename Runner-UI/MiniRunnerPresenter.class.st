@@ -157,7 +157,7 @@ MiniRunnerPresenter >> initializePackagesPresenter [
 	packagesPresenter := self instantiate: SpFilteringListPresenter.
 	packagesPresenter listPresenter beMultipleSelection.
 	packagesPresenter
-		display: [ :package | package name ];
+		display: [ :package | package name, ' (', (self definedTestCases: package) size asString, ')' ];
 		displayIcon: [ self iconNamed: #package ];
 		items: self packagesWithTests
 ]
