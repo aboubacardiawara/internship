@@ -15,9 +15,9 @@ Class {
 { #category : #accessing }
 FailThenPass class >> counter [
 
-	counter isNil
-		ifTrue: [ counter := 0 ]
-		ifFalse: [ counter := counter + 1 ].
+	counter
+		ifNil: [ counter := 0 ]
+		ifNotNil: [ counter = 1 ifTrue: [ counter := 0 ] ifFalse: [ counter := 1 ]].
 	^ counter
 ]
 
@@ -29,5 +29,6 @@ FailThenPass class >> reset [
 
 { #category : #tests }
 FailThenPass >> testFailAtFirstRunning [
-	self assert: self class counter > 0.
+
+	self assert: self class counter equals: 1
 ]

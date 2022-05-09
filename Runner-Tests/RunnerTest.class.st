@@ -98,7 +98,6 @@ RunnerTest >> testRerunningFailedTest [
 	"we will run a test who fail only during the first execution"
 
 	| firstRunningResult secondRunningResult |
-	FailThenPass reset.
 	"first execution"
 	firstRunningResult := runner runCase: FailThenPass.
 	self assert: firstRunningResult runCount equals: 1.

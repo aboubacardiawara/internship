@@ -1,3 +1,41 @@
+"
+I represent a runner supposed to execute unit test.
+I can take a TestCase in order to run then restituate the result.
+
+Public API and Key Messages
+
+- Runner >> runCase:
+- Runner class >> runCase:
+- Runner >> accumulateResult
+- Runner >> result
+- Runner >> run
+- Runner >> suitePreparator:
+
+## Example
+Let create a simple runner and run some test with.
+`Warning:` By default, i do not accumulate results, but i can do it if you want. 
+```smalltalk
+|aRunner|
+aRunner := Runner new.
+
+aRunner runCase: MyClassTest >> ""a TestResult"" ""(1)""
+""if we run a second test case, the first result will be overwritten""
+""we can prevent that by sending the message accumulateResult to the runner""
+
+aRunner accumulateResult.
+aRunner runCase: AnotherClassTest >> ""a TestResult"" ""(2)""
+this last result contains the accumulation of the two last result (1) and (2)
+```
+ 
+Internal Representation and Key Implementation Points.
+
+    Instance Variables
+	result:		a test execution result
+	shouldAccumulate:		indicate either the futur execution result should be add to the previous result or not.
+	suitePreparator:		before test execution, this object apply some operation on test suite (e.g shuffle).
+	suites:		a test suites
+
+"
 Class {
 	#name : #Runner,
 	#superclass : #Object,
@@ -19,6 +57,8 @@ Runner class >> runCase: aTestCase [
 { #category : #'as yet unclassified' }
 Runner >> accumulateResult [
 
+	"activate the results accumulation behavior"
+
 	self shouldAccumulate: true
 ]
 
@@ -31,6 +71,9 @@ Runner >> defaultExecutionEnvironmentClass [
 { #category : #running }
 Runner >> defaultSuitePreparator [
 
+	"by default any process will be applied on suites.
+	You can change the default behavior. See suitePreparator:"
+
 	^ AnyEffectSuitePreparator
 ]
 
@@ -42,6 +85,8 @@ Runner >> defaultTestResultClass [
 
 { #category : #'as yet unclassified' }
 Runner >> doNotAccumulateResult [
+
+	"activate the results accumulation behavior"
 
 	self shouldAccumulate: false
 ]
@@ -58,15 +103,13 @@ Runner >> executeSuite: aTestSuite as: aBlock [
 { #category : #testing }
 Runner >> hasTestsToRun [
 
-	"check either the runner has test to run or not."
-
-	"If any test has not been added, there nothing to run"
+	"check either the runner has test to run or not.
+	If any test has not been added, there nothing to run"
 
 	"Example of usages:"
 
-	"Runner new hasTestsToRun >>> false"
-
-	"(Runner new testSuiteFromClass: GreenTest) hasTestsToRun >>> true"
+	"Runner new hasTestsToRun >>> false
+	(Runner new testSuiteFromClass: GreenTest) hasTestsToRun >>> true"
 
 	^ self suites isNotEmpty
 ]
@@ -93,7 +136,9 @@ Runner >> preProcessOnSuites [
 { #category : #'as yet unclassified' }
 Runner >> rerunFailures [
 
-	| failures aResult|
+	"rerun only the failed testcases"
+
+	| failures aResult |
 	failures := self result failures.
 	result failures: Set new.
 	aResult := failures collect: [ :failure | failure run ].
@@ -103,24 +148,30 @@ Runner >> rerunFailures [
 { #category : #running }
 Runner >> resetResult [
 
+	"reset the runner result"
+
 	result := self defaultTestResultClass new
 ]
 
 { #category : #tests }
 Runner >> resetSuite [
-	suites := OrderedCollection new.
+
+	suites := OrderedCollection new
 ]
 
 { #category : #accessing }
 Runner >> result [
+
 	^ result
 ]
 
 { #category : #running }
 Runner >> run [
 
-	"run all the suite then return the result" 
+	"run all the suite then return the result"
+
 	"self shouldNotAccumulate ifTrue: [ self resetSuite ]."
+
 	self preProcessOnSuites.
 	self runTestsSuites.
 	^ result
@@ -132,7 +183,7 @@ Runner >> runCase: aTestCase [
 	"self shouldAccumulate ifFalse: [ self resetSuite. self resetResult]."
 
 	self shouldAccumulate
-		ifTrue: [  self resetResult ]
+		ifTrue: [ self resetResult ]
 		ifFalse: [ 
 			self resetSuite.
 			self resetResult ].
@@ -157,11 +208,13 @@ Runner >> runTestsSuites [
 
 { #category : #tests }
 Runner >> shouldAccumulate [
+
 	^ shouldAccumulate
 ]
 
 { #category : #asserting }
-Runner >> shouldAccumulate: aBoolean [ 
+Runner >> shouldAccumulate: aBoolean [
+
 	shouldAccumulate := aBoolean
 ]
 
@@ -185,7 +238,7 @@ Runner >> suites [
 
 { #category : #tests }
 Runner >> testSuiteFromClass: aClass [
-
+	"build a suite from the giving class then add it to the internal collections of suites"
 	self suites add: aClass isAbstract not & aClass suite
 ]
 
@@ -211,5 +264,6 @@ Runner >> testsCount [
 Runner >> updateResultForFailure: testResult [
 
 	"updtade the current test result"
+
 	testResult passed do: [ :testCase | result addPass: testCase ]
 ]

@@ -58,7 +58,7 @@ MiniRunnerPresenter >> defaultLayout [
 
 	| packagesLayout classesLayout resultLayout |
 	packagesLayout := SpBoxLayout newTopToBottom
-		                  add: 'Packages' expand: false;
+		                  add: 'Packages (Number of TestCases)' expand: false;
 		                  add: packagesPresenter;
 		                  yourself.
 
@@ -126,7 +126,7 @@ MiniRunnerPresenter >> informUser: aMsgContain [
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> initialize [
 
-	super initialize.
+	super initialize
 ]
 
 { #category : #'buttons-presenters-initialization' }
@@ -157,7 +157,9 @@ MiniRunnerPresenter >> initializePackagesPresenter [
 	packagesPresenter := self instantiate: SpFilteringListPresenter.
 	packagesPresenter listPresenter beMultipleSelection.
 	packagesPresenter
-		display: [ :package | package name, ' (', (self definedTestCases: package) size asString, ')' ];
+		display: [ :package | 
+			package name , ' ('
+			, (self definedTestCases: package) size asString , ')' ];
 		displayIcon: [ self iconNamed: #package ];
 		items: self packagesWithTests
 ]
@@ -174,7 +176,7 @@ MiniRunnerPresenter >> initializePresenters [
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> initializeRunner [
 
-	self runner: self defaultRunnerClass new accumulateResult.
+	self runner: self defaultRunnerClass new accumulateResult
 ]
 
 { #category : #'presenters-initialization' }
@@ -205,7 +207,7 @@ MiniRunnerPresenter >> rerunFailuresButtonPresenter [
 		  label: 'Run failures';
 		  help: 'run failures';
 		  action: [ 
-				self inform: 'rerunning failures'.
+			  self inform: 'rerunning failures'.
 			  self runner rerunFailures.
 			  self updateResultPresenter ];
 		  yourself
@@ -235,6 +237,7 @@ MiniRunnerPresenter >> runner: aRunner [
 
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> selectedClasses [
+
 	^ selectedClasses ifNil: [ selectedClasses := OrderedCollection new ]
 ]
 
