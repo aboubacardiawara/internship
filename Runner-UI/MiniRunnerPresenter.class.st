@@ -25,26 +25,32 @@ MiniRunnerPresenter class >> open [
 MiniRunnerPresenter >> allDefinedTestCases: aCollectionOfPackage [
 
 	"return all the defined test cases from the giving pavkage"
-	^ aCollectionOfPackage collectAll: [ :package | self definedTestCases: package ].
+
+	^ aCollectionOfPackage collectAll: [ :package | 
+		  self definedTestCases: package ]
 ]
 
 { #category : #'presenters-connection' }
 MiniRunnerPresenter >> connectPackagesPresenter [
-	packagesPresenter transmitTo: classesPresenter transform: [ :aCollectionOfPackage | 
-		aCollectionOfPackage
-			ifNotNil: [ self allDefinedTestCases: aCollectionOfPackage ]
-			ifNil: [ #(  ) ] ]
+
+	packagesPresenter
+		transmitTo: classesPresenter
+		transform: [ :aCollectionOfPackage | 
+			aCollectionOfPackage
+				ifNotNil: [ self allDefinedTestCases: aCollectionOfPackage ]
+				ifNil: [ #(  ) ] ]
 ]
 
 { #category : #initialization }
 MiniRunnerPresenter >> connectPresenters [
 
-	self connectPackagesPresenter.
+	self connectPackagesPresenter
 ]
 
 { #category : #'presenters-initialization' }
 MiniRunnerPresenter >> containsTestCase: aPackage [
-	^ aPackage definedClasses anySatisfy: [ :class | class isTestCase ] 
+
+	^ aPackage definedClasses anySatisfy: [ :class | class isTestCase ]
 ]
 
 { #category : #initialization }
@@ -80,6 +86,7 @@ MiniRunnerPresenter >> defaultLayout [
 
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> defaultRunnerClass [
+
 	^ Runner
 ]
 
@@ -88,44 +95,48 @@ MiniRunnerPresenter >> definedClasses: aPackage [
 
 	"return all the defined classes from the package either 
 	their are test case or not"
-	
+
 	^ aPackage definedClasses
 ]
 
 { #category : #'presenters-connection' }
 MiniRunnerPresenter >> definedTestCases: aPackage [
 
-	^ aPackage definedClasses asOrderedCollection select: [ :class | class isTestCase ].
+	^ aPackage definedClasses asOrderedCollection select: [ :class | 
+		  class isTestCase and: class isAbstract not ]
 ]
 
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> execute: aCollectionOfClasses [
 
-		|aRunner|
-		aRunner := self defaultRunnerClass new
-						accumulateResult.
-		aCollectionOfClasses do: [ :testCase | aRunner runCase: testCase ].
-		
-		resultPresenter text: aRunner result asString.
+	| aRunner |
+	aRunner := self defaultRunnerClass new accumulateResult.
+	aCollectionOfClasses
+		do: [ :testCase | aRunner runCase: testCase ]
+		displayingProgress: 'Running Tests'.
+
+	resultPresenter text: aRunner result asString
 ]
 
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> informUser: aMsgContain [
-	 self inform: 'Info: ', aMsgContain
+
+	self inform: 'Info: ' , aMsgContain
 ]
 
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> initialize [
+
 	super initialize.
 	self runner: self defaultRunnerClass new
 ]
 
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> initializeActionBarPresenter [
-	actionBarPresenter := (self newActionBar 
-		add: self runTestsButtonPresenter;
-		yourself
-	)
+
+	actionBarPresenter := self newActionBar
+		                      add: self runTestsButtonPresenter;
+		                      yourself
 ]
 
 { #category : #'presenters-initialization' }
@@ -149,15 +160,16 @@ MiniRunnerPresenter >> initializePackagesPresenter [
 	packagesPresenter
 		display: [ :package | package name ];
 		displayIcon: [ self iconNamed: #package ];
-		items: self packagesWithTests.
+		items: self packagesWithTests
 ]
 
 { #category : #'presenters-initialization' }
 MiniRunnerPresenter >> initializePresenters [
+
 	self initializePackagesPresenter.
 	self initializeClassesPresenter.
 	self initializeresultPresenter.
-	self initializeActionBarPresenter.
+	self initializeActionBarPresenter
 ]
 
 { #category : #'presenters-initialization' }
@@ -178,27 +190,31 @@ MiniRunnerPresenter >> initializeresultPresenter [
 MiniRunnerPresenter >> packagesWithTests [
 
 	^ RPackageOrganizer default packages select: [ :package | 
-			self containsTestCase: package
-		].
+		  self containsTestCase: package ]
 ]
 
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> runTestsButtonPresenter [
+
 	^ self newButton
-		label: 'Run';
-		help: 'Run the selected tests';
-		action: [self informUser: selectedClasses asString. self execute: selectedClasses];
-		yourself.
+		  label: 'Run';
+		  help: 'Run the selected tests';
+		  action: [ 
+			  self informUser: selectedClasses asString.
+			  self execute: selectedClasses ];
+		  yourself
 ]
 
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> runner [
+
 	^ runner
 ]
 
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> runner: aRunner [
-	runner := aRunner 
+
+	runner := aRunner
 ]
 
 { #category : #'presenters-initialization' }
@@ -209,5 +225,8 @@ MiniRunnerPresenter >> selectedClasses: aCollectionOfClasses [
 
 { #category : #'presenters-initialization' }
 MiniRunnerPresenter >> updateClassPresenter: aCollectionOfPackages [
-	classesPresenter items: (aCollectionOfPackages collectAll: [:package | self definedTestCases: package])
+
+	classesPresenter items:
+		(aCollectionOfPackages collectAll: [ :package | 
+			 self definedTestCases: package ])
 ]
