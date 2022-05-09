@@ -32,3 +32,9 @@ FailThenPass >> testFailAtFirstRunning [
 
 	self assert: self class counter equals: 1
 ]
+
+{ #category : #tests }
+FailThenPass >> testPass [
+
+	self assert: true
+]

@@ -142,6 +142,7 @@ Runner >> rerunFailures [
 	failures := self result failures.
 	result failures: Set new.
 	aResult := failures collect: [ :failure | failure run ].
+	self halt.
 	aResult do: [ :testResult | self updateResultForFailure: testResult ]
 ]
 
@@ -264,6 +265,7 @@ Runner >> testsCount [
 Runner >> updateResultForFailure: testResult [
 
 	"updtade the current test result"
-
-	testResult passed do: [ :testCase | result addPass: testCase ]
+	self halt.
+	testResult passed do: [ :testCase | result addPass: testCase ].
+	testResult failures do: [ :testCase | result addFailure: testCase ].
 ]

@@ -100,14 +100,34 @@ RunnerTest >> testRerunningFailedTest [
 	| firstRunningResult secondRunningResult |
 	"first execution"
 	firstRunningResult := runner runCase: FailThenPass.
-	self assert: firstRunningResult runCount equals: 1.
+	self assert: firstRunningResult runCount equals: 2.
 	self assert: firstRunningResult failureCount equals: 1.
 
 	"second execution"
 	runner rerunFailures.
 	secondRunningResult := runner result.
-	self assert: secondRunningResult runCount equals: 1.
+	self assert: secondRunningResult runCount equals: 2.
 	self assert: secondRunningResult failureCount equals: 0
+]
+
+{ #category : #tests }
+RunnerTest >> testRerunningFailedTest2 [
+
+	"we will run a test who fail only during the first execution"
+
+	| firstRunningResult secondRunningResult |
+	"first execution"
+	firstRunningResult := runner runCase: RedTest.
+	self assert: firstRunningResult runCount equals: 3.
+	self assert: firstRunningResult failureCount equals: 1.
+	self assert: firstRunningResult errorCount equals: 1.
+
+	"second execution"
+	runner rerunFailures.
+	secondRunningResult := runner result.
+	self assert: secondRunningResult runCount equals: 3.
+	self assert: secondRunningResult failureCount equals: 1.
+	self assert: secondRunningResult errorCount equals: 1
 ]
 
 { #category : #tests }
