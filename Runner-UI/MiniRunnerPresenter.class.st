@@ -109,13 +109,12 @@ MiniRunnerPresenter >> definedTestCases: aPackage [
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> execute: aCollectionOfClasses [
 
-	| aRunner |
-	aRunner := self defaultRunnerClass new accumulateResult.
-	aCollectionOfClasses
-		do: [ :testCase | aRunner runCase: testCase ]
-		displayingProgress: 'Running Tests'.
+	self initializeRunner.
 
-	resultPresenter text: aRunner result asString
+	aCollectionOfClasses
+		do: [ :testCase | runner runCase: testCase ]
+		displayingProgress: 'Running Tests'.
+	self updateResultPresenter
 ]
 
 { #category : #'buttons-presenters-initialization' }
@@ -128,7 +127,6 @@ MiniRunnerPresenter >> informUser: aMsgContain [
 MiniRunnerPresenter >> initialize [
 
 	super initialize.
-	self runner: self defaultRunnerClass new
 ]
 
 { #category : #'buttons-presenters-initialization' }
@@ -136,6 +134,7 @@ MiniRunnerPresenter >> initializeActionBarPresenter [
 
 	actionBarPresenter := self newActionBar
 		                      add: self runTestsButtonPresenter;
+		                      add: self rerunFailuresButtonPresenter;
 		                      yourself
 ]
 
@@ -172,6 +171,12 @@ MiniRunnerPresenter >> initializePresenters [
 	self initializeActionBarPresenter
 ]
 
+{ #category : #'buttons-presenters-initialization' }
+MiniRunnerPresenter >> initializeRunner [
+
+	self runner: self defaultRunnerClass new accumulateResult.
+]
+
 { #category : #'presenters-initialization' }
 MiniRunnerPresenter >> initializeWindow: aWindowPresenter [
 
@@ -194,14 +199,25 @@ MiniRunnerPresenter >> packagesWithTests [
 ]
 
 { #category : #'buttons-presenters-initialization' }
+MiniRunnerPresenter >> rerunFailuresButtonPresenter [
+
+	^ self newButton
+		  label: 'Run failures';
+		  help: 'run failures';
+		  action: [ 
+				self inform: 'rerunning failures'.
+			  self runner rerunFailures.
+			  self updateResultPresenter ];
+		  yourself
+]
+
+{ #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> runTestsButtonPresenter [
 
 	^ self newButton
 		  label: 'Run';
 		  help: 'Run the selected tests';
-		  action: [ 
-			  self informUser: selectedClasses asString.
-			  self execute: selectedClasses ];
+		  action: [ self execute: self selectedClasses ];
 		  yourself
 ]
 
@@ -217,6 +233,11 @@ MiniRunnerPresenter >> runner: aRunner [
 	runner := aRunner
 ]
 
+{ #category : #'buttons-presenters-initialization' }
+MiniRunnerPresenter >> selectedClasses [
+	^ selectedClasses ifNil: [ selectedClasses := OrderedCollection new ]
+]
+
 { #category : #'presenters-initialization' }
 MiniRunnerPresenter >> selectedClasses: aCollectionOfClasses [
 
@@ -229,4 +250,10 @@ MiniRunnerPresenter >> updateClassPresenter: aCollectionOfPackages [
 	classesPresenter items:
 		(aCollectionOfPackages collectAll: [ :package | 
 			 self definedTestCases: package ])
+]
+
+{ #category : #'buttons-presenters-initialization' }
+MiniRunnerPresenter >> updateResultPresenter [
+
+	resultPresenter text: runner result asString
 ]
