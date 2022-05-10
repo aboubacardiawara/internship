@@ -142,7 +142,6 @@ Runner >> rerunFailures [
 	failures := self result failures.
 	result failures: Set new.
 	aResult := failures collect: [ :failure | failure run ].
-	self halt.
 	aResult do: [ :testResult | self updateResultForFailure: testResult ]
 ]
 
@@ -183,11 +182,10 @@ Runner >> runCase: aTestCase [
 
 	"self shouldAccumulate ifFalse: [ self resetSuite. self resetResult]."
 
-	self shouldAccumulate
-		ifTrue: [ self resetResult ]
-		ifFalse: [ 
-			self resetSuite.
-			self resetResult ].
+	"/!\ todo  la compléxité est élévée, mieux vaut vider le suite dans les cas et garder le resultat si accumulation activée"
+
+	self resetResult.
+	self shouldAccumulate ifFalse: [ self resetSuite ].
 	self testSuiteFromClass: aTestCase.
 	^ self run
 ]
@@ -239,8 +237,12 @@ Runner >> suites [
 
 { #category : #tests }
 Runner >> testSuiteFromClass: aClass [
+
 	"build a suite from the giving class then add it to the internal collections of suites"
-	self suites add: aClass isAbstract not & aClass suite
+
+	aClass isTestCase
+		ifFalse: [ ANoTestCaseException signal: aClass name, ' is not a testCase' ]
+		ifTrue: [ self suites add: aClass isAbstract not & aClass suite ]
 ]
 
 { #category : #tests }
@@ -265,7 +267,7 @@ Runner >> testsCount [
 Runner >> updateResultForFailure: testResult [
 
 	"updtade the current test result"
-	self halt.
+
 	testResult passed do: [ :testCase | result addPass: testCase ].
-	testResult failures do: [ :testCase | result addFailure: testCase ].
+	testResult failures do: [ :testCase | result addFailure: testCase ]
 ]

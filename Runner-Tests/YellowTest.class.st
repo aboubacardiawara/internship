@@ -6,7 +6,8 @@ Class {
 
 { #category : #tests }
 YellowTest >> testFail [
-	self assert: false.
+
+	self assert: false
 ]
 
 { #category : #tests }

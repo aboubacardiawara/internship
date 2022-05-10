@@ -14,6 +14,22 @@ RunnerTest >> setUp [
 ]
 
 { #category : #tests }
+RunnerTest >> testGivingANonTestcaseDoesNotThrowsException [
+
+	self
+		shouldnt: (Runner runCase: GreenTest)
+		raise: ANoTestCaseException
+]
+
+{ #category : #tests }
+RunnerTest >> testGivingANonTestcaseThrowsException [
+
+	self
+		should: [Runner new runCase: Integer]
+		raise: ANoTestCaseException
+]
+
+{ #category : #tests }
 RunnerTest >> testGivingTestToTheRunner [
 
 	"test that a runner has initialy any test to run.
