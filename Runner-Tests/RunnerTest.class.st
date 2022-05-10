@@ -65,7 +65,7 @@ RunnerTest >> testOnRunnerResultWithGreenTest [
 { #category : #tests }
 RunnerTest >> testOnRunnerResultWithRedTest [
 	|result|
-	result := runner runCase: RedTest..
+	result := runner runCase: RedTest.
 	self
 		assert: result tests size
 		equals: 3.
