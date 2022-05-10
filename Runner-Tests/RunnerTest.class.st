@@ -56,8 +56,7 @@ RunnerTest >> testNewCreatedRunnerHasAnyTestsToRun [
 RunnerTest >> testOnRunnerResultWithGreenTest [
 
 	| result |
-	runner testSuiteFromClass: GreenTest.
-	result := runner run.
+	result := runner runCase: GreenTest.
 	self assert: result passedCount equals: 2.
 
 	self assert: result failureCount equals: 0
@@ -66,9 +65,7 @@ RunnerTest >> testOnRunnerResultWithGreenTest [
 { #category : #tests }
 RunnerTest >> testOnRunnerResultWithRedTest [
 	|result|
-	
-	runner testSuiteFromClass: RedTest.
-	result := runner run.
+	result := runner runCase: RedTest..
 	self
 		assert: result tests size
 		equals: 3.
@@ -89,23 +86,14 @@ RunnerTest >> testOnRunnerResultWithRedTest [
 
 { #category : #tests }
 RunnerTest >> testOnRunnerResultWithYellowTest [
-	|result|
-	
-	runner testSuiteFromClass: YellowTest.
-	result := runner run.
-	self 
-		assert: result tests size
-		equals: 2.
-		
-	self 
-		assert: result passedCount 
-		equals: 1.
 
-	self 
-		assert: result failureCount 
-		equals: 1.
-	
-	
+	| result |
+	result := runner runCase: YellowTest.
+	self assert: result tests size equals: 2.
+
+	self assert: result passedCount equals: 1.
+
+	self assert: result failureCount equals: 1
 ]
 
 { #category : #tests }
