@@ -170,24 +170,18 @@ Runner >> run [
 
 	"run all the suite then return the result"
 
-	"self shouldNotAccumulate ifTrue: [ self resetSuite ]."
-
 	self preProcessOnSuites.
 	self runTestsSuites.
-	^ result
 ]
 
 { #category : #running }
 Runner >> runCase: aTestCase [
 
-	"self shouldAccumulate ifFalse: [ self resetSuite. self resetResult]."
-
-	"/!\ todo  la compléxité est élévée, mieux vaut vider le suite dans les cas et garder le resultat si accumulation activée"
-
 	self resetResult.
 	self shouldAccumulate ifFalse: [ self resetSuite ].
 	self testSuiteFromClass: aTestCase.
-	^ self run
+	self run.
+	^ result
 ]
 
 { #category : #running }
