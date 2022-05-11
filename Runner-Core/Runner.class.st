@@ -123,7 +123,7 @@ Runner >> hasTestsToRun [
 	^ self suites isNotEmpty
 ]
 
-{ #category : #running }
+{ #category : #initialization }
 Runner >> initialize [
 
 	super initialize.
@@ -145,18 +145,6 @@ Runner >> preProcessOnSuites [
 { #category : #tests }
 Runner >> raiseNotTestCaseException: aClass [
 	 ANoTestCaseException signal: aClass name, ' is not a testCase'
-]
-
-{ #category : #running }
-Runner >> rerunFailures [
-
-	"rerun only the failed testcases"
-
-	| failures aResult |
-	failures := self result failures.
-	result failures: Set new.
-	aResult := failures collect: [ :failure | failure run ].
-	aResult do: [ :testResult | self updateResultForFailure: testResult ]
 ]
 
 { #category : #running }
@@ -196,6 +184,25 @@ Runner >> runCase: aTestCase [
 	self testSuiteFromClass: aTestCase.
 	self run.
 	^ result
+]
+
+{ #category : #running }
+Runner >> runFailure: failure [
+
+	"rerun the giving failure"
+
+	"remove it, run it, the update the result"
+
+	result removeFailure: failure.
+	self updateResultForFailure: failure run
+]
+
+{ #category : #running }
+Runner >> runFailures [
+
+	"rerun all the failed testcases"
+
+	self result failures do: [ :failure | self runFailure: failure ]
 ]
 
 { #category : #running }
@@ -274,7 +281,7 @@ Runner >> testsCount [
 		  into: [ :sum :suite | sum + suite tests size ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #update }
 Runner >> updateResultForFailure: testResult [
 
 	"updtade the current test result"

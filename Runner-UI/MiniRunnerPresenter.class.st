@@ -222,7 +222,7 @@ MiniRunnerPresenter >> rerunFailuresButtonPresenter [
 		  help: 'run failures';
 		  action: [ 
 			  self inform: 'rerunning failures'.
-			  self runner rerunFailures.
+			  self runner runFailures.
 			  self updateResultPresenter ];
 		  yourself
 ]

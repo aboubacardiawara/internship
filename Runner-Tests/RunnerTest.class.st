@@ -108,7 +108,7 @@ RunnerTest >> testRerunningFailedTest [
 	self assert: firstRunningResult failureCount equals: 1.
 
 	"second execution"
-	runner rerunFailures.
+	runner runFailures.
 	secondRunningResult := runner result.
 	self assert: secondRunningResult runCount equals: 2.
 	self assert: secondRunningResult failureCount equals: 0
@@ -127,7 +127,7 @@ RunnerTest >> testRerunningFailedTest2 [
 	self assert: firstRunningResult errorCount equals: 1.
 
 	"second execution"
-	runner rerunFailures.
+	runner runFailures.
 	secondRunningResult := runner result.
 	self assert: secondRunningResult runCount equals: 3.
 	self assert: secondRunningResult failureCount equals: 1.
@@ -208,6 +208,6 @@ RunnerTest >> testreruningFailuresUsesTheSameRunnerConfiguration [
 	result := runner runCase: FailThenPass.
 	self assert: result hasFailures.
 
-	runner rerunFailures.
+	runner runFailures.
 	self assert:false description: 'continue writting the test'.
 ]
