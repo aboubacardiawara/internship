@@ -43,7 +43,7 @@ MiniRunnerPresenter >> connectPackagesPresenter [
 
 { #category : #initialization }
 MiniRunnerPresenter >> connectPresenters [
-
+	super connectPresenters.
 	self connectPackagesPresenter
 ]
 
@@ -110,8 +110,6 @@ MiniRunnerPresenter >> definedTestCases: aPackage [
 MiniRunnerPresenter >> execute: aCollectionOfClasses [
 
 	self initializeRunner.
-
-	self informInProgress.
 	aCollectionOfClasses
 		do: [ :testCase | 
 			runner runCase: testCase.
@@ -204,7 +202,8 @@ MiniRunnerPresenter >> initializeWindow: aWindowPresenter [
 { #category : #'presenters-initialization' }
 MiniRunnerPresenter >> initializeresultPresenter [
 
-	resultPresenter := SpTextPresenter new beNotEditable
+	resultPresenter := self instantiate: SpListPresenter.
+	resultPresenter contextMenu: self resultListContextMenu
 ]
 
 { #category : #'presenters-initialization' }
@@ -225,6 +224,20 @@ MiniRunnerPresenter >> rerunFailuresButtonPresenter [
 			  self runner runFailures.
 			  self updateResultPresenter ];
 		  yourself
+]
+
+{ #category : #'presenters-initialization' }
+MiniRunnerPresenter >> resultListContextMenu [
+
+	^ self newMenu
+		  addItem: [ :item | 
+			  item
+				  name: 'Rerun';
+				  action: [ self informUser: 'Do you want to rerun me ?' ] ];
+		  addItem: [ :item | 
+			  item
+				  name: 'other';
+				  action: [ self informUser: 'Not implemented yet' ] ]
 ]
 
 { #category : #'buttons-presenters-initialization' }
@@ -272,5 +285,5 @@ MiniRunnerPresenter >> updateClassPresenter: aCollectionOfPackages [
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> updateResultPresenter [
 
-	resultPresenter text: runner result asString
+	resultPresenter items: runner result failures asOrderedCollection
 ]
