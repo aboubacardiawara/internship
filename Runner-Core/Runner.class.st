@@ -49,6 +49,15 @@ Class {
 }
 
 { #category : #running }
+Runner class >> example [
+	<script>
+	Runner new 
+	suitePreparator: ShuffleSuitePreparator;
+	runCase: DependencyTest;
+	inspect
+]
+
+{ #category : #running }
 Runner class >> runCase: aTestCase [
 	^ self new
 		runCase: aTestCase
@@ -133,7 +142,12 @@ Runner >> preProcessOnSuites [
 	self suitePreparator applyOnSuites: suites
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
+Runner >> raiseNotTestCaseException: aClass [
+	 ANoTestCaseException signal: aClass name, ' is not a testCase'
+]
+
+{ #category : #running }
 Runner >> rerunFailures [
 
 	"rerun only the failed testcases"
@@ -172,13 +186,13 @@ Runner >> run [
 
 	self preProcessOnSuites.
 	self runTestsSuites.
+	self resetSuite.
 ]
 
 { #category : #running }
 Runner >> runCase: aTestCase [
 
-	self resetResult.
-	self shouldAccumulate ifFalse: [ self resetSuite ].
+	self shouldAccumulate ifFalse: [ self resetResult ].
 	self testSuiteFromClass: aTestCase.
 	self run.
 	^ result
@@ -194,6 +208,8 @@ Runner >> runSuite: aTestSuite [
 
 { #category : #running }
 Runner >> runTestsSuites [
+
+	"execute all every collected suite"
 
 	self defaultExecutionEnvironmentClass runTestsBy: [ 
 		self suites do: [ :testSuite | self runSuite: testSuite ] ]
@@ -232,10 +248,11 @@ Runner >> suites [
 { #category : #tests }
 Runner >> testSuiteFromClass: aClass [
 
-	"build a suite from the giving class then add it to the internal collections of suites"
+	"build a suite from the giving class then add it to the internal collections of suites. 
+	The giving class should be a test case"
 
 	aClass isTestCase
-		ifFalse: [ ANoTestCaseException signal: aClass name, ' is not a testCase' ]
+		ifFalse: [ self raiseNotTestCaseException: aClass ]
 		ifTrue: [ self suites add: aClass isAbstract not & aClass suite ]
 ]
 

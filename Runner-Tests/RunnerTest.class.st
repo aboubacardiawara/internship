@@ -10,7 +10,7 @@ Class {
 { #category : #tests }
 RunnerTest >> setUp [
 	super setUp.
-	runner := Runner new.
+	runner := Runner new suitePreparator: ShuffleSuitePreparator.
 ]
 
 { #category : #tests }
@@ -198,4 +198,16 @@ RunnerTest >> testSuiteWithMultipleTestCase [
 			RedTest }.
 	self assert: runner suites size equals: 3.
 	self assert: runner testsCount equals: 2 + 2 + 3
+]
+
+{ #category : #tests }
+RunnerTest >> testreruningFailuresUsesTheSameRunnerConfiguration [
+
+	| result |
+	FailThenPass reset.
+	result := runner runCase: FailThenPass.
+	self assert: result hasFailures.
+
+	runner rerunFailures.
+	self assert:false description: 'continue writting the test'.
 ]

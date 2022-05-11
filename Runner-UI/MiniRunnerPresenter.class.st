@@ -111,10 +111,18 @@ MiniRunnerPresenter >> execute: aCollectionOfClasses [
 
 	self initializeRunner.
 
+	self informInProgress.
 	aCollectionOfClasses
-		do: [ :testCase | runner runCase: testCase ]
-		displayingProgress: 'Running Tests'.
-	self updateResultPresenter
+		do: [ :testCase | 
+			runner runCase: testCase.
+			self updateResultPresenter ]
+		displayingProgress: 'Running Tests'
+]
+
+{ #category : #'buttons-presenters-initialization' }
+MiniRunnerPresenter >> informInProgress [
+
+	resultPresenter text: 'In progress ...'
 ]
 
 { #category : #'buttons-presenters-initialization' }
@@ -143,6 +151,8 @@ MiniRunnerPresenter >> initializeClassesPresenter [
 
 	classesPresenter := self instantiate: SpFilteringListPresenter.
 	classesPresenter listPresenter beMultipleSelection.
+	classesPresenter listPresenter sortingBlock: [ :a :b | 
+		a name < b name ].
 	classesPresenter
 		display: [ :class | class name ];
 		displayIcon: [ :class | class systemIcon ];
@@ -156,6 +166,8 @@ MiniRunnerPresenter >> initializePackagesPresenter [
 
 	packagesPresenter := self instantiate: SpFilteringListPresenter.
 	packagesPresenter listPresenter beMultipleSelection.
+	packagesPresenter listPresenter sortingBlock: [ :a :b | 
+		a name < b name ].
 	packagesPresenter
 		display: [ :package | 
 			package name , ' ('
@@ -176,7 +188,9 @@ MiniRunnerPresenter >> initializePresenters [
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> initializeRunner [
 
-	self runner: self defaultRunnerClass new accumulateResult
+	self runner: (self defaultRunnerClass new
+			 accumulateResult;
+			 suitePreparator: ShuffleSuitePreparator)
 ]
 
 { #category : #'presenters-initialization' }
