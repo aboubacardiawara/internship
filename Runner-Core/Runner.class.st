@@ -71,6 +71,19 @@ Runner >> accumulateResult [
 	self shouldAccumulate: true
 ]
 
+{ #category : #running }
+Runner >> debugFailure: failure [
+
+	"rerun the giving failure"
+
+	"remove it, run it, the update the result"
+
+	| debugResult |
+	debugResult := failure debug.
+	debugResult ifNotNil: [ result removeFailure: failure ].
+	self updateResultForFailure: debugResult
+]
+
 { #category : #'as yet unclassified' }
 Runner >> defaultExecutionEnvironmentClass [
 
@@ -285,7 +298,6 @@ Runner >> testsCount [
 Runner >> updateResultForFailure: testResult [
 
 	"updtade the current test result"
-
 	testResult passed do: [ :testCase | result addPass: testCase ].
 	testResult failures do: [ :testCase | result addFailure: testCase ]
 ]

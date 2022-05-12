@@ -14,6 +14,22 @@ RunnerTest >> setUp [
 ]
 
 { #category : #tests }
+RunnerTest >> testFailedTestFaildWhileRerunningDoesNotChangeTheResult [
+
+	| firstRunningResult secondRunningResult |
+	"first execution"
+	firstRunningResult := runner runCase: YellowTest.
+	self assert: firstRunningResult runCount equals: 2.
+	self assert: firstRunningResult failureCount equals: 1.
+
+	"second execution"
+	runner runFailures.
+	secondRunningResult := runner result.
+	self assert: secondRunningResult runCount equals: 2.
+	self assert: secondRunningResult failureCount equals: 1.
+]
+
+{ #category : #tests }
 RunnerTest >> testGivingANonTestcaseDoesNotThrowsException [
 
 	self
@@ -209,5 +225,5 @@ RunnerTest >> testreruningFailuresUsesTheSameRunnerConfiguration [
 	self assert: result hasFailures.
 
 	runner runFailures.
-	self assert:false description: 'continue writting the test'.
+	self assert: false description: 'continue writting the test'.
 ]

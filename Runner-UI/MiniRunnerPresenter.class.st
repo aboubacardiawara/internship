@@ -53,6 +53,13 @@ MiniRunnerPresenter >> containsTestCase: aPackage [
 	^ aPackage definedClasses anySatisfy: [ :class | class isTestCase ]
 ]
 
+{ #category : #'presenters-initialization' }
+MiniRunnerPresenter >> debugSelectedTest [
+
+	runner debugFailure: resultPresenter selection selectedItem.
+	self updateResultPresenter.
+]
+
 { #category : #initialization }
 MiniRunnerPresenter >> defaultLayout [
 
@@ -214,16 +221,28 @@ MiniRunnerPresenter >> packagesWithTests [
 ]
 
 { #category : #'buttons-presenters-initialization' }
+MiniRunnerPresenter >> rerunFailedTests [
+
+	self inform: 'rerunning failures'.
+	self runner runFailures.
+	self updateResultPresenter
+]
+
+{ #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> rerunFailuresButtonPresenter [
 
 	^ self newButton
 		  label: 'Run failures';
 		  help: 'run failures';
-		  action: [ 
-			  self inform: 'rerunning failures'.
-			  self runner runFailures.
-			  self updateResultPresenter ];
+		  action: [ self rerunFailedTests ];
 		  yourself
+]
+
+{ #category : #'presenters-initialization' }
+MiniRunnerPresenter >> rerunSelectedTestAs: aBlock [
+	
+	aBlock value: resultPresenter selection selectedItem.
+	self updateResultPresenter
 ]
 
 { #category : #'presenters-initialization' }
@@ -233,11 +252,13 @@ MiniRunnerPresenter >> resultListContextMenu [
 		  addItem: [ :item | 
 			  item
 				  name: 'Rerun';
-				  action: [ self informUser: 'Do you want to rerun me ?' ] ];
+				  action: [ 
+					  self rerunSelectedTestAs: [ :test | runner runFailure: test ] ] ];
 		  addItem: [ :item | 
 			  item
-				  name: 'other';
-				  action: [ self informUser: 'Not implemented yet' ] ]
+				  name: 'Debug';
+				  action: [ 
+					  self rerunSelectedTestAs: [ :test | runner debugFailure: test ] ] ]
 ]
 
 { #category : #'buttons-presenters-initialization' }
