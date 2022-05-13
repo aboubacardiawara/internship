@@ -140,7 +140,7 @@ Runner >> hasTestsToRun [
 Runner >> initialize [
 
 	super initialize.
-	self resetSuite.
+	self resetSuites.
 	self doNotAccumulateResult.
 	self resetResult.
 	suitePreparator := self defaultSuitePreparator
@@ -157,7 +157,8 @@ Runner >> preProcessOnSuites [
 
 { #category : #tests }
 Runner >> raiseNotTestCaseException: aClass [
-	 ANoTestCaseException signal: aClass name, ' is not a testCase'
+
+	ANoTestCaseException signal: aClass name , ' is not a testCase'
 ]
 
 { #category : #running }
@@ -169,7 +170,7 @@ Runner >> resetResult [
 ]
 
 { #category : #tests }
-Runner >> resetSuite [
+Runner >> resetSuites [
 
 	suites := OrderedCollection new
 ]
@@ -187,7 +188,7 @@ Runner >> run [
 
 	self preProcessOnSuites.
 	self runTestsSuites.
-	self resetSuite.
+	self resetSuites.
 ]
 
 { #category : #running }
@@ -206,8 +207,11 @@ Runner >> runFailure: failure [
 
 	"remove it, run it, the update the result"
 
+	| aResult |
+	aResult := failure run.
+	aResult hasFailures ifTrue: [ ^ self ].
 	result removeFailure: failure.
-	self updateResultForFailure: failure run
+	self updateResultForFailure: aResult
 ]
 
 { #category : #running }
@@ -262,7 +266,7 @@ Runner >> suitePreparator: aSuitePreparator [
 { #category : #'instance creation' }
 Runner >> suites [
 
-	^ suites ifNil: [ self resetSuite ]
+	^ suites ifNil: [ self resetSuites ]
 ]
 
 { #category : #tests }
