@@ -1,29 +1,28 @@
 Class {
-	#name : #MiniRunnerPresenter,
+	#name : #AbstractRunnerPresenter,
 	#superclass : #SpPresenter,
 	#instVars : [
 		'packagesPresenter',
 		'classesPresenter',
 		'actionBarPresenter',
 		'runner',
-		'result',
 		'selectedPackages',
 		'selectedClasses',
-		'resultListPresenter',
+		'resultItemsPresenter',
 		'resultDescriptionPresenter'
 	],
 	#category : #'Runner-UI'
 }
 
 { #category : #'instance creation' }
-MiniRunnerPresenter class >> open [ 
+AbstractRunnerPresenter class >> open [ 
 	<script>
 	
 	^ self new open
 ]
 
 { #category : #'presenters-connection' }
-MiniRunnerPresenter >> allDefinedTestCases: aCollectionOfPackage [
+AbstractRunnerPresenter >> allDefinedTestCases: aCollectionOfPackage [
 
 	"return all the defined test cases from the giving pavkage"
 
@@ -32,7 +31,7 @@ MiniRunnerPresenter >> allDefinedTestCases: aCollectionOfPackage [
 ]
 
 { #category : #'presenters-connection' }
-MiniRunnerPresenter >> connectPackagesPresenter [
+AbstractRunnerPresenter >> connectPackagesPresenter [
 
 	packagesPresenter
 		transmitTo: classesPresenter
@@ -43,26 +42,26 @@ MiniRunnerPresenter >> connectPackagesPresenter [
 ]
 
 { #category : #initialization }
-MiniRunnerPresenter >> connectPresenters [
+AbstractRunnerPresenter >> connectPresenters [
 	super connectPresenters.
 	self connectPackagesPresenter
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenter >> containsTestCase: aPackage [
+AbstractRunnerPresenter >> containsTestCase: aPackage [
 
 	^ aPackage definedClasses anySatisfy: [ :class | class isTestCase ]
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenter >> debugSelectedTest [
+AbstractRunnerPresenter >> debugSelectedTest [
 
-	runner debugFailure: resultListPresenter selection selectedItem.
+	runner debugFailure: resultItemsPresenter selection selectedItem.
 	self updateResultPresenter.
 ]
 
 { #category : #initialization }
-MiniRunnerPresenter >> defaultLayout [
+AbstractRunnerPresenter >> defaultLayout [
 
 	| packagesLayout classesLayout resultLayout |
 	packagesLayout := SpBoxLayout newTopToBottom
@@ -80,7 +79,7 @@ MiniRunnerPresenter >> defaultLayout [
 		                spacing: 1;
 		                add: 'Execution result' expand: false;
 		                add: resultDescriptionPresenter height: 70;
-		                add: resultListPresenter;
+		                add: resultItemsPresenter;
 		                yourself.
 
 	^ SpBoxLayout newTopToBottom
@@ -96,13 +95,13 @@ MiniRunnerPresenter >> defaultLayout [
 ]
 
 { #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenter >> defaultRunnerClass [
+AbstractRunnerPresenter >> defaultRunnerClass [
 
 	^ Runner
 ]
 
 { #category : #'presenters-connection' }
-MiniRunnerPresenter >> definedClasses: aPackage [
+AbstractRunnerPresenter >> definedClasses: aPackage [
 
 	"return all the defined classes from the package either 
 	their are test case or not"
@@ -111,14 +110,14 @@ MiniRunnerPresenter >> definedClasses: aPackage [
 ]
 
 { #category : #'presenters-connection' }
-MiniRunnerPresenter >> definedTestCases: aPackage [
+AbstractRunnerPresenter >> definedTestCases: aPackage [
 
 	^ aPackage definedClasses asOrderedCollection select: [ :class | 
 		  class isTestCase and: class isAbstract not ]
 ]
 
 { #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenter >> execute: aCollectionOfClasses [
+AbstractRunnerPresenter >> execute: aCollectionOfClasses [
 
 	self initializeRunner.
 	aCollectionOfClasses
@@ -129,25 +128,19 @@ MiniRunnerPresenter >> execute: aCollectionOfClasses [
 ]
 
 { #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenter >> informInProgress [
+AbstractRunnerPresenter >> informInProgress [
 
-	resultListPresenter text: 'In progress ...'
+	resultDescriptionPresenter  text: 'In progress ...'
 ]
 
 { #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenter >> informUser: aMsgContain [
-
-	self inform: 'Info: ' , aMsgContain
-]
-
-{ #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenter >> initialize [
-
+AbstractRunnerPresenter >> initialize [
+	self initializeRunner.
 	super initialize
 ]
 
 { #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenter >> initializeActionBarPresenter [
+AbstractRunnerPresenter >> initializeActionBarPresenter [
 
 	actionBarPresenter := self newActionBar
 		                      add: self runTestsButtonPresenter;
@@ -156,7 +149,7 @@ MiniRunnerPresenter >> initializeActionBarPresenter [
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenter >> initializeClassesPresenter [
+AbstractRunnerPresenter >> initializeClassesPresenter [
 
 	classesPresenter := self instantiate: SpFilteringListPresenter.
 	classesPresenter listPresenter beMultipleSelection.
@@ -171,7 +164,7 @@ MiniRunnerPresenter >> initializeClassesPresenter [
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenter >> initializePackagesPresenter [
+AbstractRunnerPresenter >> initializePackagesPresenter [
 
 	packagesPresenter := self instantiate: SpFilteringListPresenter.
 	packagesPresenter listPresenter beMultipleSelection.
@@ -186,7 +179,7 @@ MiniRunnerPresenter >> initializePackagesPresenter [
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenter >> initializePresenters [
+AbstractRunnerPresenter >> initializePresenters [
 
 	self initializePackagesPresenter.
 	self initializeClassesPresenter.
@@ -195,24 +188,23 @@ MiniRunnerPresenter >> initializePresenters [
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenter >> initializeResultDescriptionPresenter [
+AbstractRunnerPresenter >> initializeResultDescriptionPresenter [
 	resultDescriptionPresenter := self newText beNotEditable
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenter >> initializeResultListPresenter [
-	resultListPresenter := self instantiate: SpListPresenter.
-	resultListPresenter contextMenu: self resultListContextMenu
+AbstractRunnerPresenter >> initializeResultItemsPresenter [
+	self subclassResponsibility
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenter >> initializeResultPresenter [
+AbstractRunnerPresenter >> initializeResultPresenter [
 	self initializeResultDescriptionPresenter.
-	self initializeResultListPresenter.
+	self initializeResultItemsPresenter.
 ]
 
 { #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenter >> initializeRunner [
+AbstractRunnerPresenter >> initializeRunner [
 
 	self runner: (self defaultRunnerClass new
 			 accumulateResult;
@@ -220,22 +212,22 @@ MiniRunnerPresenter >> initializeRunner [
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenter >> initializeWindow: aWindowPresenter [
+AbstractRunnerPresenter >> initializeWindow: aWindowPresenter [
 
 	aWindowPresenter
-		title: 'MiniUI for Runner';
+		title: self windowName;
 		initialExtent: 800 @ 600
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenter >> packagesWithTests [
+AbstractRunnerPresenter >> packagesWithTests [
 
 	^ RPackageOrganizer default packages select: [ :package | 
 		  self containsTestCase: package ]
 ]
 
 { #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenter >> rerunFailedTests [
+AbstractRunnerPresenter >> rerunFailedTests [
 
 	self inform: 'rerunning failures'.
 	self runner runFailures.
@@ -243,7 +235,7 @@ MiniRunnerPresenter >> rerunFailedTests [
 ]
 
 { #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenter >> rerunFailuresButtonPresenter [
+AbstractRunnerPresenter >> rerunFailuresButtonPresenter [
 
 	^ self newButton
 		  label: 'Run failures';
@@ -253,14 +245,14 @@ MiniRunnerPresenter >> rerunFailuresButtonPresenter [
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenter >> rerunSelectedTestAs: aBlock [
+AbstractRunnerPresenter >> rerunSelectedTestAs: aBlock [
 	
-	aBlock value: resultListPresenter selection selectedItem.
+	aBlock value: resultItemsPresenter selection selectedItem.
 	self updateResultPresenter
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenter >> resultListContextMenu [
+AbstractRunnerPresenter >> resultListContextMenu [
 
 	^ self newMenu
 		  addItem: [ :item | 
@@ -276,7 +268,7 @@ MiniRunnerPresenter >> resultListContextMenu [
 ]
 
 { #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenter >> runTestsButtonPresenter [
+AbstractRunnerPresenter >> runTestsButtonPresenter [
 
 	^ self newButton
 		  label: 'Run';
@@ -286,31 +278,31 @@ MiniRunnerPresenter >> runTestsButtonPresenter [
 ]
 
 { #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenter >> runner [
+AbstractRunnerPresenter >> runner [
 
 	^ runner
 ]
 
 { #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenter >> runner: aRunner [
+AbstractRunnerPresenter >> runner: aRunner [
 
 	runner := aRunner
 ]
 
 { #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenter >> selectedClasses [
+AbstractRunnerPresenter >> selectedClasses [
 
 	^ selectedClasses ifNil: [ selectedClasses := OrderedCollection new ]
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenter >> selectedClasses: aCollectionOfClasses [
+AbstractRunnerPresenter >> selectedClasses: aCollectionOfClasses [
 
 	selectedClasses := aCollectionOfClasses
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenter >> updateClassPresenter: aCollectionOfPackages [
+AbstractRunnerPresenter >> updateClassPresenter: aCollectionOfPackages [
 
 	classesPresenter items:
 		(aCollectionOfPackages collectAll: [ :package | 
@@ -318,12 +310,17 @@ MiniRunnerPresenter >> updateClassPresenter: aCollectionOfPackages [
 ]
 
 { #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenter >> updateResultPresenter [
+AbstractRunnerPresenter >> updateResultPresenter [
 
 	| failures resultMessage |
 	failures := runner result failures asOrderedCollection.
 	resultMessage := runner result asString.
 	
-	resultListPresenter items: failures.
+	resultItemsPresenter items: failures.
 	resultDescriptionPresenter text: resultMessage.
+]
+
+{ #category : #'presenters-initialization' }
+AbstractRunnerPresenter >> windowName [
+	self subclassResponsibility
 ]
