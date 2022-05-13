@@ -219,11 +219,5 @@ RunnerTest >> testSuiteWithMultipleTestCase [
 { #category : #tests }
 RunnerTest >> testreruningFailuresUsesTheSameRunnerConfiguration [
 
-	| result |
-	FailThenPass reset.
-	result := runner runCase: FailThenPass.
-	self assert: result hasFailures.
-
-	runner runFailures.
-	self assert: false description: 'continue writting the test'.
+	self assert: false
 ]

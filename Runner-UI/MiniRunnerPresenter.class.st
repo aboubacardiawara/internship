@@ -305,6 +305,8 @@ MiniRunnerPresenter >> updateClassPresenter: aCollectionOfPackages [
 
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> updateResultPresenter [
-
-	resultPresenter items: runner result failures asOrderedCollection
+	|failures resultMessage|
+	failures := runner result failures asOrderedCollection.
+	resultMessage := runner result asString.
+	resultPresenter items: (failures copyWithFirst: resultMessage)
 ]
