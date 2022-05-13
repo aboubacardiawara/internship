@@ -5,11 +5,12 @@ Class {
 		'packagesPresenter',
 		'classesPresenter',
 		'actionBarPresenter',
-		'resultPresenter',
 		'runner',
 		'result',
 		'selectedPackages',
-		'selectedClasses'
+		'selectedClasses',
+		'resultListPresenter',
+		'resultDescriptionPresenter'
 	],
 	#category : #'Runner-UI'
 }
@@ -56,7 +57,7 @@ MiniRunnerPresenter >> containsTestCase: aPackage [
 { #category : #'presenters-initialization' }
 MiniRunnerPresenter >> debugSelectedTest [
 
-	runner debugFailure: resultPresenter selection selectedItem.
+	runner debugFailure: resultListPresenter selection selectedItem.
 	self updateResultPresenter.
 ]
 
@@ -65,7 +66,8 @@ MiniRunnerPresenter >> defaultLayout [
 
 	| packagesLayout classesLayout resultLayout |
 	packagesLayout := SpBoxLayout newTopToBottom
-		                  add: 'Packages (Number of TestCases)' expand: false;
+		                  add: 'Packages (Number of TestCases)'
+		                  expand: false;
 		                  add: packagesPresenter;
 		                  yourself.
 
@@ -75,8 +77,10 @@ MiniRunnerPresenter >> defaultLayout [
 		                 yourself.
 
 	resultLayout := SpBoxLayout newTopToBottom
+		                spacing: 1;
 		                add: 'Execution result' expand: false;
-		                add: resultPresenter;
+		                add: resultDescriptionPresenter height: 70;
+		                add: resultListPresenter;
 		                yourself.
 
 	^ SpBoxLayout newTopToBottom
@@ -127,7 +131,7 @@ MiniRunnerPresenter >> execute: aCollectionOfClasses [
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> informInProgress [
 
-	resultPresenter text: 'In progress ...'
+	resultListPresenter text: 'In progress ...'
 ]
 
 { #category : #'buttons-presenters-initialization' }
@@ -186,8 +190,25 @@ MiniRunnerPresenter >> initializePresenters [
 
 	self initializePackagesPresenter.
 	self initializeClassesPresenter.
-	self initializeresultPresenter.
+	self initializeResultPresenter.
 	self initializeActionBarPresenter
+]
+
+{ #category : #'presenters-initialization' }
+MiniRunnerPresenter >> initializeResultDescriptionPresenter [
+	resultDescriptionPresenter := self newText beNotEditable
+]
+
+{ #category : #'presenters-initialization' }
+MiniRunnerPresenter >> initializeResultListPresenter [
+	resultListPresenter := self instantiate: SpListPresenter.
+	resultListPresenter contextMenu: self resultListContextMenu
+]
+
+{ #category : #'presenters-initialization' }
+MiniRunnerPresenter >> initializeResultPresenter [
+	self initializeResultDescriptionPresenter.
+	self initializeResultListPresenter.
 ]
 
 { #category : #'buttons-presenters-initialization' }
@@ -204,13 +225,6 @@ MiniRunnerPresenter >> initializeWindow: aWindowPresenter [
 	aWindowPresenter
 		title: 'MiniUI for Runner';
 		initialExtent: 800 @ 600
-]
-
-{ #category : #'presenters-initialization' }
-MiniRunnerPresenter >> initializeresultPresenter [
-
-	resultPresenter := self instantiate: SpListPresenter.
-	resultPresenter contextMenu: self resultListContextMenu
 ]
 
 { #category : #'presenters-initialization' }
@@ -241,7 +255,7 @@ MiniRunnerPresenter >> rerunFailuresButtonPresenter [
 { #category : #'presenters-initialization' }
 MiniRunnerPresenter >> rerunSelectedTestAs: aBlock [
 	
-	aBlock value: resultPresenter selection selectedItem.
+	aBlock value: resultListPresenter selection selectedItem.
 	self updateResultPresenter
 ]
 
@@ -305,8 +319,11 @@ MiniRunnerPresenter >> updateClassPresenter: aCollectionOfPackages [
 
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenter >> updateResultPresenter [
-	|failures resultMessage|
+
+	| failures resultMessage |
 	failures := runner result failures asOrderedCollection.
 	resultMessage := runner result asString.
-	resultPresenter items: (failures copyWithFirst: resultMessage)
+	
+	resultListPresenter items: failures.
+	resultDescriptionPresenter text: resultMessage.
 ]
