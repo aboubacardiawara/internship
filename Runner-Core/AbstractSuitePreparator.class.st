@@ -1,3 +1,6 @@
+"
+After building a TestSuite and after executing its tests, we would like to apply to it some process as randomisation. I repesent an abstract represent of any Class intented to do such things.
+"
 Class {
 	#name : #AbstractSuitePreparator,
 	#superclass : #Object,
