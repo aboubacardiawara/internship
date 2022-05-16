@@ -77,5 +77,4 @@ DependencyTest >> testDataIs14ThenIncrement [
 DependencyTest >> testDataIs15ThenIncrement [
 
 	self assert: self class data equals: 15.
-	self class incrementData
 ]
