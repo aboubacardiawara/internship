@@ -15,10 +15,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-AbstractRunnerPresenter class >> open [ 
+AbstractRunnerPresenter class >> open [
+
 	<script>
-	
-	^ self new open
+	self subclassResponsibility
 ]
 
 { #category : #'presenters-connection' }
