@@ -12,6 +12,17 @@ MiniRunnerPresenterTree class >> open [
 ]
 
 { #category : #'presenters-initialization' }
+MiniRunnerPresenterTree >> generateTree [
+
+	resultItemsPresenter
+		roots: { #failures };
+		children: [ :parent | 
+			parent = #failures
+				ifFalse: [ {  } ]
+				ifTrue: [ runner result failures ] ]
+]
+
+{ #category : #'presenters-initialization' }
 MiniRunnerPresenterTree >> initializeResultItemsPresenter [
 
 	resultItemsPresenter := self newTreeTable.
@@ -23,23 +34,18 @@ MiniRunnerPresenterTree >> initializeResultItemsPresenter [
 		addColumn: (SpCompositeTableColumn new
 				 width: 50;
 				 title: 'total';
-				 yourself);
-		roots: { 'failures' };
-		children: [ :parent | 
-			parent = 'failures'
-				ifTrue: [ runner result failures ]
-				ifFalse: '' ]
+				 yourself).
+	self generateTree.
 ]
 
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenterTree >> updateResultPresenter [
 
 	| resultMessage |
-	runner result failures asOrderedCollection.
 	resultMessage := runner result asString.
-	
+
 	resultDescriptionPresenter text: resultMessage.
-	self initializeResultItemsPresenter.
+	self generateTree
 ]
 
 { #category : #'presenters-initialization' }
