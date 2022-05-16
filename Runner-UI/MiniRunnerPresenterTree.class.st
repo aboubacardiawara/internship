@@ -12,14 +12,21 @@ MiniRunnerPresenterTree class >> open [
 ]
 
 { #category : #'presenters-initialization' }
+MiniRunnerPresenterTree >> childreenFor: aParent [
+
+	aParent = #failures ifTrue: [ ^ runner result failures ].
+	aParent = #errors ifTrue: [ ^ runner result errors ].
+	^ {  }
+]
+
+{ #category : #'presenters-initialization' }
 MiniRunnerPresenterTree >> generateTree [
 
+	runner allTestPassed ifTrue: [ ^ self ].
 	resultItemsPresenter
-		roots: { #failures };
+		roots: self rootCandidates;
 		children: [ :parent | 
-			parent = #failures
-				ifFalse: [ {  } ]
-				ifTrue: [ runner result failures ] ]
+			(self childreenFor: parent) asOrderedCollection ]
 ]
 
 { #category : #'presenters-initialization' }
@@ -36,6 +43,16 @@ MiniRunnerPresenterTree >> initializeResultItemsPresenter [
 				 title: 'total';
 				 yourself).
 	self generateTree.
+]
+
+{ #category : #'presenters-initialization' }
+MiniRunnerPresenterTree >> rootCandidates [
+
+	| rootCandidats |
+	rootCandidats := OrderedCollection new.
+	runner someTestFailed ifTrue: [ rootCandidats add: #failures ].
+	runner someTestCausesError ifTrue: [ rootCandidats add: #errors ].
+	^ rootCandidats
 ]
 
 { #category : #'buttons-presenters-initialization' }
