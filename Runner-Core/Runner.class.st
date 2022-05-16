@@ -71,6 +71,11 @@ Runner >> accumulateResult [
 	self shouldAccumulate: true
 ]
 
+{ #category : #accessing }
+Runner >> allTestPassed [
+	^ result passedCount = result runCount
+]
+
 { #category : #running }
 Runner >> debugFailure: failure [
 
@@ -249,6 +254,18 @@ Runner >> shouldAccumulate [
 Runner >> shouldAccumulate: aBoolean [
 
 	shouldAccumulate := aBoolean
+]
+
+{ #category : #accessing }
+Runner >> someTestCausesError [
+
+	^ result hasErrors
+]
+
+{ #category : #accessing }
+Runner >> someTestFailed [
+
+	^ result hasFailures
 ]
 
 { #category : #accessing }
