@@ -16,6 +16,7 @@ MiniRunnerPresenterTree >> childreenFor: aParent [
 
 	aParent = #failures ifTrue: [ ^ runner result failures ].
 	aParent = #errors ifTrue: [ ^ runner result errors ].
+	"..."
 	^ {  }
 ]
 
@@ -41,8 +42,28 @@ MiniRunnerPresenterTree >> initializeResultItemsPresenter [
 		addColumn: (SpCompositeTableColumn new
 				 width: 50;
 				 title: 'total';
-				 yourself).
-	self generateTree.
+				 yourself);
+		contextMenu: self menu.
+	self generateTree
+]
+
+{ #category : #'presenters-initialization' }
+MiniRunnerPresenterTree >> menu [
+
+	^ self newMenu
+		  title: 'Context menu example';
+		  addGroup: [ :aGroup | 
+			  aGroup
+				  addItem: [ :anItem | 
+					  anItem
+						  name: 'run';
+						  description: 'run the selected test';
+						  action: [ self runSelectedTest ] ];
+				  addItem: [ :anItem | 
+					  anItem
+						  name: 'debug';
+						  description: 'debug the selected test';
+						  action: [ self debugSelectedTest ] ] ]
 ]
 
 { #category : #'presenters-initialization' }

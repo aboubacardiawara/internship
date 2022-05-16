@@ -17,6 +17,20 @@ MiniRunnerPresenterList >> initializeResultItemsPresenter [
 	resultItemsPresenter contextMenu: self resultListContextMenu
 ]
 
+{ #category : #'presenters-initialization' }
+MiniRunnerPresenterList >> resultListContextMenu [
+
+	^ self newMenu
+		  addItem: [ :item | 
+			  item
+				  name: 'Rerun';
+				  action: [ self runSelectedTest ] ];
+		  addItem: [ :item | 
+			  item
+				  name: 'Debug';
+				  action: [ self debugSelectedTest ] ]
+]
+
 { #category : #'buttons-presenters-initialization' }
 MiniRunnerPresenterList >> updateResultPresenter [
 

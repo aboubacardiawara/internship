@@ -56,8 +56,7 @@ AbstractRunnerPresenter >> containsTestCase: aPackage [
 { #category : #'presenters-initialization' }
 AbstractRunnerPresenter >> debugSelectedTest [
 
-	runner debugFailure: resultItemsPresenter selection selectedItem.
-	self updateResultPresenter.
+	self rerunSelectedTestAs: [ :test | runner debugFailure: test ]
 ]
 
 { #category : #initialization }
@@ -252,19 +251,9 @@ AbstractRunnerPresenter >> rerunSelectedTestAs: aBlock [
 ]
 
 { #category : #'presenters-initialization' }
-AbstractRunnerPresenter >> resultListContextMenu [
+AbstractRunnerPresenter >> runSelectedTest [
 
-	^ self newMenu
-		  addItem: [ :item | 
-			  item
-				  name: 'Rerun';
-				  action: [ 
-					  self rerunSelectedTestAs: [ :test | runner runFailure: test ] ] ];
-		  addItem: [ :item | 
-			  item
-				  name: 'Debug';
-				  action: [ 
-					  self rerunSelectedTestAs: [ :test | runner debugFailure: test ] ] ]
+	self rerunSelectedTestAs: [ :test | runner runFailure: test ]
 ]
 
 { #category : #'buttons-presenters-initialization' }
