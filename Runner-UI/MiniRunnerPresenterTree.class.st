@@ -27,7 +27,8 @@ MiniRunnerPresenterTree >> generateTree [
 	resultItemsPresenter
 		roots: self rootCandidates;
 		children: [ :parent | 
-			(self childreenFor: parent) asOrderedCollection ]
+			(self childreenFor: parent) asOrderedCollection ];
+		expandPath: #(1)
 ]
 
 { #category : #'presenters-initialization' }
@@ -56,13 +57,13 @@ MiniRunnerPresenterTree >> menu [
 			  aGroup
 				  addItem: [ :anItem | 
 					  anItem
-						  name: 'run';
-						  description: 'run the selected test';
+						  name: 'Run';
+						  description: 'Run the selected test';
 						  action: [ self runSelectedTest ] ];
 				  addItem: [ :anItem | 
 					  anItem
-						  name: 'debug';
-						  description: 'debug the selected test';
+						  name: 'Debug';
+						  description: 'Debug the selected test';
 						  action: [ self debugSelectedTest ] ] ]
 ]
 
