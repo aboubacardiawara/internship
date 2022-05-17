@@ -151,8 +151,14 @@ Runner >> initialize [
 	suitePreparator := self defaultSuitePreparator
 ]
 
+{ #category : #running }
+Runner >> postExecution [
+
+	self resetSuites
+]
+
 { #category : #'as yet unclassified' }
-Runner >> preProcessOnSuites [
+Runner >> preExecution [
 
 	"we would like to process suites before execution (e.g shufling the tests, ...). It can be useful 
 	for tests dependancy detection"
@@ -191,9 +197,9 @@ Runner >> run [
 
 	"run all the suite then return the result"
 
-	self preProcessOnSuites.
+	self preExecution.
 	self runTestsSuites.
-	self resetSuites.
+	self postExecution
 ]
 
 { #category : #running }
@@ -283,7 +289,7 @@ Runner >> suitePreparator: aSuitePreparator [
 { #category : #'instance creation' }
 Runner >> suites [
 
-	^ suites ifNil: [ self resetSuites ]
+	^ suites ifNil: [ self postExecution ]
 ]
 
 { #category : #tests }
