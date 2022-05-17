@@ -5,18 +5,24 @@ Class {
 	#name : #CoverageRunner,
 	#superclass : #Runner,
 	#instVars : [
-		'classes'
+		'classes',
+		'link',
+		'methods',
+		'covered',
+		'uncovered'
 	],
 	#category : #'Runner-Core-Core'
 }
 
 { #category : #adding }
-CoverageRunner >> addClass: aClass [ 
+CoverageRunner >> addClass: aClass [
+
 	classes add: aClass
 ]
 
 { #category : #adding }
 CoverageRunner >> addTestCase: aTestCase [
+
 	self testSuiteFromClass: aTestCase
 ]
 
@@ -36,37 +42,70 @@ CoverageRunner >> classes [
 ]
 
 { #category : #coverage }
-CoverageRunner >> collectAllMethodsWithLink: aLink [
+CoverageRunner >> collectAllMethodsWithLink [
 
-	| methods |
 	methods := self allClassMethods.
-	methods do: [ :method | method ast link: aLink ].
-	^ methods
+	methods do: [ :method | method ast link: link ]
 ]
 
 { #category : #coverage }
 CoverageRunner >> coverage [
 
-	| methods link notExecuted |
-	link := link := MetaLink new
-		                selector: #tagExecuted;
-		                metaObject: #node.
-	methods := self collectAllMethodsWithLink: link.
-	[ self runTestsSuites ] ensure: [ link uninstall ].
-	notExecuted := methods reject: [ :each | each ast hasBeenExecuted ].
-	self removeAnnotationsFrom: methods.
-	^ 100 - (100 * notExecuted size // methods size)
+	^ 100 - (100 * self unCovered size // methods size)
 ]
 
-{ #category : #adding }
+{ #category : #initialization }
 CoverageRunner >> initialize [
+
 	super initialize.
 	classes := OrderedCollection new.
+	link := MetaLink new
+		        selector: #tagExecuted;
+		        metaObject: #node
 ]
 
 { #category : #coverage }
-CoverageRunner >> removeAnnotationsFrom: aMethod [
+CoverageRunner >> methods [
 
-	aMethod do: [ :each | 
+	^ methods
+]
+
+{ #category : #running }
+CoverageRunner >> postExecution [
+
+	link uninstall.
+	self saveCoveredMethods.
+	self saveUnCoveredMethods.
+	self removeAnnotationsFromMethods
+]
+
+{ #category : #coverage }
+CoverageRunner >> preExecution [
+	
+	self collectAllMethodsWithLink.
+]
+
+{ #category : #coverage }
+CoverageRunner >> removeAnnotationsFromMethods [
+
+	methods do: [ :each | 
 		each ast removeProperty: #tagExecuted ifAbsent: [  ] ]
+]
+
+{ #category : #coverage }
+CoverageRunner >> saveCoveredMethods [
+
+	covered := methods select: [ :each | each ast hasBeenExecuted ]
+]
+
+{ #category : #coverage }
+CoverageRunner >> saveUnCoveredMethods [
+
+	uncovered := methods reject: [ :each | each ast hasBeenExecuted ]
+]
+
+{ #category : #coverage }
+CoverageRunner >> unCovered [
+
+	^ uncovered
 ]
