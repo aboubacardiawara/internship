@@ -73,6 +73,7 @@ Runner >> accumulateResult [
 
 { #category : #accessing }
 Runner >> allTestPassed [
+
 	^ result passedCount = result runCount
 ]
 

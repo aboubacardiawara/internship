@@ -17,7 +17,14 @@ Class {
 { #category : #adding }
 CoverageRunner >> addClass: aClass [
 
-	classes add: aClass
+	self classes add: aClass.
+	self updateMethods: aClass
+]
+
+{ #category : #coverage }
+CoverageRunner >> addLinkToAllMethodsFromClasses [
+
+	methods do: [ :method | method ast link: link ]
 ]
 
 { #category : #adding }
@@ -27,7 +34,7 @@ CoverageRunner >> addTestCase: aTestCase [
 ]
 
 { #category : #coverage }
-CoverageRunner >> allClassMethods [
+CoverageRunner >> allClassesMethods [
 
 	| res |
 	res := OrderedCollection new.
@@ -38,36 +45,45 @@ CoverageRunner >> allClassMethods [
 { #category : #coverage }
 CoverageRunner >> classes [
 
-	^ classes
-]
-
-{ #category : #coverage }
-CoverageRunner >> collectAllMethodsWithLink [
-
-	methods := self allClassMethods.
-	methods do: [ :method | method ast link: link ]
+	^ classes ifNil: [ classes := OrderedCollection new ]
 ]
 
 { #category : #coverage }
 CoverageRunner >> coverage [
 
-	^ 100 - (100 * self unCovered size // methods size)
+	self classes isEmpty ifTrue: [ self error: 'Any classes to run' ].
+	^ 100 - (100 * self unCovered size // self methods size)
+]
+
+{ #category : #testing }
+CoverageRunner >> hasClassToRun [
+
+	^ self classes size > 0
 ]
 
 { #category : #initialization }
 CoverageRunner >> initialize [
 
 	super initialize.
-	classes := OrderedCollection new.
 	link := MetaLink new
 		        selector: #tagExecuted;
 		        metaObject: #node
 ]
 
 { #category : #coverage }
+CoverageRunner >> initializeMethods [
+	methods := self allClassesMethods.
+]
+
+{ #category : #accessing }
+CoverageRunner >> link [
+	^ link
+]
+
+{ #category : #coverage }
 CoverageRunner >> methods [
 
-	^ methods
+	^ methods ifNil: [ methods := OrderedCollection new ]
 ]
 
 { #category : #running }
@@ -82,7 +98,7 @@ CoverageRunner >> postExecution [
 { #category : #coverage }
 CoverageRunner >> preExecution [
 	
-	self collectAllMethodsWithLink.
+	self addLinkToAllMethodsFromClasses.
 ]
 
 { #category : #coverage }
@@ -107,5 +123,11 @@ CoverageRunner >> saveUnCoveredMethods [
 { #category : #coverage }
 CoverageRunner >> unCovered [
 
-	^ uncovered
+	^ uncovered ifNil: [ uncovered := OrderedCollection new ]
+]
+
+{ #category : #adding }
+CoverageRunner >> updateMethods: aClass [
+
+	self methods addAll: aClass methods
 ]
