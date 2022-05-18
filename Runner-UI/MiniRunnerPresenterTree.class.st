@@ -23,12 +23,11 @@ MiniRunnerPresenterTree >> childreenFor: aParent [
 { #category : #'presenters-initialization' }
 MiniRunnerPresenterTree >> generateTree [
 
-	runner allTestPassed ifTrue: [ ^ self ].
 	resultItemsPresenter
 		roots: self rootCandidates;
 		children: [ :parent | 
 			(self childreenFor: parent) asOrderedCollection ];
-		expandPath: #(1)
+		expandPath: #( 1 )
 ]
 
 { #category : #'presenters-initialization' }
