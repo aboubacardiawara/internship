@@ -14,6 +14,27 @@ CoverageRunnerTest >> setUp [
 ]
 
 { #category : #tests }
+CoverageRunnerTest >> testAddingClassToCoverageRunner [
+
+	| expectedMethodsCount |
+	coverageRunner addClass: Integer.
+	expectedMethodsCount := Integer methods size.
+	coverageRunner addClass: Runner.
+	expectedMethodsCount := expectedMethodsCount + Runner methods size.
+
+	self assert: coverageRunner methods size equals: expectedMethodsCount
+]
+
+{ #category : #tests }
+CoverageRunnerTest >> testAllMethodsHaveAnnotationAfterPeRunningProcess [
+
+	coverageRunner addClass: Integer.
+	coverageRunner addLinkToAllMethodsFromClasses.
+	self assert: (coverageRunner methods allSatisfy: [ :m |
+			m ast hasMetalink: coverageRunner link ])
+]
+
+{ #category : #tests }
 CoverageRunnerTest >> testCoverageOn1ClassesAnd2Test [
 
 	coverageRunner addTestCase: MyClassCovered50Test.
@@ -75,11 +96,43 @@ CoverageRunnerTest >> testCoverageOn2ClassesAnd2Tests [
 ]
 
 { #category : #tests }
+CoverageRunnerTest >> testLinksAreRemovedFromMethodAtTheEndOfPostExecution [
+
+	coverageRunner addClass: Integer.
+	coverageRunner run.
+	self assert: (coverageRunner methods allSatisfy: [ :m | 
+			 (m ast hasMetalink: coverageRunner link) not ])
+]
+
+{ #category : #tests }
+CoverageRunnerTest >> testNewCoverageRunnerHasAnyTestToRun [
+
+	self deny: coverageRunner hasClassToRun
+]
+
+{ #category : #tests }
+CoverageRunnerTest >> testNewCreatedCoverageRunnerCoverageIsNil [
+
+	self should: [ coverageRunner coverage equals: 0 ] raise: Error
+]
+
+{ #category : #tests }
+CoverageRunnerTest >> testNewCreatedMethodsDoesNotHaveAnnotation [
+
+	coverageRunner addClass: Integer.
+	coverageRunner initializeMethods.
+	self assert: (coverageRunner methods allSatisfy: [ :m | 
+			 (m ast hasMetalink: coverageRunner link) not ])
+]
+
+{ #category : #tests }
 CoverageRunnerTest >> testOnClassCoveredHalf [
 
 	coverageRunner addTestCase: MyClassCovered50Test.
 	coverageRunner addClass: MyClassCovered50.
+	
 	coverageRunner run.
+	
 	self assert: coverageRunner coverage equals: 50
 ]
 
@@ -87,8 +140,11 @@ CoverageRunnerTest >> testOnClassCoveredHalf [
 CoverageRunnerTest >> testOnClassFullyCovered [
 
 	coverageRunner addTestCase: MyClassCovered100Test.
+	
 	coverageRunner addClass: MyClassCovered100.
+	
 	coverageRunner run.
+	
 	self assert: coverageRunner coverage equals: 100
 ]
 
@@ -96,8 +152,11 @@ CoverageRunnerTest >> testOnClassFullyCovered [
 CoverageRunnerTest >> testOnNotCoveredClass [
 
 	coverageRunner addTestCase: MyClassCovered100Test.
+	
 	coverageRunner addClass: MyClassCovered50.
+	
 	coverageRunner run.
+	
 	self assert: coverageRunner coverage equals: 0
 ]
 
