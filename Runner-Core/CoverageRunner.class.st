@@ -104,7 +104,7 @@ CoverageRunner >> preExecution [
 { #category : #coverage }
 CoverageRunner >> removeAnnotationsFromMethods [
 
-	methods do: [ :each | 
+	self methods do: [ :each | 
 		each ast removeProperty: #tagExecuted ifAbsent: [  ] ]
 ]
 
