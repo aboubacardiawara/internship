@@ -1,6 +1,6 @@
 Class {
 	#name : #AnyEffectSuitePreparatorTest,
-	#superclass : #TestCaseCopy,
+	#superclass : #TestCase,
 	#instVars : [
 		'runner'
 	],
