@@ -126,15 +126,6 @@ Runner >> doNotAccumulateResult [
 	self shouldAccumulate: false
 ]
 
-{ #category : #processing }
-Runner >> executeSuite: aTestSuite as: aBlock [
-
-	" The block defines how to interact with the suite. run with a result or debug"
-
-	[ aBlock cull: aTestSuite cull: result ] ensure: [ 
-		aTestSuite unsubscribe: TestAnnouncement ]
-]
-
 { #category : #initialization }
 Runner >> executionMode [
 
@@ -257,10 +248,6 @@ Runner >> runFailures [
 Runner >> runSuite: aTestSuite [
 
 	result := result + (self executionMode executeSuite: aTestSuite)
-	
-	"self
-		executeSuite: aTestSuite
-		as: [ :aSuite :aResult | aSuite run: aResult ]"
 ]
 
 { #category : #running }

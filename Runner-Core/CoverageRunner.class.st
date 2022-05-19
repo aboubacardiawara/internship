@@ -58,7 +58,7 @@ CoverageRunner >> coverage [
 { #category : #testing }
 CoverageRunner >> hasClassToRun [
 
-	^ self classes size > 0
+	^ self classes isNotEmpty
 ]
 
 { #category : #initialization }
