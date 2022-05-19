@@ -153,10 +153,11 @@ AbstractRunnerPresenter >> initialize [
 { #category : #'buttons-presenters-initialization' }
 AbstractRunnerPresenter >> initializeActionBarPresenter [
 
-	actionBarPresenter := self newActionBar
-		                      add: self runTestsButtonPresenter;
-		                      add: self rerunFailuresButtonPresenter;
-		                      add: self debugerOn1stFailureButtonPresenters;
+	actionBarPresenter := SpBoxLayout newLeftToRight
+		                      spacing: 5;
+		                      add: self runTestsButtonPresenter expand: false;
+		                      add: self rerunFailuresButtonPresenter expand: false;
+		                      add: self debugerOn1stFailureButtonPresenters expand: false;
 		                      yourself
 ]
 
@@ -273,7 +274,13 @@ AbstractRunnerPresenter >> runSelectedTest [
 { #category : #'buttons-presenters-initialization' }
 AbstractRunnerPresenter >> runSelectedTestsWithDebugFirstRunner [
 
-	self notYetImplemented
+	self runner switchToDebugMode.
+	selectedClasses
+		do: [ :testCase | 
+			runner runCase: testCase.
+			self updateResultPresenter ]
+		displayingProgress: 'Running Tests'.
+	self runner switchToRunMode
 ]
 
 { #category : #'buttons-presenters-initialization' }
