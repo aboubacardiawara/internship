@@ -61,6 +61,16 @@ AbstractRunnerPresenter >> debugSelectedTest [
 	self rerunSelectedTestAs: [ :test | runner debugFailure: test ]
 ]
 
+{ #category : #'buttons-presenters-initialization' }
+AbstractRunnerPresenter >> debugerOn1stFailureButtonPresenters [
+
+	^ self newButton
+		  label: 'Debug 1st';
+		  help: 'Open the debuger on the first failure';
+		  action: [ self runSelectedTestsWithDebugFirstRunner ];
+		  yourself
+]
+
 { #category : #initialization }
 AbstractRunnerPresenter >> defaultLayout [
 
@@ -146,6 +156,7 @@ AbstractRunnerPresenter >> initializeActionBarPresenter [
 	actionBarPresenter := self newActionBar
 		                      add: self runTestsButtonPresenter;
 		                      add: self rerunFailuresButtonPresenter;
+		                      add: self debugerOn1stFailureButtonPresenters;
 		                      yourself
 ]
 
@@ -157,7 +168,8 @@ AbstractRunnerPresenter >> initializeClassesPresenter [
 	classesPresenter listPresenter sortingBlock: [ :a :b | 
 		a name < b name ].
 	classesPresenter
-		display: [ :class | class name ];
+		display: [ :class | 
+			class name , ' (' , class testSelectors size asString, ')' ];
 		displayIcon: [ :class | class systemIcon ];
 		whenSelectionChangedDo: [ :selectionItemMode | 
 			selectionItemMode isEmpty ifFalse: [ 
@@ -256,6 +268,12 @@ AbstractRunnerPresenter >> rerunSelectedTestAs: aBlock [
 AbstractRunnerPresenter >> runSelectedTest [
 
 	self rerunSelectedTestAs: [ :test | runner runFailure: test ]
+]
+
+{ #category : #'buttons-presenters-initialization' }
+AbstractRunnerPresenter >> runSelectedTestsWithDebugFirstRunner [
+
+	self notYetImplemented
 ]
 
 { #category : #'buttons-presenters-initialization' }
