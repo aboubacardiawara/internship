@@ -65,8 +65,8 @@ AbstractRunnerPresenter >> debugSelectedTest [
 AbstractRunnerPresenter >> debugerOn1stFailureButtonPresenters [
 
 	^ self newButton
-		  label: 'Debug 1st';
-		  help: 'Open the debuger on the first failure';
+		  label: 'Debug';
+		  help: 'Open the debuger on the first failure if some fail';
 		  action: [ self runSelectedTestsWithDebugFirstRunner ];
 		  yourself
 ]
