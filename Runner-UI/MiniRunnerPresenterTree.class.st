@@ -1,3 +1,6 @@
+"
+I am a mini UI TestRunner and i present the result as a Tree.
+"
 Class {
 	#name : #MiniRunnerPresenterTree,
 	#superclass : #AbstractRunnerPresenter,

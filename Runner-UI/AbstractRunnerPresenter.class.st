@@ -1,3 +1,6 @@
+"
+I am an abstract mini ui runner for tests. 
+"
 Class {
 	#name : #AbstractRunnerPresenter,
 	#superclass : #SpPresenter,
@@ -6,7 +9,6 @@ Class {
 		'classesPresenter',
 		'actionBarPresenter',
 		'runner',
-		'selectedPackages',
 		'selectedClasses',
 		'resultItemsPresenter',
 		'resultDescriptionPresenter'

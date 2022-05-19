@@ -1,3 +1,6 @@
+"
+I am a mini UI TestRunner and i present the result as a List.
+"
 Class {
 	#name : #MiniRunnerPresenterList,
 	#superclass : #AbstractRunnerPresenter,
