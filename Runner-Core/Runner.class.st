@@ -43,7 +43,8 @@ Class {
 		'suites',
 		'result',
 		'suitePreparator',
-		'shouldAccumulate'
+		'shouldAccumulate',
+		'executionMode'
 	],
 	#category : #'Runner-Core-Core'
 }
@@ -63,7 +64,7 @@ Runner class >> runCase: aTestCase [
 		runCase: aTestCase
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #processing }
 Runner >> accumulateResult [
 
 	"activate the results accumulation behavior"
@@ -90,10 +91,16 @@ Runner >> debugFailure: failure [
 	self updateResultForFailure: debugResult
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 Runner >> defaultExecutionEnvironmentClass [
 
 	^ CurrentExecutionEnvironment
+]
+
+{ #category : #running }
+Runner >> defaultExecutionModeClass [
+
+	^ RunMode
 ]
 
 { #category : #running }
@@ -111,7 +118,7 @@ Runner >> defaultTestResultClass [
 	^ TestResult
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 Runner >> doNotAccumulateResult [
 
 	"activate the results accumulation behavior"
@@ -126,6 +133,19 @@ Runner >> executeSuite: aTestSuite as: aBlock [
 
 	[ aBlock cull: aTestSuite cull: result ] ensure: [ 
 		aTestSuite unsubscribe: TestAnnouncement ]
+]
+
+{ #category : #initialization }
+Runner >> executionMode [
+
+	^ executionMode ifNil: [ 
+		  executionMode := self defaultExecutionModeClass]
+]
+
+{ #category : #running }
+Runner >> executionMode: anExecutionMode [
+
+	executionMode := anExecutionMode
 ]
 
 { #category : #testing }
@@ -149,7 +169,6 @@ Runner >> initialize [
 	self resetSuites.
 	self doNotAccumulateResult.
 	self resetResult.
-	suitePreparator := self defaultSuitePreparator
 ]
 
 { #category : #running }
@@ -158,7 +177,7 @@ Runner >> postExecution [
 	self resetSuites
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #processing }
 Runner >> preExecution [
 
 	"we would like to process suites before execution (e.g shufling the tests, ...). It can be useful 
@@ -237,9 +256,11 @@ Runner >> runFailures [
 { #category : #running }
 Runner >> runSuite: aTestSuite [
 
-	self
+	result := result + (self executionMode executeSuite: aTestSuite)
+	
+	"self
 		executeSuite: aTestSuite
-		as: [ :aSuite :aResult | aSuite run: aResult ]
+		as: [ :aSuite :aResult | aSuite run: aResult ]"
 ]
 
 { #category : #running }
@@ -278,7 +299,8 @@ Runner >> someTestFailed [
 { #category : #accessing }
 Runner >> suitePreparator [
 
-	^ suitePreparator
+	^ suitePreparator ifNil: [ 
+		  suitePreparator := self defaultSuitePreparator ]
 ]
 
 { #category : #adding }
