@@ -1,6 +1,6 @@
 Class {
 	#name : #ShuffleSuitePreparatorTest,
-	#superclass : #TestCaseCopy,
+	#superclass : #TestCase,
 	#instVars : [
 		'runner'
 	],
