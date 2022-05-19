@@ -215,9 +215,3 @@ RunnerTest >> testSuiteWithMultipleTestCase [
 	self assert: runner suites size equals: 3.
 	self assert: runner testsCount equals: 2 + 2 + 3
 ]
-
-{ #category : #tests }
-RunnerTest >> testreruningFailuresUsesTheSameRunnerConfiguration [
-
-	self skip
-]
