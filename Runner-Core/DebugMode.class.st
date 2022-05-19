@@ -8,7 +8,7 @@ Class {
 DebugMode class >> executeSuite: aTestSuite [
 
 	| result |
-	result := self defaultTestResultClass.
+	result := self defaultTestResultClass new.
 	" The block defines how to interact with the suite. run with a result or debug"
 	[ aTestSuite debug ] ensure: [ 
 		aTestSuite unsubscribe: TestAnnouncement ].

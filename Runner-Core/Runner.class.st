@@ -302,6 +302,18 @@ Runner >> suites [
 	^ suites ifNil: [ self postExecution ]
 ]
 
+{ #category : #running }
+Runner >> switchToDebugMode [
+
+	self executionMode: DebugMode
+]
+
+{ #category : #running }
+Runner >> switchToRunMode [
+
+	self executionMode: RunMode
+]
+
 { #category : #tests }
 Runner >> testSuiteFromClass: aClass [
 
