@@ -3,9 +3,29 @@ SUnit test for TestCase class
 "
 Class {
 	#name : #TestCaseTest,
-	#superclass : #TestCase,
+	#superclass : #ParametrizedTestCase,
+	#instVars : [
+		'factoryForTestCaseTestClass',
+		'testCaseClass'
+	],
 	#category : #'SUnit-Tests-Core'
 }
+
+{ #category : #tests }
+TestCaseTest class >> testParameters [
+
+	^ ParametrizedTestMatrix new
+		  addCase: { 
+				  (#factoryForTestCaseTestClass -> ClassFactoryForTestCaseTest).
+				  (#testCaseClass -> TestCase) };
+		  yourself
+]
+
+{ #category : #setter }
+TestCaseTest >> factoryForTestCaseTestClass: aClass [
+
+	factoryForTestCaseTestClass := aClass
+]
 
 { #category : #events }
 TestCaseTest >> testAnnouncement [
@@ -47,6 +67,12 @@ TestCaseTest >> testAssertEqualsActualAndExpectedOrder [
 		raise: TestFailure 
 		whoseDescriptionIncludes: 'Got ''actual'' instead of ''expected with fairly long print string''.' 
 		description: 'In #assert:equals: the first argument is the actual value and the second one is the expected.'.
+]
+
+{ #category : #setter }
+TestCaseTest >> testCaseClass: aClass [
+
+	testCaseClass := aClass
 ]
 
 { #category : #testing }
