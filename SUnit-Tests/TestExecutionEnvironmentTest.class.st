@@ -3,7 +3,10 @@ Class {
 	#superclass : #TestExecutionEnvironmentTestCase,
 	#instVars : [
 		'exampleTestBlock',
-		'ranTest'
+		'ranTest',
+		'serviceExampleTestClass',
+		'tooMuchTimeTestErrorClass',
+		'processMonitorTestServiceClass'
 	],
 	#category : #'SUnit-Tests-Core'
 }
@@ -11,6 +14,18 @@ Class {
 { #category : #accessing }
 TestExecutionEnvironmentTest class >> defaultTimeLimit [
 	^9.1 seconds
+]
+
+{ #category : #accessing }
+TestExecutionEnvironmentTest class >> testParameters [
+
+	^ ParametrizedTestMatrix new
+		  addCase: { 
+				  (#executionEnvForTestClass -> TestExecutionEnvironment).
+				  (#serviceExampleTestClass -> TestServiceExample).
+				  (#tooMuchTimeTestErrorClass -> TestTookTooMuchTime).
+				  (#processMonitorTestServiceClass -> ProcessMonitorTestService) };
+		  yourself
 ]
 
 { #category : #running }
@@ -30,6 +45,11 @@ TestExecutionEnvironmentTest >> exampleTestBlock: anObject [
 	exampleTestBlock := anObject
 ]
 
+{ #category : #setter }
+TestExecutionEnvironmentTest >> processMonitorTestServiceClass: aClass [ 
+	processMonitorTestServiceClass := aClass
+]
+
 { #category : #helpers }
 TestExecutionEnvironmentTest >> runTestWith: aBlock [
 
@@ -47,6 +67,11 @@ TestExecutionEnvironmentTest >> runTestWith: aBlock [
 TestExecutionEnvironmentTest >> serviceExampleTestClass [
 
 	^ TestServiceExample
+]
+
+{ #category : #setter }
+TestExecutionEnvironmentTest >> serviceExampleTestClass: aClass [ 
+	serviceExampleTestClass := aClass
 ]
 
 { #category : #tests }
@@ -451,4 +476,9 @@ TestExecutionEnvironmentTest >> testRunningTooLongTest [
 TestExecutionEnvironmentTest >> tooMuchTimeTestErrorClass [
 
 	^ TestTookTooMuchTime
+]
+
+{ #category : #setter }
+TestExecutionEnvironmentTest >> tooMuchTimeTestErrorClass: aClass [ 
+	tooMuchTimeTestErrorClass := aClass
 ]

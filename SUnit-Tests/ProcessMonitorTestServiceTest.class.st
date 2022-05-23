@@ -1,8 +1,25 @@
 Class {
 	#name : #ProcessMonitorTestServiceTest,
 	#superclass : #TestExecutionEnvironmentTestCase,
+	#instVars : [
+		'failedByForkedProcessTestClass',
+		'leftRunningProcessTestClass',
+		'processMonitorTestServiceClass'
+	],
 	#category : #'SUnit-Tests-Core'
 }
+
+{ #category : #tests }
+ProcessMonitorTestServiceTest class >> testParameters [
+
+	^ ParametrizedTestMatrix new
+		  addCase: { 
+				  (#executionEnvForTestClass -> TestExecutionEnvironment).
+				  (#failedByForkedProcessTestClass -> TestFailedByForkedProcess).
+				  (#leftRunningProcessTestClass -> TestLeftRunningProcess).
+				  (#processMonitorTestServiceClass -> ProcessMonitorTestService) };
+		  yourself
+]
 
 { #category : #running }
 ProcessMonitorTestServiceTest >> createTestService [
@@ -14,6 +31,11 @@ ProcessMonitorTestServiceTest >> createTestService [
 ProcessMonitorTestServiceTest >> failedByForkedProcessTestClass [
 
 	^ TestFailedByForkedProcess
+]
+
+{ #category : #setter }
+ProcessMonitorTestServiceTest >> failedByForkedProcessTestClass: aClass [ 
+	failedByForkedProcessTestClass := aClass
 ]
 
 { #category : #running }
@@ -33,10 +55,20 @@ ProcessMonitorTestServiceTest >> leftRunningProcessTestClass [
 	^ TestLeftRunningProcess
 ]
 
+{ #category : #setter }
+ProcessMonitorTestServiceTest >> leftRunningProcessTestClass: aClass [ 
+	leftRunningProcessTestClass := aClass
+]
+
 { #category : #running }
 ProcessMonitorTestServiceTest >> processMonitorTestServiceClass [
 
 	^ ProcessMonitorTestService
+]
+
+{ #category : #setter }
+ProcessMonitorTestServiceTest >> processMonitorTestServiceClass: aClass [ 
+	processMonitorTestServiceClass := aClass
 ]
 
 { #category : #running }
