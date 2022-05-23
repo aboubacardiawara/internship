@@ -10,8 +10,9 @@ Class {
 { #category : #tests }
 TestAsserterTest class >> testParameters [
 
-	^ ParametrizedTestMatrix new addCase:
-		  { (#testFailureClass -> TestFailure) }
+	^ ParametrizedTestMatrix new
+		  addCase: { (#testFailureClass -> TestFailure) };
+		  yourself
 ]
 
 { #category : #tests }
