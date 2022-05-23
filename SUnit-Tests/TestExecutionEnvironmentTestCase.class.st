@@ -1,10 +1,11 @@
 Class {
 	#name : #TestExecutionEnvironmentTestCase,
-	#superclass : #TestCase,
+	#superclass : #ParametrizedTestCase,
 	#instVars : [
 		'testService',
 		'executionEnvironment',
-		'processes'
+		'processes',
+		'executionEnvForTestClass'
 	],
 	#category : #'SUnit-Tests-Core'
 }
@@ -14,10 +15,31 @@ TestExecutionEnvironmentTestCase class >> isAbstract [
 	^self = TestExecutionEnvironmentTestCase
 ]
 
+{ #category : #testing }
+TestExecutionEnvironmentTestCase class >> testParameters [
+
+	^ ParametrizedTestMatrix new
+		  addCase:
+			  { (#executionEnvForTestClass -> TestExecutionEnvironment) };
+		  yourself
+]
+
 { #category : #running }
 TestExecutionEnvironmentTestCase >> createTestService [
 
 	self subclassResponsibility
+]
+
+{ #category : #running }
+TestExecutionEnvironmentTestCase >> executionEnvForTestClass [
+
+	^ executionEnvForTestClass
+]
+
+{ #category : #running }
+TestExecutionEnvironmentTestCase >> executionEnvForTestClass: aClass [
+
+	executionEnvForTestClass := aClass
 ]
 
 { #category : #running }
@@ -32,10 +54,11 @@ TestExecutionEnvironmentTestCase >> newProcess: aName toImmediatelyExecute: aBlo
 
 { #category : #running }
 TestExecutionEnvironmentTestCase >> runCaseManaged [
+
 	"Here we are testing the test environment logic.
 	So we should disable it for ourselves"
-	
-	^DefaultExecutionEnvironment beActiveDuring: [ self runCase]
+
+	^ DefaultExecutionEnvironment  beActiveDuring: [ self runCase ]
 ]
 
 { #category : #running }
@@ -59,7 +82,7 @@ TestExecutionEnvironmentTestCase >> setUp [
 	
 	testService := self createTestService.	
 	testService enable.
-	executionEnvironment := TestExecutionEnvironment new.
+	executionEnvironment := self executionEnvForTestClass new.
 	executionEnvironment registerService: testService.
 ]
 
