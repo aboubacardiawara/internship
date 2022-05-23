@@ -4,6 +4,13 @@ SUnit tests for handling of many test resources
 Class {
 	#name : #ManyTestResourceTestCase,
 	#superclass : #SimpleTestResourceTestCase,
+	#instVars : [
+		'simplTestRessourceClassA',
+		'simplTestRessourceClassA1',
+		'simplTestRessourceClassA2',
+		'simplTestRessourceClassB',
+		'simplTestRessourceClassB1'
+	],
 	#category : #'SUnit-Tests-Core'
 }
 
@@ -16,6 +23,21 @@ ManyTestResourceTestCase class >> resources [
 { #category : #testing }
 ManyTestResourceTestCase class >> shouldInheritSelectors [
 	^true
+]
+
+{ #category : #testing }
+ManyTestResourceTestCase class >> testParameters [
+
+	^ ParametrizedTestMatrix new
+		  addCase: { 
+				  (#simpleRessourceClass -> SimpleTestResource).
+				  (#simpleTestRessourceTestCaseClass -> SimpleTestResourceTestCase).
+				  (#simplTestRessourceClassA -> SimpleTestResourceA).
+				  (#simplTestRessourceClassA1 -> SimpleTestResourceA1).
+				  (#simplTestRessourceClassA2 -> SimpleTestResourceA2).
+				  (#simplTestRessourceClassB -> SimpleTestResourceB).
+				  (#simplTestRessourceClassB1 -> SimpleTestResourceB1) };
+		  yourself
 ]
 
 { #category : #utilities }
@@ -47,6 +69,36 @@ ManyTestResourceTestCase >> clearOuterResourceStateDuring: aBlock [
 			self
 				assert: SimpleTestResourceB1 isAlreadyAvailable
 				description: 'The resource was not set up again after the test']
+]
+
+{ #category : #setter }
+ManyTestResourceTestCase >> simplTestRessourceClassA1: aClass [
+
+	simplTestRessourceClassA1 := aClass
+]
+
+{ #category : #setter }
+ManyTestResourceTestCase >> simplTestRessourceClassA2: aClass [
+
+	simplTestRessourceClassA2 := aClass
+]
+
+{ #category : #setter }
+ManyTestResourceTestCase >> simplTestRessourceClassA: aClass [
+
+	simplTestRessourceClassA := aClass
+]
+
+{ #category : #setter }
+ManyTestResourceTestCase >> simplTestRessourceClassB1: aClass [
+
+	simplTestRessourceClassB1 := aClass
+]
+
+{ #category : #setter }
+ManyTestResourceTestCase >> simplTestRessourceClassB: aClass [
+
+	simplTestRessourceClassB := aClass
 ]
 
 { #category : #running }
