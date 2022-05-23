@@ -3,9 +3,11 @@ SUnit tests for simple test resources
 "
 Class {
 	#name : #SimpleTestResourceTestCase,
-	#superclass : #TestCase,
+	#superclass : #ParametrizedTestCase,
 	#instVars : [
-		'resource'
+		'resource',
+		'simpleRessourceClass',
+		'simpleTestRessourceTestCaseClass'
 	],
 	#category : #'SUnit-Tests-Core'
 }
@@ -20,25 +22,35 @@ SimpleTestResourceTestCase class >> resources [
 	^Array with: SimpleTestResource
 ]
 
+{ #category : #accessing }
+SimpleTestResourceTestCase class >> testParameters [
+	^ ParametrizedTestMatrix new
+		addCase: {
+			#simpleRessourceClass -> SimpleTestResource.
+			#simpleTestRessourceTestCaseClass -> SimpleTestResourceTestCase
+			};
+		yourself
+]
+
 { #category : #utilities }
 SimpleTestResourceTestCase >> clearOuterResourceStateDuring: aBlock [
 	"This self-testing test must clear the outer state of its resources before starting and after finishing, so that it can construct test cases and suites of itself and test them."
 	
 	self
-		assert: SimpleTestResource isAlreadyAvailable
+		assert: self simpleRessourceClass isAlreadyAvailable
 		description: 'The resource was not set up for the test'.
-	SimpleTestResource reset.
+	self simpleRessourceClass reset.
 	self
-		deny: SimpleTestResource isAlreadyAvailable
+		deny: self simpleRessourceClass isAlreadyAvailable
 		description: 'The resource was still set up before we began the run'.
 	^aBlock
 		ensure:
 			[self
-				deny: SimpleTestResource isAlreadyAvailable
+				deny: self simpleRessourceClass isAlreadyAvailable
 				description: 'The resource was still set up after we finished the run'.
-			SimpleTestResource isAvailable.
+			self simpleRessourceClass isAvailable.
 			self
-				assert: SimpleTestResource isAlreadyAvailable
+				assert: self simpleRessourceClass isAlreadyAvailable
 				description: 'The resource was not set up again after the test']
 ]
 
@@ -65,16 +77,40 @@ SimpleTestResourceTestCase >> setRun [
 SimpleTestResourceTestCase >> setUp [
 	"Ensure that we error, not just fail, if resource is nil so that #should:raise: checks cannot mistake such an error for what they are trapping."
 	super setUp.
-	resource := SimpleTestResource rawCurrentForTest.
+	resource := self simpleRessourceClass rawCurrentForTest.
 	self
 		deny: resource isNil
 		description: 'SimpleTestResource has no current value in test'.
 	self
-		assert: resource class == SimpleTestResource
+		assert: resource class == self simpleRessourceClass
 		description: 'SimpleTestResource current is not an instance of itself'.
 	self
 		assert: resource hasSetup
 		description: 'This test uses a resource but it was not set up'
+]
+
+{ #category : #accessing }
+SimpleTestResourceTestCase >> simpleRessourceClass [
+
+	^ simpleRessourceClass
+]
+
+{ #category : #setter }
+SimpleTestResourceTestCase >> simpleRessourceClass: aClass [
+
+	simpleRessourceClass := aClass
+]
+
+{ #category : #accessing }
+SimpleTestResourceTestCase >> simpleTestRessourceTestCaseClass [
+
+	^ simpleTestRessourceTestCaseClass
+]
+
+{ #category : #setter }
+SimpleTestResourceTestCase >> simpleTestRessourceTestCaseClass: aClass [
+
+	simpleTestRessourceTestCaseClass := aClass
 ]
 
 { #category : #tests }
@@ -109,8 +145,8 @@ SimpleTestResourceTestCase >> testResourceInitRelease [
 SimpleTestResourceTestCase >> testRunSuiteWithResource [
 	| suite |
 	suite :=  self classForTestSuite new.
-	suite addTest: (SimpleTestResourceTestCase selector: #error).
-	suite addTest: (SimpleTestResourceTestCase selector: #fail).
+	suite addTest: (self simpleTestRessourceTestCaseClass selector: #error).
+	suite addTest: (self simpleTestRessourceTestCaseClass selector: #fail).
 	suite addTest: (self class selector: #dummy).
 	self clearOuterResourceStateDuring:
 		[self
