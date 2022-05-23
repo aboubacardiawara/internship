@@ -15,7 +15,7 @@ TestExecutionEnvironmentTest class >> defaultTimeLimit [
 
 { #category : #running }
 TestExecutionEnvironmentTest >> createTestService [
-	^TestServiceExample new
+	^ self serviceExampleTestClass new
 ]
 
 { #category : #helpers }
@@ -43,18 +43,23 @@ TestExecutionEnvironmentTest >> runTestWith: aBlock [
 	executionEnvironment runTestCase: ranTest
 ]
 
+{ #category : #running }
+TestExecutionEnvironmentTest >> serviceExampleTestClass [
+
+	^ TestServiceExample
+]
+
 { #category : #tests }
 TestExecutionEnvironmentTest >> testActivationShouldRegisterDefaultServices [
 
-	[
-		TestServiceExample isEnabled: true.
-		executionEnvironment removeAllServices.
-		
-		executionEnvironment activated.
-		self assert: (executionEnvironment services 
-						anySatisfy: [:each | each class = TestServiceExample ])
+	[ 
+	TestServiceExample isEnabled: true.
+	executionEnvironment removeAllServices.
 
-	] ensure: [TestServiceExample isEnabled: false]
+	executionEnvironment activated.
+	self assert: (executionEnvironment services anySatisfy: [ :each | 
+			 each class = self serviceExampleTestClass ]) ] ensure: [ 
+		self serviceExampleTestClass isEnabled: false ]
 ]
 
 { #category : #tests }
@@ -127,7 +132,7 @@ TestExecutionEnvironmentTest >> testDeactivation [
 { #category : #tests }
 TestExecutionEnvironmentTest >> testDisableGivenServiceWhenItExists [
 
-	executionEnvironment disableService: TestServiceExample.
+	executionEnvironment disableService: self serviceExampleTestClass.
 
 	self deny: testService isEnabled
 ]
@@ -136,8 +141,8 @@ TestExecutionEnvironmentTest >> testDisableGivenServiceWhenItExists [
 TestExecutionEnvironmentTest >> testDisableGivenServiceWhenItIsNotRegistered [
 
 	executionEnvironment removeAllServices.
-	
-	executionEnvironment disableService: TestServiceExample
+
+	executionEnvironment disableService: self serviceExampleTestClass
 ]
 
 { #category : #tests }
@@ -167,8 +172,9 @@ TestExecutionEnvironmentTest >> testEnableGivenServiceWhenItExists [
 
 	| actual |
 	testService disable.
-	
-	actual := executionEnvironment enableService: TestServiceExample.
+
+	actual := executionEnvironment enableService:
+		          self serviceExampleTestClass.
 
 	self assert: actual identicalTo: testService.
 	self assert: testService isEnabled
@@ -178,10 +184,14 @@ TestExecutionEnvironmentTest >> testEnableGivenServiceWhenItExists [
 TestExecutionEnvironmentTest >> testEnableGivenServiceWhenItIsNotRegistered [
 
 	executionEnvironment removeAllServices.
-	
-	testService := executionEnvironment enableService: TestServiceExample.
 
-	self assert: testService identicalTo: (executionEnvironment findService: TestServiceExample).
+	testService := executionEnvironment enableService:
+		               self serviceExampleTestClass.
+
+	self
+		assert: testService
+		identicalTo:
+		(executionEnvironment findService: self serviceExampleTestClass).
 	self assert: testService isEnabled
 ]
 
@@ -189,7 +199,9 @@ TestExecutionEnvironmentTest >> testEnableGivenServiceWhenItIsNotRegistered [
 TestExecutionEnvironmentTest >> testEnableGivenServiceWithConfigurationBlock [
 
 	| actual |
-	executionEnvironment enableService: TestServiceExample using: [:service | actual := service] .
+	executionEnvironment
+		enableService: self serviceExampleTestClass
+		using: [ :service | actual := service ].
 
 	self assert: actual identicalTo: testService
 ]
@@ -197,7 +209,10 @@ TestExecutionEnvironmentTest >> testEnableGivenServiceWithConfigurationBlock [
 { #category : #tests }
 TestExecutionEnvironmentTest >> testFindService [
 
-	self assert: (executionEnvironment findService: TestServiceExample) identicalTo: testService
+	self
+		assert:
+		(executionEnvironment findService: self serviceExampleTestClass)
+		identicalTo: testService
 ]
 
 { #category : #tests }
@@ -226,8 +241,8 @@ TestExecutionEnvironmentTest >> testHandleForkedProcessesByAllServices [
 { #category : #tests }
 TestExecutionEnvironmentTest >> testHasEmptyServicesByDefault [
 
-	executionEnvironment := TestExecutionEnvironment new.
-	
+	executionEnvironment := self executionEnvForTestClass new.
+
 	self assert: executionEnvironment services isEmpty
 ]
 
@@ -240,7 +255,7 @@ TestExecutionEnvironmentTest >> testIgnoreLongTestWhenItIsSuspendedAsUnderDebug 
 		[ self runTestWith: [ 
 				executionEnvironment maxTimeForTest: 10 milliSeconds.
 				Processor activeProcess suspend "it simulates the under debugger condition"]
-		] on: TestTookTooMuchTime do: [ :err | timeOutSignaled := true ]		
+		] on: self tooMuchTimeTestErrorClass do: [ :err | timeOutSignaled := true ]		
 	] forkAt: Processor activePriority + 1.
 
 	self deny: timeOutSignaled
@@ -430,4 +445,10 @@ TestExecutionEnvironmentTest >> testRunningTooLongTest [
 				executionEnvironment maxTimeForTest: 10 milliSeconds.
 				20 milliSeconds wait]]
 		raise: TestTookTooMuchTime
+]
+
+{ #category : #tests }
+TestExecutionEnvironmentTest >> tooMuchTimeTestErrorClass [
+
+	^ TestTookTooMuchTime
 ]
