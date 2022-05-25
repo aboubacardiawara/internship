@@ -175,9 +175,11 @@ RunnerTest >> testRunningACollectionOfTestCases [
 
 	"first execution"
 
-	runner runCases: { GreenTest }.
-	self assert: runner runCount equals: 2.
-	self assert: runner passedCount equals: 2
+	runner runCases: { 
+			GreenTest.
+			YellowTest }.
+	self assert: runner runCount equals: 4.
+	self assert: runner passedCount equals: 3
 ]
 
 { #category : #tests }

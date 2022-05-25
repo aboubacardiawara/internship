@@ -240,6 +240,13 @@ Runner >> runCase: aTestCase [
 	^ result
 ]
 
+{ #category : #running }
+Runner >> runCases: aCollectionOfTestCases [
+
+	self accumulateResult.
+	aCollectionOfTestCases do: [ :class | self runCase: class ]
+]
+
 { #category : #accessing }
 Runner >> runCount [
 
