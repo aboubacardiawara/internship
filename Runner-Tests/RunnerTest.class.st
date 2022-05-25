@@ -16,17 +16,16 @@ RunnerTest >> setUp [
 { #category : #tests }
 RunnerTest >> testFailedTestFaildWhileRerunningDoesNotChangeTheResult [
 
-	| firstRunningResult secondRunningResult |
 	"first execution"
-	firstRunningResult := runner runCase: YellowTest.
-	self assert: firstRunningResult runCount equals: 2.
-	self assert: firstRunningResult failureCount equals: 1.
+
+	runner runCase: YellowTest.
+	self assert: runner runCount equals: 2.
+	self assert: runner failureCount equals: 1.
 
 	"second execution"
 	runner runFailures.
-	secondRunningResult := runner result.
-	self assert: secondRunningResult runCount equals: 2.
-	self assert: secondRunningResult failureCount equals: 1.
+	self assert: runner runCount equals: 2.
+	self assert: runner failureCount equals: 1
 ]
 
 { #category : #tests }
@@ -71,31 +70,30 @@ RunnerTest >> testNewCreatedRunnerHasAnyTestsToRun [
 { #category : #tests }
 RunnerTest >> testOnRunnerResultWithGreenTest [
 
-	| result |
-	result := runner runCase: GreenTest.
-	self assert: result passedCount equals: 2.
+	runner runCase: GreenTest.
+	self assert: runner passedCount equals: 2.
 
-	self assert: result failureCount equals: 0
+	self assert: runner failureCount equals: 0
 ]
 
 { #category : #tests }
 RunnerTest >> testOnRunnerResultWithRedTest [
-	|result|
-	result := runner runCase: RedTest.
+	
+	runner runCase: RedTest.
 	self
-		assert: result tests size
+		assert: runner testsCount
 		equals: 3.
 	
 	self
-		assert: result passedCount 
+		assert: runner passedCount 
 		equals: 1.
 
 	self 
-		assert: result failureCount 
+		assert: runner failureCount 
 		equals: 1.
 
 	self 
-		assert: result errorCount
+		assert: runner errorCount
 		equals: 1.
 	
 ]
@@ -103,13 +101,12 @@ RunnerTest >> testOnRunnerResultWithRedTest [
 { #category : #tests }
 RunnerTest >> testOnRunnerResultWithYellowTest [
 
-	| result |
-	result := runner runCase: YellowTest.
-	self assert: result tests size equals: 2.
+	runner runCase: YellowTest.
+	self assert: runner testsCount equals: 2.
 
-	self assert: result passedCount equals: 1.
+	self assert: runner passedCount equals: 1.
 
-	self assert: result failureCount equals: 1
+	self assert: runner failureCount equals: 1
 ]
 
 { #category : #tests }
@@ -117,17 +114,17 @@ RunnerTest >> testRerunningFailedTest [
 
 	"we will run a test who fail only during the first execution"
 
-	| firstRunningResult secondRunningResult |
 	"first execution"
-	firstRunningResult := runner runCase: FailThenPass.
-	self assert: firstRunningResult runCount equals: 2.
-	self assert: firstRunningResult failureCount equals: 1.
+
+	runner runCase: FailThenPass.
+	self assert: runner runCount equals: 2.
+	self assert: runner failureCount equals: 1.
 
 	"second execution"
 	runner runFailures.
-	secondRunningResult := runner result.
-	self assert: secondRunningResult runCount equals: 2.
-	self assert: secondRunningResult failureCount equals: 0
+	runner result.
+	self assert: runner runCount equals: 2.
+	self assert: runner failureCount equals: 0
 ]
 
 { #category : #tests }
@@ -135,62 +132,60 @@ RunnerTest >> testRerunningFailedTest2 [
 
 	"we will run a test who fail only during the first execution"
 
-	| firstRunningResult secondRunningResult |
 	"first execution"
-	firstRunningResult := runner runCase: RedTest.
-	self assert: firstRunningResult runCount equals: 3.
-	self assert: firstRunningResult failureCount equals: 1.
-	self assert: firstRunningResult errorCount equals: 1.
+
+	runner runCase: RedTest.
+	self assert: runner runCount equals: 3.
+	self assert: runner failureCount equals: 1.
+	self assert: runner errorCount equals: 1.
 
 	"second execution"
 	runner runFailures.
-	secondRunningResult := runner result.
-	self assert: secondRunningResult runCount equals: 3.
-	self assert: secondRunningResult failureCount equals: 1.
-	self assert: secondRunningResult errorCount equals: 1
+	runner result.
+	self assert: runner runCount equals: 3.
+	self assert: runner failureCount equals: 1.
+	self assert: runner errorCount equals: 1
 ]
 
 { #category : #tests }
 RunnerTest >> testRunnerCanAccumulateResult [
 
-	| result firstRunningCount secondRunningCount |
+	| firstRunningCount secondRunningCount |
 	runner accumulateResult.
-	result := runner runCase: GreenTest. "2 tests"
-	firstRunningCount := result runCount.
+	runner runCase: GreenTest. "2 tests"
+	firstRunningCount := runner runCount.
 
-	result := runner runCase: YellowTest. "2 tests"
-	secondRunningCount := result runCount.
+	runner runCase: YellowTest. "2 tests"
+	secondRunningCount := runner runCount.
 	self assert: secondRunningCount equals: firstRunningCount + 2
 ]
 
 { #category : #tests }
 RunnerTest >> testRunnerDoesNotAccumulateRsultByDefault [
 
-	| result firstRunningCount secondRunningCount |
-	result := Runner runCase: GreenTest.
-	firstRunningCount := result runCount.
+	| firstRunningCount secondRunningCount |
+	firstRunningCount := (Runner runCase: GreenTest) runCount.
 
-	result := Runner runCase: GreenTest.
-	secondRunningCount := result runCount.
+	secondRunningCount := (Runner runCase: GreenTest) runCount.
 	self assert: secondRunningCount equals: firstRunningCount
 ]
 
 { #category : #tests }
 RunnerTest >> testRunningTestClassSide [
-	| result |
-	result := Runner runCase: GreenTest.
-	self assert: result passedCount equals: 2.
 
-	self assert: result failureCount equals: 0
+	Runner runCase: GreenTest.
+	self assert: (Runner runCase: GreenTest) passedCount equals: 2.
+
+	self assert: (Runner runCase: GreenTest) failureCount equals: 0
 ]
 
 { #category : #tests }
 RunnerTest >> testRunningTestInstanceSide [
-	| result |
-	result := runner runCase: GreenTest.
-	self assert: result passedCount equals: 2.
 
-	self assert: result failureCount equals: 0
+	runner runCase: GreenTest.
+	self assert: runner passedCount equals: 2.
+
+	self assert: runner failureCount equals: 0
 ]
 
 { #category : #tests }
@@ -213,5 +208,4 @@ RunnerTest >> testSuiteWithMultipleTestCase [
 			YellowTest.
 			RedTest }.
 	self assert: runner suites size equals: 3.
-	self assert: runner testsCount equals: 2 + 2 + 3
 ]

@@ -126,6 +126,12 @@ Runner >> doNotAccumulateResult [
 	self shouldAccumulate: false
 ]
 
+{ #category : #accessing }
+Runner >> errorCount [
+
+	^ result errorCount
+]
+
 { #category : #initialization }
 Runner >> executionMode [
 
@@ -137,6 +143,12 @@ Runner >> executionMode [
 Runner >> executionMode: anExecutionMode [
 
 	executionMode := anExecutionMode
+]
+
+{ #category : #accessing }
+Runner >> failureCount [
+
+	^ self result failureCount
 ]
 
 { #category : #testing }
@@ -160,6 +172,12 @@ Runner >> initialize [
 	self resetSuites.
 	self doNotAccumulateResult.
 	self resetResult.
+]
+
+{ #category : #accessing }
+Runner >> passedCount [
+
+	^ self result passedCount
 ]
 
 { #category : #running }
@@ -220,6 +238,12 @@ Runner >> runCase: aTestCase [
 	self testSuiteFromClass: aTestCase.
 	self run.
 	^ result
+]
+
+{ #category : #accessing }
+Runner >> runCount [
+
+	^ self result runCount
 ]
 
 { #category : #running }
@@ -338,9 +362,7 @@ Runner >> testsCount [
 
 	"return the number of all tests methods from suites"
 
-	^ self suites
-		  inject: 0
-		  into: [ :sum :suite | sum + suite tests size ]
+	^ self result tests size
 ]
 
 { #category : #update }
