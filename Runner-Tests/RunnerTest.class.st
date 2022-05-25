@@ -29,6 +29,14 @@ RunnerTest >> testFailedTestFaildWhileRerunningDoesNotChangeTheResult [
 ]
 
 { #category : #tests }
+RunnerTest >> testGivingANoAbstractTestcaseShouldntThrowsException [
+
+	self
+		shouldnt: (Runner runCase: GreenTest)
+		raise: AnAbstractTestCaseException
+]
+
+{ #category : #tests }
 RunnerTest >> testGivingANonTestcaseThrowsException [
 
 	self
@@ -42,6 +50,14 @@ RunnerTest >> testGivingATestcaseDoesNotThrowsException [
 	self
 		shouldnt: (Runner runCase: GreenTest)
 		raise: ANoTestCaseException
+]
+
+{ #category : #tests }
+RunnerTest >> testGivingAnAbstractTestcaseShouldThrowsException [
+
+	self
+		should: [ Runner runCase: AthensCairoExportSurfaceTest ]
+		raise: AnAbstractTestCaseException
 ]
 
 { #category : #tests }
@@ -183,12 +199,35 @@ RunnerTest >> testRunningACollectionOfTestCases [
 ]
 
 { #category : #tests }
+RunnerTest >> testRunningACollectionOfTestCasesWithSomeAbstractClass [
+
+	runner runCases: { 
+			AthensCairoExportSurfaceTest.
+			AthensCairoPDFSurfaceTest.
+			AthensCairoSVGSurfaceTest }.
+
+	self assert: runner runCount equals: 8
+]
+
+{ #category : #tests }
 RunnerTest >> testRunningAnEmptyCollectionOfTestCases [
 
 	"first execution"
 
 	runner runCases: {  }.
 	self assert: runner runCount equals: 0
+]
+
+{ #category : #tests }
+RunnerTest >> testRunningFromAPackage [
+
+	"first execution"
+
+	| aPackage |
+	aPackage := #'Zodiac-Tests' asPackage.
+	runner runPackage: aPackage.
+	self assert: runner runCount equals: 79.
+	self assert: runner passedCount equals: 79
 ]
 
 { #category : #tests }

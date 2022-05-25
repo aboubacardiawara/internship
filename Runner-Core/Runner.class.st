@@ -196,6 +196,13 @@ Runner >> preExecution [
 ]
 
 { #category : #tests }
+Runner >> raiseAbstractTestCaseException: aClass [
+
+	AnAbstractTestCaseException signal:
+		aClass name , ' is abstract. Run its subclassees instead'
+]
+
+{ #category : #tests }
 Runner >> raiseNotTestCaseException: aClass [
 
 	ANoTestCaseException signal: aClass name , ' is not a testCase'
@@ -244,7 +251,8 @@ Runner >> runCase: aTestCase [
 Runner >> runCases: aCollectionOfTestCases [
 
 	self accumulateResult.
-	aCollectionOfTestCases do: [ :class | self runCase: class ]
+	aCollectionOfTestCases do: [ :class | 
+		class isAbstract ifFalse: [ self runCase: class ] ]
 ]
 
 { #category : #accessing }
@@ -273,6 +281,13 @@ Runner >> runFailures [
 	"rerun all the failed testcases"
 
 	self result failures do: [ :failure | self runFailure: failure ]
+]
+
+{ #category : #runninh }
+Runner >> runPackage: aRPackage [
+
+	self runCases:
+		(aRPackage definedClasses reject: [ :class | class isAbstract ])
 ]
 
 { #category : #running }
@@ -351,9 +366,9 @@ Runner >> testSuiteFromClass: aClass [
 	"build a suite from the giving class then add it to the internal collections of suites. 
 	The giving class should be a test case"
 
-	aClass isTestCase
-		ifFalse: [ self raiseNotTestCaseException: aClass ]
-		ifTrue: [ self suites add: aClass isAbstract not & aClass suite ]
+	aClass isTestCase ifFalse: [ self raiseNotTestCaseException: aClass ].
+	aClass isAbstract ifTrue: [ self raiseAbstractTestCaseException: aClass].
+	self suites add: aClass suite
 ]
 
 { #category : #tests }
