@@ -192,6 +192,18 @@ RunnerTest >> testRunningAnEmptyCollectionOfTestCases [
 ]
 
 { #category : #tests }
+RunnerTest >> testRunningFromAPackage [
+
+	"first execution"
+
+	| aPackage |
+	aPackage := #'Zodiac-Tests' asPackage.
+	runner runPackage: aPackage.
+	self assert: runner runCount equals: 79.
+	self assert: runner passedCount equals: 79
+]
+
+{ #category : #tests }
 RunnerTest >> testRunningTestClassSide [
 
 	Runner runCase: GreenTest.
