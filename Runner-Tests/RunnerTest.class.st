@@ -171,6 +171,25 @@ RunnerTest >> testRunnerDoesNotAccumulateRsultByDefault [
 ]
 
 { #category : #tests }
+RunnerTest >> testRunningACollectionOfTestCases [
+
+	"first execution"
+
+	runner runCases: { GreenTest }.
+	self assert: runner runCount equals: 2.
+	self assert: runner passedCount equals: 2
+]
+
+{ #category : #tests }
+RunnerTest >> testRunningAnEmptyCollectionOfTestCases [
+
+	"first execution"
+
+	runner runCases: {  }.
+	self assert: runner runCount equals: 0
+]
+
+{ #category : #tests }
 RunnerTest >> testRunningTestClassSide [
 
 	Runner runCase: GreenTest.
