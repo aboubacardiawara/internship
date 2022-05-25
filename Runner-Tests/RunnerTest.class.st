@@ -29,6 +29,14 @@ RunnerTest >> testFailedTestFaildWhileRerunningDoesNotChangeTheResult [
 ]
 
 { #category : #tests }
+RunnerTest >> testGivingANoAbstractTestcaseShouldntThrowsException [
+
+	self
+		shouldnt: (Runner runCase: GreenTest)
+		raise: AnAbstractTestCaseException
+]
+
+{ #category : #tests }
 RunnerTest >> testGivingANonTestcaseThrowsException [
 
 	self
@@ -42,6 +50,14 @@ RunnerTest >> testGivingATestcaseDoesNotThrowsException [
 	self
 		shouldnt: (Runner runCase: GreenTest)
 		raise: ANoTestCaseException
+]
+
+{ #category : #tests }
+RunnerTest >> testGivingAnAbstractTestcaseShouldThrowsException [
+
+	self
+		should: [ Runner runCase: AthensCairoExportSurfaceTest ]
+		raise: AnAbstractTestCaseException
 ]
 
 { #category : #tests }
@@ -180,6 +196,17 @@ RunnerTest >> testRunningACollectionOfTestCases [
 			YellowTest }.
 	self assert: runner runCount equals: 4.
 	self assert: runner passedCount equals: 3
+]
+
+{ #category : #tests }
+RunnerTest >> testRunningACollectionOfTestCasesWithSomeAbstractClass [
+
+	runner runCases: { 
+			AthensCairoExportSurfaceTest.
+			AthensCairoPDFSurfaceTest.
+			AthensCairoSVGSurfaceTest }.
+
+	self assert: runner runCount equals: 8
 ]
 
 { #category : #tests }
