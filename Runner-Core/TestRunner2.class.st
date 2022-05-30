@@ -180,19 +180,6 @@ TestRunner2 >> passedCount [
 	^ self result passedCount
 ]
 
-{ #category : #tests }
-TestRunner2 >> raiseAbstractTestCaseException: aClass [
-
-	AnAbstractTestCaseException signal:
-		aClass name , ' is abstract. Run its subclassees instead'
-]
-
-{ #category : #tests }
-TestRunner2 >> raiseNotTestCaseException: aClass [
-
-	ANoTestCaseException signal: aClass name , ' is not a testCase'
-]
-
 { #category : #running }
 TestRunner2 >> resetResult [
 

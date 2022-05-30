@@ -29,22 +29,6 @@ RunnerTest >> testFailedTestFaildWhileRerunningDoesNotChangeTheResult [
 ]
 
 { #category : #tests }
-RunnerTest >> testGivingANoAbstractTestcaseShouldntThrowsException [
-
-	self
-		shouldnt: (TestRunner2 runCase: GreenTest)
-		raise: AnAbstractTestCaseException
-]
-
-{ #category : #tests }
-RunnerTest >> testGivingATestcaseDoesNotThrowsException [
-
-	self
-		shouldnt: (TestRunner2 runCase: GreenTest)
-		raise: ANoTestCaseException
-]
-
-{ #category : #tests }
 RunnerTest >> testGivingTestToTheRunner [
 
 	"test that a runner has initialy any test to run.
