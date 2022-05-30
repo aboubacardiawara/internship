@@ -348,6 +348,12 @@ Runner >> suites [
 	^ suites ifNil: [ self postExecution ]
 ]
 
+{ #category : #'as yet unclassified' }
+Runner >> suitesTotal [
+
+	^ suites size
+]
+
 { #category : #running }
 Runner >> switchToDebugMode [
 
