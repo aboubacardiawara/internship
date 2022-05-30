@@ -86,21 +86,6 @@ CoverageRunner >> methods [
 	^ methods ifNil: [ methods := OrderedCollection new ]
 ]
 
-{ #category : #running }
-CoverageRunner >> postExecution [
-
-	link uninstall.
-	self saveCoveredMethods.
-	self saveUnCoveredMethods.
-	self removeAnnotationsFromMethods
-]
-
-{ #category : #coverage }
-CoverageRunner >> preExecution [
-	
-	self addLinkToAllMethodsFromClasses.
-]
-
 { #category : #coverage }
 CoverageRunner >> removeAnnotationsFromMethods [
 
@@ -118,6 +103,21 @@ CoverageRunner >> saveCoveredMethods [
 CoverageRunner >> saveUnCoveredMethods [
 
 	uncovered := methods reject: [ :each | each ast hasBeenExecuted ]
+]
+
+{ #category : #coverage }
+CoverageRunner >> setUp [
+	
+	self addLinkToAllMethodsFromClasses.
+]
+
+{ #category : #running }
+CoverageRunner >> tearDown [
+
+	link uninstall.
+	self saveCoveredMethods.
+	self saveUnCoveredMethods.
+	self removeAnnotationsFromMethods
 ]
 
 { #category : #coverage }
