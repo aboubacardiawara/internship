@@ -252,10 +252,10 @@ RunnerTest >> testRunningTestInstanceSide [
 RunnerTest >> testSuiteCreation [
 
 	self assert: runner suites isEmpty.
-	
+
 	runner testSuiteFromClass: GreenTest.
-	
-	self deny: runner suites isEmpty.
+
+	self deny: runner suitesTotal equals: 0
 ]
 
 { #category : #tests }
@@ -267,5 +267,5 @@ RunnerTest >> testSuiteWithMultipleTestCase [
 			GreenTest.
 			YellowTest.
 			RedTest }.
-	self assert: runner suites size equals: 3.
+	self assert: runner suitesTotal equals: 3.
 ]

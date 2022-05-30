@@ -180,21 +180,6 @@ Runner >> passedCount [
 	^ self result passedCount
 ]
 
-{ #category : #running }
-Runner >> postExecution [
-
-	self resetSuites
-]
-
-{ #category : #processing }
-Runner >> preExecution [
-
-	"we would like to process suites before execution (e.g shufling the tests, ...). It can be useful 
-	for tests dependancy detection"
-
-	self suitePreparator applyOnSuites: suites
-]
-
 { #category : #tests }
 Runner >> raiseAbstractTestCaseException: aClass [
 
@@ -233,9 +218,8 @@ Runner >> run [
 
 	"run all the suite then return the result"
 
-	self preExecution.
-	self runTestsSuites.
-	self postExecution
+	self setUp.
+	[ self runTestsSuites ] ensure: [ self tearDown ]
 ]
 
 { #category : #running }
@@ -305,6 +289,15 @@ Runner >> runTestsSuites [
 		self suites do: [ :testSuite | self runSuite: testSuite ] ]
 ]
 
+{ #category : #processing }
+Runner >> setUp [
+
+	"we would like to process suites before execution (e.g shufling the tests, ...). It can be useful 
+	for tests dependancy detection"
+
+	self suitePreparator applyOnSuites: suites
+]
+
 { #category : #tests }
 Runner >> shouldAccumulate [
 
@@ -345,7 +338,13 @@ Runner >> suitePreparator: aSuitePreparator [
 { #category : #'instance creation' }
 Runner >> suites [
 
-	^ suites ifNil: [ self postExecution ]
+	^ suites ifNil: [ self tearDown ]
+]
+
+{ #category : #'as yet unclassified' }
+Runner >> suitesTotal [
+
+	^ suites size
 ]
 
 { #category : #running }
@@ -358,6 +357,12 @@ Runner >> switchToDebugMode [
 Runner >> switchToRunMode [
 
 	self executionMode: RunMode
+]
+
+{ #category : #running }
+Runner >> tearDown [
+
+	self resetSuites
 ]
 
 { #category : #tests }
