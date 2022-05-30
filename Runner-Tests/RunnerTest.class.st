@@ -10,7 +10,7 @@ Class {
 { #category : #tests }
 RunnerTest >> setUp [
 	super setUp.
-	runner := Runner new suitePreparator: ShuffleSuitePreparator.
+	runner := TestRunner2 new suitePreparator: ShuffleSuitePreparator.
 ]
 
 { #category : #tests }
@@ -32,7 +32,7 @@ RunnerTest >> testFailedTestFaildWhileRerunningDoesNotChangeTheResult [
 RunnerTest >> testGivingANoAbstractTestcaseShouldntThrowsException [
 
 	self
-		shouldnt: (Runner runCase: GreenTest)
+		shouldnt: (TestRunner2 runCase: GreenTest)
 		raise: AnAbstractTestCaseException
 ]
 
@@ -40,7 +40,7 @@ RunnerTest >> testGivingANoAbstractTestcaseShouldntThrowsException [
 RunnerTest >> testGivingANonTestcaseThrowsException [
 
 	self
-		should: [Runner new runCase: Integer]
+		should: [TestRunner2 new runCase: Integer]
 		raise: ANoTestCaseException
 ]
 
@@ -48,7 +48,7 @@ RunnerTest >> testGivingANonTestcaseThrowsException [
 RunnerTest >> testGivingATestcaseDoesNotThrowsException [
 
 	self
-		shouldnt: (Runner runCase: GreenTest)
+		shouldnt: (TestRunner2 runCase: GreenTest)
 		raise: ANoTestCaseException
 ]
 
@@ -56,7 +56,7 @@ RunnerTest >> testGivingATestcaseDoesNotThrowsException [
 RunnerTest >> testGivingAnAbstractTestcaseShouldThrowsException [
 
 	self
-		should: [ Runner runCase: AthensCairoExportSurfaceTest ]
+		should: [ TestRunner2 runCase: AthensCairoExportSurfaceTest ]
 		raise: AnAbstractTestCaseException
 ]
 
@@ -79,7 +79,7 @@ RunnerTest >> testNewCreatedRunnerHasAnyTestsToRun [
 	only the tests added by user.
 	"
 
-	runner := Runner new.
+	runner := TestRunner2 new.
 	self deny: runner hasTestsToRun
 ]
 
@@ -180,9 +180,9 @@ RunnerTest >> testRunnerCanAccumulateResult [
 RunnerTest >> testRunnerDoesNotAccumulateRsultByDefault [
 
 	| firstRunningCount secondRunningCount |
-	firstRunningCount := (Runner runCase: GreenTest) runCount.
+	firstRunningCount := (TestRunner2 runCase: GreenTest) runCount.
 
-	secondRunningCount := (Runner runCase: GreenTest) runCount.
+	secondRunningCount := (TestRunner2 runCase: GreenTest) runCount.
 	self assert: secondRunningCount equals: firstRunningCount
 ]
 
@@ -233,10 +233,10 @@ RunnerTest >> testRunningFromAPackage [
 { #category : #tests }
 RunnerTest >> testRunningTestClassSide [
 
-	Runner runCase: GreenTest.
-	self assert: (Runner runCase: GreenTest) passedCount equals: 2.
+	TestRunner2 runCase: GreenTest.
+	self assert: (TestRunner2 runCase: GreenTest) passedCount equals: 2.
 
-	self assert: (Runner runCase: GreenTest) failureCount equals: 0
+	self assert: (TestRunner2 runCase: GreenTest) failureCount equals: 0
 ]
 
 { #category : #tests }

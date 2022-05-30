@@ -108,7 +108,7 @@ AbstractRunnerPresenter >> defaultLayout [
 { #category : #'buttons-presenters-initialization' }
 AbstractRunnerPresenter >> defaultRunnerClass [
 
-	^ Runner
+	^ TestRunner2
 ]
 
 { #category : #'presenters-connection' }

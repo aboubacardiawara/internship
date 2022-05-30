@@ -37,7 +37,7 @@ Internal Representation and Key Implementation Points.
 
 "
 Class {
-	#name : #Runner,
+	#name : #TestRunner2,
 	#superclass : #Object,
 	#instVars : [
 		'suites',
@@ -50,22 +50,22 @@ Class {
 }
 
 { #category : #running }
-Runner class >> example [
+TestRunner2 class >> example [
 	<script>
-	Runner new 
+	TestRunner2 new 
 	suitePreparator: ShuffleSuitePreparator;
 	runCase: DependencyTest;
 	inspect
 ]
 
 { #category : #running }
-Runner class >> runCase: aTestCase [
+TestRunner2 class >> runCase: aTestCase [
 	^ self new
 		runCase: aTestCase
 ]
 
 { #category : #processing }
-Runner >> accumulateResult [
+TestRunner2 >> accumulateResult [
 
 	"activate the results accumulation behavior"
 
@@ -73,13 +73,13 @@ Runner >> accumulateResult [
 ]
 
 { #category : #accessing }
-Runner >> allTestPassed [
+TestRunner2 >> allTestPassed [
 
 	^ result passedCount = result runCount
 ]
 
 { #category : #running }
-Runner >> debugFailure: failure [
+TestRunner2 >> debugFailure: failure [
 
 	"rerun the giving failure"
 
@@ -92,34 +92,34 @@ Runner >> debugFailure: failure [
 ]
 
 { #category : #accessing }
-Runner >> defaultExecutionEnvironmentClass [
+TestRunner2 >> defaultExecutionEnvironmentClass [
 
 	^ CurrentExecutionEnvironment
 ]
 
 { #category : #running }
-Runner >> defaultExecutionModeClass [
+TestRunner2 >> defaultExecutionModeClass [
 
 	^ RunMode
 ]
 
 { #category : #running }
-Runner >> defaultSuitePreparator [
+TestRunner2 >> defaultSuitePreparator [
 
 	"by default any process will be applied on suites.
 	You can change the default behavior. See suitePreparator:"
 
-	^ AnyEffectSuitePreparator
+	^ ShuffleSuitePreparator
 ]
 
 { #category : #running }
-Runner >> defaultTestResultClass [
+TestRunner2 >> defaultTestResultClass [
 
 	^ TestResult
 ]
 
 { #category : #accessing }
-Runner >> doNotAccumulateResult [
+TestRunner2 >> doNotAccumulateResult [
 
 	"activate the results accumulation behavior"
 
@@ -127,32 +127,32 @@ Runner >> doNotAccumulateResult [
 ]
 
 { #category : #accessing }
-Runner >> errorCount [
+TestRunner2 >> errorCount [
 
 	^ result errorCount
 ]
 
 { #category : #initialization }
-Runner >> executionMode [
+TestRunner2 >> executionMode [
 
 	^ executionMode ifNil: [ 
 		  executionMode := self defaultExecutionModeClass]
 ]
 
 { #category : #running }
-Runner >> executionMode: anExecutionMode [
+TestRunner2 >> executionMode: anExecutionMode [
 
 	executionMode := anExecutionMode
 ]
 
 { #category : #accessing }
-Runner >> failureCount [
+TestRunner2 >> failureCount [
 
 	^ self result failureCount
 ]
 
 { #category : #testing }
-Runner >> hasTestsToRun [
+TestRunner2 >> hasTestsToRun [
 
 	"check either the runner has test to run or not.
 	If any test has not been added, there nothing to run"
@@ -166,7 +166,7 @@ Runner >> hasTestsToRun [
 ]
 
 { #category : #initialization }
-Runner >> initialize [
+TestRunner2 >> initialize [
 
 	super initialize.
 	self resetSuites.
@@ -175,26 +175,26 @@ Runner >> initialize [
 ]
 
 { #category : #accessing }
-Runner >> passedCount [
+TestRunner2 >> passedCount [
 
 	^ self result passedCount
 ]
 
 { #category : #tests }
-Runner >> raiseAbstractTestCaseException: aClass [
+TestRunner2 >> raiseAbstractTestCaseException: aClass [
 
 	AnAbstractTestCaseException signal:
 		aClass name , ' is abstract. Run its subclassees instead'
 ]
 
 { #category : #tests }
-Runner >> raiseNotTestCaseException: aClass [
+TestRunner2 >> raiseNotTestCaseException: aClass [
 
 	ANoTestCaseException signal: aClass name , ' is not a testCase'
 ]
 
 { #category : #running }
-Runner >> resetResult [
+TestRunner2 >> resetResult [
 
 	"reset the runner result"
 
@@ -202,19 +202,19 @@ Runner >> resetResult [
 ]
 
 { #category : #tests }
-Runner >> resetSuites [
+TestRunner2 >> resetSuites [
 
 	suites := OrderedCollection new
 ]
 
 { #category : #accessing }
-Runner >> result [
+TestRunner2 >> result [
 
 	^ result
 ]
 
 { #category : #running }
-Runner >> run [
+TestRunner2 >> run [
 
 	"run all the suite then return the result"
 
@@ -223,7 +223,7 @@ Runner >> run [
 ]
 
 { #category : #running }
-Runner >> runCase: aTestCase [
+TestRunner2 >> runCase: aTestCase [
 
 	self shouldAccumulate ifFalse: [ self resetResult ].
 	self testSuiteFromClass: aTestCase.
@@ -232,21 +232,22 @@ Runner >> runCase: aTestCase [
 ]
 
 { #category : #running }
-Runner >> runCases: aCollectionOfTestCases [
+TestRunner2 >> runCases: aCollectionOfTestCases [
 
 	self accumulateResult.
 	aCollectionOfTestCases do: [ :class | 
-		class isAbstract ifFalse: [ self runCase: class ] ]
+		class isAbstract ifFalse: [ self runCase: class ] ].
+	^ result
 ]
 
 { #category : #accessing }
-Runner >> runCount [
+TestRunner2 >> runCount [
 
 	^ self result runCount
 ]
 
 { #category : #running }
-Runner >> runFailure: failure [
+TestRunner2 >> runFailure: failure [
 
 	"rerun the giving failure"
 
@@ -260,7 +261,7 @@ Runner >> runFailure: failure [
 ]
 
 { #category : #running }
-Runner >> runFailures [
+TestRunner2 >> runFailures [
 
 	"rerun all the failed testcases"
 
@@ -268,20 +269,20 @@ Runner >> runFailures [
 ]
 
 { #category : #runninh }
-Runner >> runPackage: aRPackage [
+TestRunner2 >> runPackage: aRPackage [
 
 	self runCases:
 		(aRPackage definedClasses reject: [ :class | class isAbstract ])
 ]
 
 { #category : #running }
-Runner >> runSuite: aTestSuite [
+TestRunner2 >> runSuite: aTestSuite [
 
 	result := result + (self executionMode executeSuite: aTestSuite)
 ]
 
 { #category : #running }
-Runner >> runTestsSuites [
+TestRunner2 >> runTestsSuites [
 
 	"execute all every collected suite"
 
@@ -290,7 +291,7 @@ Runner >> runTestsSuites [
 ]
 
 { #category : #processing }
-Runner >> setUp [
+TestRunner2 >> setUp [
 
 	"we would like to process suites before execution (e.g shufling the tests, ...). It can be useful 
 	for tests dependancy detection"
@@ -299,74 +300,74 @@ Runner >> setUp [
 ]
 
 { #category : #tests }
-Runner >> shouldAccumulate [
+TestRunner2 >> shouldAccumulate [
 
 	^ shouldAccumulate
 ]
 
 { #category : #asserting }
-Runner >> shouldAccumulate: aBoolean [
+TestRunner2 >> shouldAccumulate: aBoolean [
 
 	shouldAccumulate := aBoolean
 ]
 
 { #category : #accessing }
-Runner >> someTestCausesError [
+TestRunner2 >> someTestCausesError [
 
 	^ result hasErrors
 ]
 
 { #category : #accessing }
-Runner >> someTestFailed [
+TestRunner2 >> someTestFailed [
 
 	^ result hasFailures
 ]
 
 { #category : #accessing }
-Runner >> suitePreparator [
+TestRunner2 >> suitePreparator [
 
 	^ suitePreparator ifNil: [ 
 		  suitePreparator := self defaultSuitePreparator ]
 ]
 
 { #category : #adding }
-Runner >> suitePreparator: aSuitePreparator [
+TestRunner2 >> suitePreparator: aSuitePreparator [
 
 	suitePreparator := aSuitePreparator
 ]
 
 { #category : #'instance creation' }
-Runner >> suites [
+TestRunner2 >> suites [
 
-	^ suites ifNil: [ self tearDown ]
+	^ suites ifNil: [ self resetSuites ]
 ]
 
 { #category : #'as yet unclassified' }
-Runner >> suitesTotal [
+TestRunner2 >> suitesTotal [
 
 	^ suites size
 ]
 
 { #category : #running }
-Runner >> switchToDebugMode [
+TestRunner2 >> switchToDebugMode [
 
 	self executionMode: DebugMode
 ]
 
 { #category : #running }
-Runner >> switchToRunMode [
+TestRunner2 >> switchToRunMode [
 
 	self executionMode: RunMode
 ]
 
 { #category : #running }
-Runner >> tearDown [
+TestRunner2 >> tearDown [
 
 	self resetSuites
 ]
 
 { #category : #tests }
-Runner >> testSuiteFromClass: aClass [
+TestRunner2 >> testSuiteFromClass: aClass [
 
 	"build a suite from the giving class then add it to the internal collections of suites. 
 	The giving class should be a test case"
@@ -377,15 +378,15 @@ Runner >> testSuiteFromClass: aClass [
 ]
 
 { #category : #tests }
-Runner >> testSuitesFromClasses: aColOfTestCase [
+TestRunner2 >> testSuitesFromClasses: aColOfTestCase [
 
-	"build a collection of TestSuite and store it in "
+	"build a collection of TestSuite and save it"
 
 	aColOfTestCase do: [ :class | self testSuiteFromClass: class ]
 ]
 
 { #category : #accessing }
-Runner >> testsCount [
+TestRunner2 >> testsCount [
 
 	"return the number of all tests methods from suites"
 
@@ -393,7 +394,7 @@ Runner >> testsCount [
 ]
 
 { #category : #update }
-Runner >> updateResultForFailure: testResult [
+TestRunner2 >> updateResultForFailure: testResult [
 
 	"updtade the current test result"
 	testResult passed do: [ :testCase | result addPass: testCase ].
