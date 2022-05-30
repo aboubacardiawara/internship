@@ -116,6 +116,6 @@ CommandLineTestRunner2 >> stdout [
 CommandLineTestRunner2 >> tearDown [
 
 	super tearDown.
-	self printReportInTranscript
+	self printReport
 
 ]

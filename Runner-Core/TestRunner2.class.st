@@ -372,9 +372,8 @@ TestRunner2 >> testSuiteFromClass: aClass [
 	"build a suite from the giving class then add it to the internal collections of suites. 
 	The giving class should be a test case"
 
-	aClass isTestCase ifFalse: [ self raiseNotTestCaseException: aClass ].
-	aClass isAbstract ifTrue: [ self raiseAbstractTestCaseException: aClass].
-	self suites add: aClass suite
+	(aClass isTestCase and: aClass isAbstract not) ifTrue: [ 
+		self suites add: aClass suite ]
 ]
 
 { #category : #tests }

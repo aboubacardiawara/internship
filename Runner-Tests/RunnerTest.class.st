@@ -37,27 +37,11 @@ RunnerTest >> testGivingANoAbstractTestcaseShouldntThrowsException [
 ]
 
 { #category : #tests }
-RunnerTest >> testGivingANonTestcaseThrowsException [
-
-	self
-		should: [TestRunner2 new runCase: Integer]
-		raise: ANoTestCaseException
-]
-
-{ #category : #tests }
 RunnerTest >> testGivingATestcaseDoesNotThrowsException [
 
 	self
 		shouldnt: (TestRunner2 runCase: GreenTest)
 		raise: ANoTestCaseException
-]
-
-{ #category : #tests }
-RunnerTest >> testGivingAnAbstractTestcaseShouldThrowsException [
-
-	self
-		should: [ TestRunner2 runCase: AthensCairoExportSurfaceTest ]
-		raise: AnAbstractTestCaseException
 ]
 
 { #category : #tests }
@@ -268,4 +252,18 @@ RunnerTest >> testSuiteWithMultipleTestCase [
 			YellowTest.
 			RedTest }.
 	self assert: runner suitesTotal equals: 3.
+]
+
+{ #category : #tests }
+RunnerTest >> testSuitesFromANonTestCaseIsEmpty [
+
+	TestRunner2 runCase: Integer.
+	self deny: runner hasTestsToRun
+]
+
+{ #category : #tests }
+RunnerTest >> testSuitesFromAnAbstractTestCaseIsEmpty [
+
+	TestRunner2 runCase: AthensCairoExportSurfaceTest.
+	self deny: runner hasTestsToRun
 ]
