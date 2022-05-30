@@ -45,7 +45,8 @@ Class {
 		'suitePreparator',
 		'shouldAccumulate',
 		'executionMode',
-		'currentTest'
+		'currentTest',
+		'currentResult'
 	],
 	#category : #'Runner-Core-Core'
 }
@@ -267,7 +268,8 @@ TestRunner2 >> runPackage: aRPackage [
 { #category : #running }
 TestRunner2 >> runSuite: aTestSuite [
 
-	result := result + (self executionMode executeSuite: aTestSuite)
+	currentResult := self executionMode executeSuite: aTestSuite.
+	result := result + currentResult
 ]
 
 { #category : #running }

@@ -48,8 +48,9 @@ CommandLineTestRunner2 >> printReport [
 	cr := OSPlatform current lineEnding.
 
 	self stderr << cr << 'Finished running ' << currentTest name << cr
-	<< '  [+] passed: ' << '?' << cr << '  [-] failure: ' << '?' << cr
-	<< '  [+] errors: ' << '?' << cr << '  [+] skip: ' << '?' << cr
+	<< '  [+] passed: ' << currentResult runCount asString << cr
+	<< '  [-] failure: ' << currentResult failureCount asString << cr
+	<< '  [+] errors: ' << currentResult errorCount asString << cr
 ]
 
 { #category : #private }
