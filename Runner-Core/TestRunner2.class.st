@@ -44,7 +44,8 @@ Class {
 		'result',
 		'suitePreparator',
 		'shouldAccumulate',
-		'executionMode'
+		'executionMode',
+		'currentTest'
 	],
 	#category : #'Runner-Core-Core'
 }
@@ -212,6 +213,7 @@ TestRunner2 >> run [
 { #category : #running }
 TestRunner2 >> runCase: aTestCase [
 
+	currentTest := aTestCase.
 	self shouldAccumulate ifFalse: [ self resetResult ].
 	self testSuiteFromClass: aTestCase.
 	self run.

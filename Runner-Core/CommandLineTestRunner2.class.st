@@ -33,12 +33,23 @@ CommandLineTestRunner2 >> print: longErrorMessage short: shortErrorMessage of: a
 ]
 
 { #category : #private }
+CommandLineTestRunner2 >> printNextTest [
+
+	| cr |
+	cr := OSPlatform current lineEnding.
+
+	self stderr << 'Test in progress: ' << currentTest name << cr
+]
+
+{ #category : #private }
 CommandLineTestRunner2 >> printReport [
 
 	| cr |
 	cr := OSPlatform current lineEnding.
 
-	self stderr << cr << 'Finished running ' << cr
+	self stderr << cr << 'Finished running ' << currentTest name << cr
+	<< '  [+] passed: ' << '?' << cr << '  [-] failure: ' << '?' << cr
+	<< '  [+] errors: ' << '?' << cr << '  [+] skip: ' << '?' << cr
 ]
 
 { #category : #private }
@@ -95,6 +106,12 @@ CommandLineTestRunner2 >> recordPassOf: aTestCase [
 		print: nil
 		short: ' [OK]' 
 		of: aTestCase
+]
+
+{ #category : #private }
+CommandLineTestRunner2 >> setUp [
+	super setUp.
+	self printNextTest.
 ]
 
 { #category : #private }
