@@ -3,7 +3,7 @@ I am a test Coverage runner
 "
 Class {
 	#name : #CoverageRunner,
-	#superclass : #Runner,
+	#superclass : #TestRunner2,
 	#instVars : [
 		'classes',
 		'link',
