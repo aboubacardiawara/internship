@@ -266,6 +266,12 @@ TestRunner2 >> runPackage: aRPackage [
 ]
 
 { #category : #running }
+TestRunner2 >> runPackages: aCollection [
+
+	aCollection do: [ :package | self runPackage: package ]
+]
+
+{ #category : #running }
 TestRunner2 >> runSuite: aTestSuite [
 
 	currentResult := self executionMode executeSuite: aTestSuite.

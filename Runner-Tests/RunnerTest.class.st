@@ -187,6 +187,20 @@ RunnerTest >> testRunningAnEmptyCollectionOfTestCases [
 ]
 
 { #category : #tests }
+RunnerTest >> testRunningFromACollectionOfPackages [
+
+	"first execution"
+
+	| packages |
+	packages := OrderedCollection
+		            with: #'Zodiac-Tests' asPackage
+		            with: #'Zodiac-Tests' asPackage.
+	runner runPackages: packages.
+	self assert: runner runCount equals: 79 * 2.
+	self assert: runner passedCount equals: 79 * 2
+]
+
+{ #category : #tests }
 RunnerTest >> testRunningFromAPackage [
 
 	"first execution"
@@ -196,6 +210,18 @@ RunnerTest >> testRunningFromAPackage [
 	runner runPackage: aPackage.
 	self assert: runner runCount equals: 79.
 	self assert: runner passedCount equals: 79
+]
+
+{ #category : #tests }
+RunnerTest >> testRunningFromAnEmptyCollectionOfPackages [
+
+	"first execution"
+
+	| packages |
+	packages := OrderedCollection new.
+	runner runPackages: packages.
+	self assert: runner runCount equals: 0.
+	self assert: runner passedCount equals: 0
 ]
 
 { #category : #tests }
