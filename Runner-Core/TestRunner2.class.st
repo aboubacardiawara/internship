@@ -102,7 +102,7 @@ TestRunner2 >> defaultExecutionEnvironmentClass [
 { #category : #running }
 TestRunner2 >> defaultExecutionModeClass [
 
-	^ RunMode
+	^ RunExecutionMode
 ]
 
 { #category : #running }
@@ -348,13 +348,13 @@ TestRunner2 >> suitesTotal [
 { #category : #running }
 TestRunner2 >> switchToDebugMode [
 
-	self executionMode: DebugMode
+	self executionMode: DebugExecutionMode
 ]
 
 { #category : #running }
 TestRunner2 >> switchToRunMode [
 
-	self executionMode: RunMode
+	self executionMode: RunExecutionMode
 ]
 
 { #category : #running }
