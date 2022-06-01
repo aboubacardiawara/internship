@@ -15,3 +15,9 @@ ExecutionConfiguration class >> executeSuite: aTestSuite [
 
 	self subclassResponsibility
 ]
+
+{ #category : #execution }
+ExecutionConfiguration class >> isAbstract [
+
+	^ self == ExecutionConfiguration
+]

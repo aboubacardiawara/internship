@@ -18,3 +18,8 @@ AbstractSuitePreparator class >> applyOnSuites: aCol [
 	
 	aCol do: [ :suite | self applyOn: suite ]
 ]
+
+{ #category : #applying }
+AbstractSuitePreparator class >> isAbstract [
+	^ self == AbstractSuitePreparator
+]
