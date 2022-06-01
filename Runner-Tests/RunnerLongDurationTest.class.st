@@ -1,5 +1,5 @@
 Class {
-	#name : #RunnerTestLongDuration,
+	#name : #RunnerLongDurationTest,
 	#superclass : #TestCase,
 	#instVars : [
 		'runner'
@@ -8,13 +8,13 @@ Class {
 }
 
 { #category : #tests }
-RunnerTestLongDuration >> setUp [
+RunnerLongDurationTest >> setUp [
 	super setUp.
 	runner := TestRunner2 new suitePreparator: ShuffleSuitePreparator.
 ]
 
 { #category : #tests }
-RunnerTestLongDuration >> testRunningFromACollectionOfPackages [
+RunnerLongDurationTest >> testRunningFromACollectionOfPackages [
 
 	"first execution"
 
@@ -28,7 +28,7 @@ RunnerTestLongDuration >> testRunningFromACollectionOfPackages [
 ]
 
 { #category : #tests }
-RunnerTestLongDuration >> testRunningFromAPackage [
+RunnerLongDurationTest >> testRunningFromAPackage [
 
 	"first execution"
 
