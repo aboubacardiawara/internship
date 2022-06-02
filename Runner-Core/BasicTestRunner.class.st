@@ -195,7 +195,7 @@ BasicTestRunner >> tearDown [
 { #category : #tests }
 BasicTestRunner >> testSuiteFromClass: aClass [
 
-	suite := aClass suite
+	aClass isTestCase ifTrue: [ suite := aClass suite ]
 ]
 
 { #category : #counting }

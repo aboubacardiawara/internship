@@ -119,13 +119,13 @@ BasicTestRunnerTest >> testRunningTestClassSide [
 { #category : #tests }
 BasicTestRunnerTest >> testSuitesFromANonTestCaseIsEmpty [
 
-	TestRunner2 run: Integer.
+	self classForRunner run: Integer.
 	self deny: runner hasTestsToRun
 ]
 
 { #category : #tests }
 BasicTestRunnerTest >> testSuitesFromAnAbstractTestCaseIsEmpty [
 
-	TestRunner2 run: AthensCairoExportSurfaceTest.
+	self classForRunner run: AthensCairoExportSurfaceTest.
 	self deny: runner hasTestsToRun
 ]
