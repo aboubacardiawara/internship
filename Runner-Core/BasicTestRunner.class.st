@@ -119,7 +119,8 @@ BasicTestRunner >> run [
 BasicTestRunner >> run: aClass [
 
 	self testSuiteFromClass: aClass.
-	self run
+	self run.
+	^ result
 ]
 
 { #category : #counting }
@@ -201,7 +202,7 @@ BasicTestRunner >> testSuiteFromClass: aClass [
 { #category : #counting }
 BasicTestRunner >> testsCount [
 
-	^ self suite tests size
+	^ self result tests size
 ]
 
 { #category : #accessing }

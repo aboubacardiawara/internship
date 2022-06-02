@@ -30,15 +30,17 @@ BasicTestRunnerTest >> testDefaultSuitePreparatorOfTheRunner [
 BasicTestRunnerTest >> testFailedTestFaildWhileRerunningDoesNotChangeTheResult [
 
 	"first execution"
-	
+
 	runner run: YellowTest.
-	self assert: runner runCount equals: 2.
-	self assert: runner failureCount equals: 1.
+	self
+		assert: runner testsCount equals: 2;
+		assert: runner failureCount equals: 1.
 
 	"second execution"
 	runner runFailures.
-	self assert: runner runCount equals: 2.
-	self assert: runner failureCount equals: 1
+	self
+		assert: runner testsCount equals: 2;
+		assert: runner failureCount equals: 1
 ]
 
 { #category : #tests }
@@ -67,31 +69,71 @@ BasicTestRunnerTest >> testNewCreatedRunnerHasAnyTestsToRun [
 BasicTestRunnerTest >> testOnRunnerResultWithGreenTest [
 
 	runner run: GreenTest.
-	self assert: runner passedCount equals: 2.
-
-	self assert: runner failureCount equals: 0
+	self
+		assert: runner runCount equals: 2;
+		assert: runner passedCount equals: 2;
+		assert: runner failureCount equals: 0
 ]
 
 { #category : #tests }
 BasicTestRunnerTest >> testOnRunnerResultWithRedTest [
 
 	runner run: RedTest.
-
-	self assert: runner passedCount equals: 1.
-
-	self assert: runner failureCount equals: 1.
-
-	self assert: runner errorCount equals: 1
+	self
+		assert: runner runCount equals: 3;
+		assert: runner passedCount equals: 1;
+		assert: runner failureCount equals: 1;
+		assert: runner errorCount equals: 1
 ]
 
 { #category : #tests }
 BasicTestRunnerTest >> testOnRunnerResultWithYellowTest [
 
 	runner run: YellowTest.
+	self
+		assert: runner testsCount equals: 2;
+		assert: runner passedCount equals: 1;
+		assert: runner failureCount equals: 1
+]
 
-	self assert: runner passedCount equals: 1.
+{ #category : #tests }
+BasicTestRunnerTest >> testRerunningFailedTest [
 
-	self assert: runner failureCount equals: 1
+	"we will run a test who fail only during the first execution"
+
+	"first execution"
+
+	runner run: FailThenPass.
+	self assert: runner runCount equals: 2.
+	self assert: runner failureCount equals: 1.
+
+	"second execution"
+	runner runFailures.
+	runner result.
+	self assert: runner runCount equals: 2.
+	self assert: runner failureCount equals: 0
+]
+
+{ #category : #tests }
+BasicTestRunnerTest >> testRerunningFailedTest2 [
+
+	"we will run a test who fail only during the first execution"
+
+	"first execution"
+
+	runner run: RedTest.
+	self
+		assert: runner runCount equals: 3;
+		assert: runner failureCount equals: 1;
+		assert: runner errorCount equals: 1.
+
+	"second execution"
+	runner runFailures.
+	runner result.
+	self
+		assert: runner runCount equals: 3;
+		assert: runner failureCount equals: 1;
+		assert: runner errorCount equals: 1
 ]
 
 { #category : #tests }
