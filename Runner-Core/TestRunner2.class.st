@@ -56,14 +56,14 @@ TestRunner2 class >> example [
 	<script>
 	TestRunner2 new 
 	suitePreparator: ShuffleSuitePreparator;
-	runCase: DependencyTest;
+	run: DependencyTest;
 	inspect
 ]
 
 { #category : #running }
-TestRunner2 class >> runCase: aTestCase [
+TestRunner2 class >> run: aTestCase [
 	^ self new
-		runCase: aTestCase
+		run: aTestCase
 ]
 
 { #category : #processing }
@@ -212,7 +212,7 @@ TestRunner2 >> run [
 ]
 
 { #category : #running }
-TestRunner2 >> runCase: aTestCase [
+TestRunner2 >> run: aTestCase [
 
 	currentTest := aTestCase.
 	self shouldAccumulate ifFalse: [ self resetResult ].
@@ -226,7 +226,7 @@ TestRunner2 >> runCases: aCollectionOfTestCases [
 
 	self accumulateResult.
 	aCollectionOfTestCases do: [ :class | 
-		class isAbstract ifFalse: [ self runCase: class ] ].
+		class isAbstract ifFalse: [ self run: class ] ].
 	^ result
 ]
 

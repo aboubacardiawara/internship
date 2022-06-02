@@ -133,7 +133,7 @@ AbstractRunnerPresenter >> execute: aCollectionOfClasses [
 	self initializeRunner.
 	aCollectionOfClasses
 		do: [ :testCase | 
-			runner runCase: testCase.
+			runner run: testCase.
 			self updateResultPresenter ]
 		displayingProgress: 'Running Tests'
 ]
@@ -277,7 +277,7 @@ AbstractRunnerPresenter >> runSelectedTestsWithDebugFirstRunner [
 	self runner switchToDebugMode.
 	selectedClasses
 		do: [ :testCase | 
-			runner runCase: testCase.
+			runner run: testCase.
 			self updateResultPresenter ]
 		displayingProgress: 'Running Tests'.
 	self runner switchToRunMode
