@@ -15,6 +15,12 @@ Class {
 	#category : #'Runner-Core-Core'
 }
 
+{ #category : #running }
+BasicTestRunner class >> run: aClass [
+
+	^ self new run: aClass
+]
+
 { #category : #getter }
 BasicTestRunner >> classForTestSuite [
 
@@ -150,7 +156,7 @@ BasicTestRunner >> runSuite [
 	result := self executionMode executeSuite: suite
 ]
 
-{ #category : #running }
+{ #category : #processing }
 BasicTestRunner >> setUp [
 
 	"we would like to process suites before 

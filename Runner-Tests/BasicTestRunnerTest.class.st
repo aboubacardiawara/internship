@@ -8,10 +8,16 @@ Class {
 }
 
 { #category : #tests }
+BasicTestRunnerTest >> classForRunner [
+
+	^ BasicTestRunner
+]
+
+{ #category : #running }
 BasicTestRunnerTest >> setUp [
 
 	super setUp.
-	runner := BasicTestRunner new
+	runner := self classForRunner new
 ]
 
 { #category : #tests }
@@ -96,6 +102,18 @@ BasicTestRunnerTest >> testRunnerDoesNotAccumulateRsult [
 
 	secondRunningCount := (runner run: GreenTest) runCount.
 	self assert: secondRunningCount equals: firstRunningCount
+]
+
+{ #category : #tests }
+BasicTestRunnerTest >> testRunningTestClassSide [
+
+	self
+		assert: (self classForRunner run: GreenTest) passedCount
+		equals: 2.
+
+	self
+		assert: (self classForRunner run: GreenTest) failureCount
+		equals: 0
 ]
 
 { #category : #tests }
