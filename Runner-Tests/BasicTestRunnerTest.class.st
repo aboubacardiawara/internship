@@ -103,15 +103,14 @@ BasicTestRunnerTest >> testRerunningFailedTest [
 
 	"first execution"
 
-	runner run: FailThenPass.
+	[runner run: FailThenPass.
 	self assert: runner runCount equals: 2.
 	self assert: runner failureCount equals: 1.
 
 	"second execution"
 	runner runFailures.
-	runner result.
 	self assert: runner runCount equals: 2.
-	self assert: runner failureCount equals: 0
+	self assert: runner failureCount equals: 0] ensure: [ FailThenPass reset  ]
 ]
 
 { #category : #tests }

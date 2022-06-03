@@ -13,7 +13,7 @@ TestRunnerTest class >> shouldInheritSelectors [
 { #category : #tests }
 TestRunnerTest >> classForRunner [
 
-	^ TestRunner3
+	^ TestRunnerDecorator
 ]
 
 { #category : #tests }

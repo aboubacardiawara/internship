@@ -27,6 +27,19 @@ BasicTestRunner >> classForTestSuite [
 	^ TestSuite
 ]
 
+{ #category : #running }
+BasicTestRunner >> debugFailure: failure [
+
+	"rerun the giving failure"
+
+	"remove it, run it, the update the result"
+
+	| debugResult |
+	debugResult := failure debug.
+	debugResult ifNotNil: [ result removeFailure: failure ].
+	self updateResultWith: debugResult
+]
+
 { #category : #accessing }
 BasicTestRunner >> defaultExecutionModeClass [
 
@@ -140,7 +153,7 @@ BasicTestRunner >> runFailure: failure [
 	aResult := failure run.
 	aResult hasFailures ifTrue: [ ^ self ].
 	result removeFailure: failure.
-	self updateResultForFailure: aResult
+	self updateResultWith: aResult
 ]
 
 { #category : #accessing }
@@ -148,7 +161,8 @@ BasicTestRunner >> runFailures [
 
 	"rerun all the failed testcases"
 
-	self result failures do: [ :failure | self runFailure: failure ]
+	self result failures do: [ :failure | self runFailure: failure ].
+	^ result
 ]
 
 { #category : #running }
@@ -187,6 +201,18 @@ BasicTestRunner >> suitePreparator: anObject [
 	suitePreparator := anObject
 ]
 
+{ #category : #processing }
+BasicTestRunner >> switchToDebugMode [
+
+	self executionMode: DebugExecutionMode
+]
+
+{ #category : #processing }
+BasicTestRunner >> switchToRunMode [
+
+	self executionMode: RunExecutionMode
+]
+
 { #category : #running }
 BasicTestRunner >> tearDown [
 
@@ -206,9 +232,10 @@ BasicTestRunner >> testsCount [
 ]
 
 { #category : #accessing }
-BasicTestRunner >> updateResultForFailure: testResult [
+BasicTestRunner >> updateResultWith: testResult [
 
-	"updtade the current test result"
-	testResult passed do: [ :testCase | result addPass: testCase ].
-	testResult failures do: [ :testCase | result addFailure: testCase ]
+	"updtade the current test result then return it"
+
+	self result + testResult.
+	^ result
 ]

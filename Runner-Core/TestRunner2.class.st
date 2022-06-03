@@ -54,7 +54,7 @@ Class {
 { #category : #running }
 TestRunner2 class >> example [
 	<script>
-	TestRunner2 new 
+	self new 
 	suitePreparator: ShuffleSuitePreparator;
 	run: DependencyTest;
 	inspect
@@ -90,7 +90,7 @@ TestRunner2 >> debugFailure: failure [
 	| debugResult |
 	debugResult := failure debug.
 	debugResult ifNotNil: [ result removeFailure: failure ].
-	self updateResultForFailure: debugResult
+	self updateResultWith: debugResult
 ]
 
 { #category : #accessing }
@@ -247,7 +247,7 @@ TestRunner2 >> runFailure: failure [
 	aResult := failure run.
 	aResult hasFailures ifTrue: [ ^ self ].
 	result removeFailure: failure.
-	self updateResultForFailure: aResult
+	self updateResultWith: aResult
 ]
 
 { #category : #running }
@@ -390,7 +390,7 @@ TestRunner2 >> testsCount [
 ]
 
 { #category : #update }
-TestRunner2 >> updateResultForFailure: testResult [
+TestRunner2 >> updateResultWith: testResult [
 
 	"updtade the current test result"
 	testResult passed do: [ :testCase | result addPass: testCase ].

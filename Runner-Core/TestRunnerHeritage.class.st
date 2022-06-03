@@ -1,5 +1,5 @@
 Class {
-	#name : #TestRunner3,
+	#name : #TestRunnerHeritage,
 	#superclass : #BasicTestRunner,
 	#instVars : [
 		'suites',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #running }
-TestRunner3 class >> example [
+TestRunnerHeritage class >> example [
 	<script>
 	TestRunner2 new 
 	suitePreparator: ShuffleSuitePreparator;
@@ -20,13 +20,13 @@ TestRunner3 class >> example [
 ]
 
 { #category : #running }
-TestRunner3 class >> run: aTestCase [
+TestRunnerHeritage class >> run: aTestCase [
 	^ self new
 		run: aTestCase
 ]
 
 { #category : #processing }
-TestRunner3 >> accumulateResult [
+TestRunnerHeritage >> accumulateResult [
 
 	"activate the results accumulation behavior"
 
@@ -34,13 +34,13 @@ TestRunner3 >> accumulateResult [
 ]
 
 { #category : #accessing }
-TestRunner3 >> allTestPassed [
+TestRunnerHeritage >> allTestPassed [
 
 	^ result passedCount = result runCount
 ]
 
 { #category : #running }
-TestRunner3 >> debugFailure: failure [
+TestRunnerHeritage >> debugFailure: failure [
 
 	"rerun the giving failure"
 
@@ -49,17 +49,17 @@ TestRunner3 >> debugFailure: failure [
 	| debugResult |
 	debugResult := failure debug.
 	debugResult ifNotNil: [ result removeFailure: failure ].
-	self updateResultForFailure: debugResult
+	self updateResultWith: debugResult
 ]
 
 { #category : #accessing }
-TestRunner3 >> defaultExecutionEnvironmentClass [
+TestRunnerHeritage >> defaultExecutionEnvironmentClass [
 
 	^ CurrentExecutionEnvironment
 ]
 
 { #category : #running }
-TestRunner3 >> defaultSuitePreparator [
+TestRunnerHeritage >> defaultSuitePreparator [
 
 	"by default any process will be applied on suites.
 	You can change the default behavior. See suitePreparator:"
@@ -68,13 +68,13 @@ TestRunner3 >> defaultSuitePreparator [
 ]
 
 { #category : #running }
-TestRunner3 >> defaultTestResultClass [
+TestRunnerHeritage >> defaultTestResultClass [
 
 	^ TestResult
 ]
 
 { #category : #accessing }
-TestRunner3 >> doNotAccumulateResult [
+TestRunnerHeritage >> doNotAccumulateResult [
 
 	"activate the results accumulation behavior"
 
@@ -82,7 +82,7 @@ TestRunner3 >> doNotAccumulateResult [
 ]
 
 { #category : #initialization }
-TestRunner3 >> initialize [
+TestRunnerHeritage >> initialize [
 
 	super initialize.
 	self resetSuites.
@@ -91,13 +91,13 @@ TestRunner3 >> initialize [
 ]
 
 { #category : #tests }
-TestRunner3 >> resetSuites [
+TestRunnerHeritage >> resetSuites [
 
 	suites := OrderedCollection new
 ]
 
 { #category : #running }
-TestRunner3 >> run [
+TestRunnerHeritage >> run [
 
 	"run all the suite then return the result"
 
@@ -106,7 +106,7 @@ TestRunner3 >> run [
 ]
 
 { #category : #running }
-TestRunner3 >> run: aTestCase [
+TestRunnerHeritage >> run: aTestCase [
 
 	currentTest := aTestCase.
 	self shouldAccumulate ifFalse: [ self resetResult ].
@@ -116,7 +116,7 @@ TestRunner3 >> run: aTestCase [
 ]
 
 { #category : #running }
-TestRunner3 >> runCases: aCollectionOfTestCases [
+TestRunnerHeritage >> runCases: aCollectionOfTestCases [
 
 	self accumulateResult.
 	aCollectionOfTestCases do: [ :class | 
@@ -125,7 +125,7 @@ TestRunner3 >> runCases: aCollectionOfTestCases [
 ]
 
 { #category : #running }
-TestRunner3 >> runFailure: failure [
+TestRunnerHeritage >> runFailure: failure [
 
 	"rerun the giving failure"
 
@@ -135,11 +135,11 @@ TestRunner3 >> runFailure: failure [
 	aResult := failure run.
 	aResult hasFailures ifTrue: [ ^ self ].
 	result removeFailure: failure.
-	self updateResultForFailure: aResult
+	self updateResultWith: aResult
 ]
 
 { #category : #running }
-TestRunner3 >> runFailures [
+TestRunnerHeritage >> runFailures [
 
 	"rerun all the failed testcases"
 
@@ -147,27 +147,27 @@ TestRunner3 >> runFailures [
 ]
 
 { #category : #runninh }
-TestRunner3 >> runPackage: aRPackage [
+TestRunnerHeritage >> runPackage: aRPackage [
 
 	self runCases:
 		(aRPackage definedClasses reject: [ :class | class isAbstract ])
 ]
 
 { #category : #running }
-TestRunner3 >> runPackages: aCollection [
+TestRunnerHeritage >> runPackages: aCollection [
 
 	aCollection do: [ :package | self runPackage: package ]
 ]
 
 { #category : #running }
-TestRunner3 >> runSuite: aTestSuite [
+TestRunnerHeritage >> runSuite: aTestSuite [
 
 	currentResult := self executionMode executeSuite: aTestSuite.
 	result := self result + currentResult
 ]
 
 { #category : #running }
-TestRunner3 >> runTestsSuites [
+TestRunnerHeritage >> runTestsSuites [
 
 	"execute all every collected suite"
 
@@ -176,7 +176,7 @@ TestRunner3 >> runTestsSuites [
 ]
 
 { #category : #processing }
-TestRunner3 >> setUp [
+TestRunnerHeritage >> setUp [
 
 	"we would like to process suites before execution (e.g shufling the tests, ...). It can be useful 
 	for tests dependancy detection"
@@ -186,75 +186,75 @@ TestRunner3 >> setUp [
 ]
 
 { #category : #tests }
-TestRunner3 >> shouldAccumulate [
+TestRunnerHeritage >> shouldAccumulate [
 
 	^ shouldAccumulate
 ]
 
 { #category : #asserting }
-TestRunner3 >> shouldAccumulate: aBoolean [
+TestRunnerHeritage >> shouldAccumulate: aBoolean [
 
 	shouldAccumulate := aBoolean
 ]
 
 { #category : #accessing }
-TestRunner3 >> someTestCausesError [
+TestRunnerHeritage >> someTestCausesError [
 
 	^ result hasErrors
 ]
 
 { #category : #accessing }
-TestRunner3 >> someTestFailed [
+TestRunnerHeritage >> someTestFailed [
 
 	^ result hasFailures
 ]
 
 { #category : #accessing }
-TestRunner3 >> suitePreparator [
+TestRunnerHeritage >> suitePreparator [
 
 	^ suitePreparator ifNil: [ 
 		  suitePreparator := self defaultSuitePreparator ]
 ]
 
 { #category : #adding }
-TestRunner3 >> suitePreparator: aSuitePreparator [
+TestRunnerHeritage >> suitePreparator: aSuitePreparator [
 
 	suitePreparator := aSuitePreparator
 ]
 
 { #category : #'instance creation' }
-TestRunner3 >> suites [
+TestRunnerHeritage >> suites [
 
 	^ suites ifNil: [ self resetSuites ]
 ]
 
 { #category : #counting }
-TestRunner3 >> suitesTotal [
+TestRunnerHeritage >> suitesTotal [
 
 	^ suites size
 ]
 
 { #category : #running }
-TestRunner3 >> switchToDebugMode [
+TestRunnerHeritage >> switchToDebugMode [
 
 	self executionMode: DebugExecutionMode
 ]
 
 { #category : #running }
-TestRunner3 >> switchToRunMode [
+TestRunnerHeritage >> switchToRunMode [
 
 	self executionMode: RunExecutionMode
 ]
 
 { #category : #running }
-TestRunner3 >> tearDown [
+TestRunnerHeritage >> tearDown [
 
 	super tearDown.
 	self resetSuites
 ]
 
 { #category : #tests }
-TestRunner3 >> testSuiteFromClass: aClass [
+TestRunnerHeritage >> testSuiteFromClass: aClass [
 
 	"build a suite from the giving class then add it to the internal collections of suites. 
 	The giving class should be a test case"
@@ -264,7 +264,7 @@ TestRunner3 >> testSuiteFromClass: aClass [
 ]
 
 { #category : #tests }
-TestRunner3 >> testSuitesFromClasses: aColOfTestCase [
+TestRunnerHeritage >> testSuitesFromClasses: aColOfTestCase [
 
 	"build a collection of TestSuite and save it"
 
@@ -272,7 +272,7 @@ TestRunner3 >> testSuitesFromClasses: aColOfTestCase [
 ]
 
 { #category : #accessing }
-TestRunner3 >> testsCount [
+TestRunnerHeritage >> testsCount [
 
 	"return the number of all tests methods from suites"
 
@@ -280,7 +280,7 @@ TestRunner3 >> testsCount [
 ]
 
 { #category : #update }
-TestRunner3 >> updateResultForFailure: testResult [
+TestRunnerHeritage >> updateResultWith: testResult [
 
 	"updtade the current test result"
 	testResult passed do: [ :testCase | result addPass: testCase ].
