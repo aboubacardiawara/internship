@@ -222,7 +222,7 @@ TestRunner2 >> run: aTestCase [
 ]
 
 { #category : #running }
-TestRunner2 >> runCases: aCollectionOfTestCases [
+TestRunner2 >> runAll: aCollectionOfTestCases [
 
 	self accumulateResult.
 	aCollectionOfTestCases do: [ :class | 
@@ -261,7 +261,7 @@ TestRunner2 >> runFailures [
 { #category : #runninh }
 TestRunner2 >> runPackage: aRPackage [
 
-	self runCases:
+	self runAll:
 		(aRPackage definedClasses reject: [ :class | class isAbstract ])
 ]
 

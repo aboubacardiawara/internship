@@ -40,7 +40,7 @@ TestRunnerTest >> testRunningACollectionOfTestCases [
 
 	"first execution"
 
-	runner runCases: { 
+	runner runAll: { 
 			GreenTest.
 			YellowTest }.
 	self assert: runner runCount equals: 4.
@@ -50,7 +50,7 @@ TestRunnerTest >> testRunningACollectionOfTestCases [
 { #category : #tests }
 TestRunnerTest >> testRunningACollectionOfTestCasesWithSomeAbstractClass [
 
-	runner runCases: { 
+	runner runAll: { 
 			AthensCairoExportSurfaceTest.
 			AthensCairoPDFSurfaceTest.
 			AthensCairoSVGSurfaceTest }.
@@ -63,7 +63,7 @@ TestRunnerTest >> testRunningAnEmptyCollectionOfTestCases [
 
 	"first execution"
 
-	runner runCases: {  }.
+	runner runAll: {  }.
 	self assert: runner runCount equals: 0
 ]
 
@@ -84,7 +84,6 @@ TestRunnerTest >> testRunningTestClassSide [
 
 	"/!\ check others ways to run tests in class side (packages, collection of tests) "
 
-	self classForRunner run: GreenTest.
 	self
 		assert: (self classForRunner run: GreenTest) passedCount
 		equals: 2.
@@ -114,4 +113,23 @@ TestRunnerTest >> testSuiteWithMultipleTestCase [
 			YellowTest.
 			RedTest }.
 	self assert: runner suitesTotal equals: 3.
+]
+
+{ #category : #tests }
+TestRunnerTest >> testTryingToRunFailuresAfterRunningMultipleTestCaseClass [
+
+	FailThenPass reset.
+
+	runner
+		accumulateResult;
+		runAll: { 
+				FailThenPass.
+				YellowTest }.
+
+	self assert: runner runCount equals: 4.
+	self assert: runner failureCount equals: 2.
+
+	runner runFailures.
+	self assert: runner runCount equals: 4.
+	self assert: runner failureCount equals: 1
 ]

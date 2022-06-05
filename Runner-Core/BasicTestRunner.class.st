@@ -136,6 +136,12 @@ BasicTestRunner >> run: aClass [
 	^ result
 ]
 
+{ #category : #accessing }
+BasicTestRunner >> runCase: aTestCase [
+
+	^ self executionMode executeCase: aTestCase
+]
+
 { #category : #counting }
 BasicTestRunner >> runCount [
 
@@ -150,9 +156,9 @@ BasicTestRunner >> runFailure: failure [
 	"remove it, run it, the update the result"
 
 	| aResult |
-	aResult := failure run.
+	aResult := self runCase: failure.
 	aResult hasFailures ifTrue: [ ^ self ].
-	result removeFailure: failure.
+	self result removeFailure: failure.
 	self updateResultWith: aResult
 ]
 
@@ -161,7 +167,7 @@ BasicTestRunner >> runFailures [
 
 	"rerun all the failed testcases"
 
-	self result failures do: [ :failure | self runFailure: failure ].
+	result failures do: [ :failure | self runFailure: failure ].
 	^ result
 ]
 

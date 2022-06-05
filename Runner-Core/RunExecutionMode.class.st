@@ -8,12 +8,16 @@ Class {
 }
 
 { #category : #execution }
+RunExecutionMode class >> executeCase: aTestCase [
+
+	^ aTestCase run
+]
+
+{ #category : #execution }
 RunExecutionMode class >> executeSuite: aTestSuite [
 
 	| result |
 	result := self defaultTestResultClass new.
-	[ aTestSuite run: result ] ensure: [ 
-		aTestSuite unsubscribe: TestAnnouncement ].
-
+	aTestSuite run: result.
 	^ result
 ]

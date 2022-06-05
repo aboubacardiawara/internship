@@ -9,8 +9,10 @@ Class {
 
 { #category : #tests }
 RunnerLongDurationTest >> setUp [
+
 	super setUp.
-	runner := TestRunner2 new suitePreparator: ShuffleSuitePreparator.
+	runner := TestRunnerDecorator new suitePreparator:
+		          ShuffleSuitePreparator
 ]
 
 { #category : #tests }

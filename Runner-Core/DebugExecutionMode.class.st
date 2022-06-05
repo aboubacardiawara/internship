@@ -9,6 +9,12 @@ Class {
 }
 
 { #category : #execution }
+DebugExecutionMode class >> executeCase: aTestCase [
+
+	^ aTestCase debug
+]
+
+{ #category : #execution }
 DebugExecutionMode class >> executeSuite: aTestSuite [
 
 	| result |

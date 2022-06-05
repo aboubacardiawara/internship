@@ -155,9 +155,12 @@ AbstractRunnerPresenter >> initializeActionBarPresenter [
 
 	actionBarPresenter := SpBoxLayout newLeftToRight
 		                      spacing: 5;
-		                      add: self runTestsButtonPresenter expand: false;
-		                      add: self rerunFailuresButtonPresenter expand: false;
-		                      add: self debugerOn1stFailureButtonPresenters expand: false;
+		                      add: self runTestsButtonPresenter
+		                      expand: false;
+		                      add: self rerunFailuresButtonPresenter
+		                      expand: false;
+		                      add: self debugerOn1stFailureButtonPresenters
+		                      expand: false;
 		                      yourself
 ]
 
@@ -220,9 +223,7 @@ AbstractRunnerPresenter >> initializeResultPresenter [
 { #category : #'buttons-presenters-initialization' }
 AbstractRunnerPresenter >> initializeRunner [
 
-	self runner: (self defaultRunnerClass new
-			 accumulateResult;
-			 suitePreparator: ShuffleSuitePreparator)
+	self runner: self defaultRunnerClass new accumulateResult
 ]
 
 { #category : #'presenters-initialization' }

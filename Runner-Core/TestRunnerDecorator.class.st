@@ -126,7 +126,7 @@ TestRunnerDecorator >> run: aTestCase [
 ]
 
 { #category : #running }
-TestRunnerDecorator >> runCases: aCollectionOfTestCases [
+TestRunnerDecorator >> runAll: aCollectionOfTestCases [
 
 	self accumulateResult.
 	aCollectionOfTestCases do: [ :class | 
@@ -141,21 +141,24 @@ TestRunnerDecorator >> runCount [
 ]
 
 { #category : #running }
-TestRunnerDecorator >> runFailure: aTestRunnerTest [
+TestRunnerDecorator >> runFailure: aTestCase [
 
-	self runner runFailure: aTestRunnerTest
+	| rerunningResult |
+	rerunningResult := self runner runCase: aTestCase.
+	rerunningResult hasPassed ifTrue: [ result removeFailure: aTestCase ].
+	self updateResultWith: rerunningResult
 ]
 
 { #category : #running }
 TestRunnerDecorator >> runFailures [
 
-	result := self runner runFailures
+	result failures do: [ :testCase | self runFailure: testCase ]
 ]
 
 { #category : #runninh }
 TestRunnerDecorator >> runPackage: aRPackage [
 
-	self runCases:
+	self runAll:
 		(aRPackage definedClasses reject: [ :class | class isAbstract ])
 ]
 
@@ -292,4 +295,13 @@ TestRunnerDecorator >> testsCount [
 	"return the number of all tests methods from suites"
 
 	^ self result tests size
+]
+
+{ #category : #tests }
+TestRunnerDecorator >> updateResultWith: testResult [
+
+	"updtade the current test result then return it"
+
+	self result + testResult.
+	^ result
 ]

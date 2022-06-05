@@ -160,7 +160,7 @@ BasicTestRunnerTest >> testRunningTestClassSide [
 { #category : #tests }
 BasicTestRunnerTest >> testSuitesFromANonTestCaseIsEmpty [
 
-	self classForRunner run: Integer.
+	runner testSuiteFromClass: Integer.
 	self deny: runner hasTestsToRun
 ]
 
