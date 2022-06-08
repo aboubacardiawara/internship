@@ -23,6 +23,12 @@ TestRunnerTreePresenter >> childreenFor: aParent [
 	^ {  }
 ]
 
+{ #category : #'buttons-presenters-initialization' }
+TestRunnerTreePresenter >> displayTestCases [
+
+	self generateTree
+]
+
 { #category : #'presenters-initialization' }
 TestRunnerTreePresenter >> generateTree [
 

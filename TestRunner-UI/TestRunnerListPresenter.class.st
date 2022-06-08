@@ -14,6 +14,15 @@ TestRunnerListPresenter class >> open [
 	^ self new open
 ]
 
+{ #category : #'buttons-presenters-initialization' }
+TestRunnerListPresenter >> displayTestCases [
+
+	| failures |
+	failures := runner result failures asOrderedCollection.
+
+	resultItemsPresenter items: failures
+]
+
 { #category : #'presenters-initialization' }
 TestRunnerListPresenter >> initializeResultItemsPresenter [
 	resultItemsPresenter := self instantiate: SpListPresenter.

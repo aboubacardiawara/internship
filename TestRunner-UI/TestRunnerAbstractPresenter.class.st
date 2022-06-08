@@ -134,6 +134,12 @@ TestRunnerAbstractPresenter >> definedTestCases: aPackage [
 ]
 
 { #category : #'buttons-presenters-initialization' }
+TestRunnerAbstractPresenter >> displayTestCases [
+
+	self shouldBeImplemented
+]
+
+{ #category : #'buttons-presenters-initialization' }
 TestRunnerAbstractPresenter >> execute: aCollectionOfClasses [
 
 	self initializeRunner.
@@ -359,6 +365,19 @@ TestRunnerAbstractPresenter >> updateClassPresenter: aCollectionOfPackages [
 	classesPresenter items:
 		(aCollectionOfPackages collectAll: [ :package | 
 			 self definedTestCases: package ])
+]
+
+{ #category : #'buttons-presenters-initialization' }
+TestRunnerAbstractPresenter >> updateResultDescription [
+
+	resultDescriptionPresenter text: runner resultDescription
+]
+
+{ #category : #'buttons-presenters-initialization' }
+TestRunnerAbstractPresenter >> updateResultPresenter [
+
+	self updateResultDescription.
+	self displayTestCases.
 ]
 
 { #category : #'presenters-initialization' }
