@@ -43,6 +43,12 @@ TestRunnerDecorator >> debugFailure: failure [
 ]
 
 { #category : #accessing }
+TestRunnerDecorator >> defaultExecutionEnvironmentClass [
+
+	^ self runner defaultExecutionEnvironmentClass
+]
+
+{ #category : #accessing }
 TestRunnerDecorator >> defaultRunner [
 
 	^ BasicTestRunner new
@@ -166,22 +172,6 @@ TestRunnerDecorator >> runPackage: aRPackage [
 TestRunnerDecorator >> runPackages: aCollection [
 
 	aCollection do: [ :package | self runPackage: package ]
-]
-
-{ #category : #running }
-TestRunnerDecorator >> runSuite: aTestSuite [
-
-	currentResult := self executionMode executeSuite: aTestSuite.
-	result := result + currentResult
-]
-
-{ #category : #running }
-TestRunnerDecorator >> runTestsSuites [
-
-	"execute all every collected suite"
-
-	self defaultExecutionEnvironmentClass runTestsBy: [ 
-		self suites do: [ :testSuite | self runSuite: testSuite ] ]
 ]
 
 { #category : #accessing }

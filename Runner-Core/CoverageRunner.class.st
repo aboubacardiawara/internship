@@ -3,13 +3,15 @@ I am a test Coverage runner
 "
 Class {
 	#name : #CoverageRunner,
-	#superclass : #TestRunner2,
+	#superclass : #Object,
 	#instVars : [
 		'classes',
 		'link',
 		'methods',
 		'covered',
-		'uncovered'
+		'uncovered',
+		'suites',
+		'runner'
 	],
 	#category : #'Runner-Core-Core'
 }
@@ -30,7 +32,7 @@ CoverageRunner >> addLinkToAllMethodsFromClasses [
 { #category : #adding }
 CoverageRunner >> addTestCase: aTestCase [
 
-	self testSuiteFromClass: aTestCase
+	self testSuitesFromClass: aTestCase
 ]
 
 { #category : #coverage }
@@ -53,6 +55,12 @@ CoverageRunner >> coverage [
 
 	self classes isEmpty ifTrue: [ self error: 'Any classes to run' ].
 	^ 100 - (100 * self unCovered size // self methods size)
+]
+
+{ #category : #adding }
+CoverageRunner >> defaultRunner [
+
+	^ BasicTestRunner new suitePreparator: AnyEffectSuitePreparator
 ]
 
 { #category : #testing }
@@ -93,6 +101,32 @@ CoverageRunner >> removeAnnotationsFromMethods [
 		each ast removeProperty: #tagExecuted ifAbsent: [  ] ]
 ]
 
+{ #category : #running }
+CoverageRunner >> run [
+
+	[ 
+	self setUp.
+	self runTestSuites ] ensure: [ self tearDown ]
+]
+
+{ #category : #running }
+CoverageRunner >> runSuite: aTestSuite [
+
+	self runner runCase: aTestSuite
+]
+
+{ #category : #running }
+CoverageRunner >> runTestSuites [
+
+	self suites do: [ :aSuite | self runSuite: aSuite ]
+]
+
+{ #category : #getter }
+CoverageRunner >> runner [
+
+	^ runner ifNil: [ self defaultRunner ]
+]
+
 { #category : #coverage }
 CoverageRunner >> saveCoveredMethods [
 
@@ -111,6 +145,12 @@ CoverageRunner >> setUp [
 	self addLinkToAllMethodsFromClasses.
 ]
 
+{ #category : #getter }
+CoverageRunner >> suites [
+
+	^ suites ifNil: [ suites := OrderedCollection new ]
+]
+
 { #category : #running }
 CoverageRunner >> tearDown [
 
@@ -118,6 +158,12 @@ CoverageRunner >> tearDown [
 	self saveCoveredMethods.
 	self saveUnCoveredMethods.
 	self removeAnnotationsFromMethods
+]
+
+{ #category : #tests }
+CoverageRunner >> testSuitesFromClass: aClass [
+
+	self suites add: aClass suite
 ]
 
 { #category : #coverage }

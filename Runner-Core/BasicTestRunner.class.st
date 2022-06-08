@@ -40,7 +40,13 @@ BasicTestRunner >> debugFailure: failure [
 	self updateResultWith: debugResult
 ]
 
-{ #category : #accessing }
+{ #category : #'default values' }
+BasicTestRunner >> defaultExecutionEnvironmentClass [
+
+	^ RunExecutionMode
+]
+
+{ #category : #'default-values' }
 BasicTestRunner >> defaultExecutionModeClass [
 
 	^ RunExecutionMode
@@ -175,6 +181,11 @@ BasicTestRunner >> runFailures [
 BasicTestRunner >> runSuite [
 
 	result := self executionMode executeSuite: suite
+]
+
+{ #category : #running }
+BasicTestRunner >> runSuite: aTestSuite [ 
+	self shouldBeImplemented.
 ]
 
 { #category : #processing }
