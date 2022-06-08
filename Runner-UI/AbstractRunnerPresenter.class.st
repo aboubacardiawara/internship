@@ -32,6 +32,12 @@ AbstractRunnerPresenter >> allDefinedTestCases: aCollectionOfPackage [
 		  self definedTestCases: package ]
 ]
 
+{ #category : #getter }
+AbstractRunnerPresenter >> classesPresenter [
+
+	^ classesPresenter
+]
+
 { #category : #'presenters-connection' }
 AbstractRunnerPresenter >> connectPackagesPresenter [
 
@@ -58,6 +64,7 @@ AbstractRunnerPresenter >> containsTestCase: aPackage [
 { #category : #'presenters-initialization' }
 AbstractRunnerPresenter >> debugSelectedTest [
 
+	self halt.
 	self rerunSelectedTestAs: [ :test | runner debugFailure: test ]
 ]
 
@@ -132,6 +139,17 @@ AbstractRunnerPresenter >> execute: aCollectionOfClasses [
 
 	self initializeRunner.
 	aCollectionOfClasses
+		do: [ :testCase | 
+			runner run: testCase.
+			self updateResultPresenter ]
+		displayingProgress: 'Running Tests'
+]
+
+{ #category : #'buttons-presenters-initialization' }
+AbstractRunnerPresenter >> executeSelectedClasses [
+
+	self initializeRunner.
+	self selectedClasses
 		do: [ :testCase | 
 			runner run: testCase.
 			self updateResultPresenter ]
@@ -234,6 +252,12 @@ AbstractRunnerPresenter >> initializeWindow: aWindowPresenter [
 		initialExtent: 800 @ 600
 ]
 
+{ #category : #getter }
+AbstractRunnerPresenter >> packagesPresenter [
+
+	^ packagesPresenter
+]
+
 { #category : #'presenters-initialization' }
 AbstractRunnerPresenter >> packagesWithTests [
 
@@ -266,6 +290,18 @@ AbstractRunnerPresenter >> rerunSelectedTestAs: aBlock [
 	self updateResultPresenter
 ]
 
+{ #category : #getter }
+AbstractRunnerPresenter >> resultDescriptionPresenter [
+
+	^ resultDescriptionPresenter
+]
+
+{ #category : #getter }
+AbstractRunnerPresenter >> resultItemsPresenter [
+
+	^ resultItemsPresenter
+]
+
 { #category : #'presenters-initialization' }
 AbstractRunnerPresenter >> runSelectedTest [
 
@@ -290,7 +326,7 @@ AbstractRunnerPresenter >> runTestsButtonPresenter [
 	^ self newButton
 		  label: 'Run';
 		  help: 'Run the selected tests';
-		  action: [ self execute: self selectedClasses ];
+		  action: [ self executeSelectedClasses];
 		  yourself
 ]
 
