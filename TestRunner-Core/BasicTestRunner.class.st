@@ -12,7 +12,7 @@ Class {
 		'executionMode',
 		'suite'
 	],
-	#category : #'Runner-Core-Core'
+	#category : #'TestRunner-Core-Core'
 }
 
 { #category : #running }

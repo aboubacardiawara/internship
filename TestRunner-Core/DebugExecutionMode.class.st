@@ -5,7 +5,7 @@ I always returns an empty result (TestResult).
 Class {
 	#name : #DebugExecutionMode,
 	#superclass : #AbstractExecutionMode,
-	#category : #'Runner-Core-Configuration'
+	#category : #'TestRunner-Core-Configuration'
 }
 
 { #category : #execution }

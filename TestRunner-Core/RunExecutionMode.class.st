@@ -4,7 +4,7 @@ I ececute a test suite then return its TestResult.
 Class {
 	#name : #RunExecutionMode,
 	#superclass : #AbstractExecutionMode,
-	#category : #'Runner-Core-Configuration'
+	#category : #'TestRunner-Core-Configuration'
 }
 
 { #category : #execution }

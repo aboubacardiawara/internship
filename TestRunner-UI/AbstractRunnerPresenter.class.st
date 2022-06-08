@@ -13,7 +13,7 @@ Class {
 		'resultItemsPresenter',
 		'resultDescriptionPresenter'
 	],
-	#category : #'Runner-UI'
+	#category : #'TestRunner-UI'
 }
 
 { #category : #'instance creation' }

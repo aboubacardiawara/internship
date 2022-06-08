@@ -13,7 +13,7 @@ Class {
 		'suites',
 		'runner'
 	],
-	#category : #'Runner-Core-Core'
+	#category : #'TestRunner-Core-Core'
 }
 
 { #category : #adding }

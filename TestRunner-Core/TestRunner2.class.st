@@ -48,7 +48,7 @@ Class {
 		'currentTest',
 		'currentResult'
 	],
-	#category : #'Runner-Core-Core'
+	#category : #'TestRunner-Core-Core'
 }
 
 { #category : #running }

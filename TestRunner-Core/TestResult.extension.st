@@ -1,6 +1,6 @@
 Extension { #name : #TestResult }
 
-{ #category : #'*Runner-Core' }
+{ #category : #'*TestRunner-Core' }
 TestResult >> + aTestResult [
 
 	aTestResult passed do: [ :each | 
@@ -13,7 +13,7 @@ TestResult >> + aTestResult [
 		(self skipped includes: each) ifFalse: (self addSkip: each) ]
 ]
 
-{ #category : #'*Runner-Core' }
+{ #category : #'*TestRunner-Core' }
 TestResult >> removeFailure: aTestCase [
 	"remove the giving failure from the failures set"
 

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'runner'
 	],
-	#category : #'Runner-Tests-Core'
+	#category : #'TestRunner-Tests-Core'
 }
 
 { #category : #tests }
