@@ -2,20 +2,20 @@
 I am a mini UI TestRunner and i present the result as a Tree.
 "
 Class {
-	#name : #MiniRunnerPresenterTree,
-	#superclass : #AbstractRunnerPresenter,
+	#name : #TestRunnerTreePresenter,
+	#superclass : #TestRunnerAbstractPresenter,
 	#category : #'TestRunner-UI'
 }
 
 { #category : #'instance creation' }
-MiniRunnerPresenterTree class >> open [ 
+TestRunnerTreePresenter class >> open [ 
 	<script>
 	
 	^ self new open
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenterTree >> childreenFor: aParent [
+TestRunnerTreePresenter >> childreenFor: aParent [
 
 	aParent = #failures ifTrue: [ ^ runner result failures ].
 	aParent = #errors ifTrue: [ ^ runner result errors ].
@@ -24,7 +24,7 @@ MiniRunnerPresenterTree >> childreenFor: aParent [
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenterTree >> generateTree [
+TestRunnerTreePresenter >> generateTree [
 
 	resultItemsPresenter
 		roots: self rootCandidates;
@@ -34,7 +34,7 @@ MiniRunnerPresenterTree >> generateTree [
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenterTree >> initializeResultItemsPresenter [
+TestRunnerTreePresenter >> initializeResultItemsPresenter [
 
 	resultItemsPresenter := self newTreeTable.
 	resultItemsPresenter
@@ -51,7 +51,7 @@ MiniRunnerPresenterTree >> initializeResultItemsPresenter [
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenterTree >> menu [
+TestRunnerTreePresenter >> menu [
 
 	^ self newMenu
 		  title: 'Context menu example';
@@ -70,7 +70,7 @@ MiniRunnerPresenterTree >> menu [
 ]
 
 { #category : #'presenters-initialization' }
-MiniRunnerPresenterTree >> rootCandidates [
+TestRunnerTreePresenter >> rootCandidates [
 
 	| rootCandidats |
 	rootCandidats := OrderedCollection new.
@@ -79,17 +79,7 @@ MiniRunnerPresenterTree >> rootCandidates [
 	^ rootCandidats
 ]
 
-{ #category : #'buttons-presenters-initialization' }
-MiniRunnerPresenterTree >> updateResultPresenter [
-
-	| resultMessage |
-	resultMessage := runner resultDescription.
-
-	resultDescriptionPresenter text: resultMessage.
-	self generateTree
-]
-
 { #category : #'presenters-initialization' }
-MiniRunnerPresenterTree >> windowName [
+TestRunnerTreePresenter >> windowName [
 	^ 'UIRunner (Tree)'
 ]

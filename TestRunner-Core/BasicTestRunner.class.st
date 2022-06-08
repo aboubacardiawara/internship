@@ -1,7 +1,14 @@
 "
 If you giving a TestCase (MyCounterTest), i can execute then and give you the execution result.
+I only can run one test a time. (see TestRunnerDecorator to execute several tests)
 
 ## Public API
+- run:
+- runSuite:
+- runCase:
+- runFailures
+- switchToDebugMode
+- switchToRunMode
 "
 Class {
 	#name : #BasicTestRunner,

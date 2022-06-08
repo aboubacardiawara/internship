@@ -1,3 +1,17 @@
+"
+I am a more advenced TestRunner. I can run several tests (from a collection, from a giving package). I can accumulate or not tests result when executing test class separatly.
+
+# Public API
+- run:
+- runAll:
+- runPackage:
+- runPackages:
+- switchToDebugMode
+- switchToRunMode
+- accumulateResult
+- doNotAccumulateResult
+- runFailures
+"
 Class {
 	#name : #TestRunnerDecorator,
 	#superclass : #Object,

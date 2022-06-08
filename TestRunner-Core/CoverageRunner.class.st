@@ -1,5 +1,11 @@
 "
 I am a test Coverage runner
+
+# Public API
+- addClass:
+- addTestCase:
+- run
+- coverage
 "
 Class {
 	#name : #CoverageRunner,

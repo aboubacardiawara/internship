@@ -1,5 +1,5 @@
 "
-i am a suite preparator who randomise the order of tests in the giving testSuite.
+I am a suite preparator who randomise the order of tests in the giving testSuite.
 "
 Class {
 	#name : #ShuffleSuitePreparator,

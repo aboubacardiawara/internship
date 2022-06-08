@@ -11,7 +11,7 @@ Class {
 MyRunnerPresenterTreeTest >> setUp [
 
 	super setUp.
-	testRunnerUI := MiniRunnerPresenterTree new
+	testRunnerUI := TestRunnerTreePresenter new
 ]
 
 { #category : #running }
@@ -38,7 +38,7 @@ MyRunnerPresenterTreeTest >> testANewTestRunnerPresenterShouldntHaveAnySelectedP
 MyRunnerPresenterTreeTest >> testClassesPresenterContainsTestCasesFromTheSelectedPackages [
 
 	| expectedNumberOfClasses aPackage |
-	aPackage := #'Runner-Tests' asPackage.
+	aPackage := #'TestRunner-Core' asPackage.
 	expectedNumberOfClasses := (aPackage definedClasses select: [ :class | 
 		                            class isTestCase ]) size.
 	self assert:
@@ -62,7 +62,7 @@ MyRunnerPresenterTreeTest >> testItemSelectionInPackagePresenter [
 
 	self assert: testRunnerUI packagesPresenter selectedItem isNil.
 	testRunnerUI packagesPresenter listPresenter selectItems:
-		{ #'Runner-Tests' asPackage }.
+		{ #'TestRunner-Tests' asPackage }.
 	self deny: testRunnerUI packagesPresenter selectedItem isNil
 ]
 
@@ -70,7 +70,7 @@ MyRunnerPresenterTreeTest >> testItemSelectionInPackagePresenter [
 MyRunnerPresenterTreeTest >> testResultDescriptionPresenterShouldContainsTheTestsExecutionStats [
 
 	| aPackage aClass expectedDescription |
-	aPackage := #'Runner-Tests' asPackage.
+	aPackage := #'TestRunner-Tests' asPackage.
 	aClass := GreenTest.
 	expectedDescription := '2 ran, 2 passed, 0 skipped, 0 expected failures, 0 failures, 0 errors, 0 passed unexpected'.
 	testRunnerUI packagesPresenter selectItem: aPackage.
