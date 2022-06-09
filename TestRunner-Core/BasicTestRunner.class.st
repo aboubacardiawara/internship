@@ -190,11 +190,6 @@ BasicTestRunner >> runSuite [
 	result := self executionMode executeSuite: suite
 ]
 
-{ #category : #running }
-BasicTestRunner >> runSuite: aTestSuite [ 
-	self shouldBeImplemented.
-]
-
 { #category : #processing }
 BasicTestRunner >> setUp [
 

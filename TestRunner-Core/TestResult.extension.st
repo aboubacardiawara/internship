@@ -3,14 +3,34 @@ Extension { #name : #TestResult }
 { #category : #'*TestRunner-Core' }
 TestResult >> + aTestResult [
 
-	aTestResult passed do: [ :each | 
-		(self passed includes: each) ifFalse: [ self addPass: each ] ].
-	aTestResult failures do: [ :each | 
-		(self failures includes: each) ifFalse: [ self addFailure: each ] ].
-	aTestResult errors do: [ :each | 
-		(self errors includes: each) ifFalse: [ self addError: each ] ].
-	aTestResult skipped do: [ :each | 
-		(self skipped includes: each) ifFalse: [ self addSkip: each ] ]
+	aTestResult passed do: [ :each | self addPassIfAbsent: each ].
+	aTestResult failures do: [ :each | self addFailureIfAbsent: each ].
+	aTestResult errors do: [ :each | self addErrorIfAbsent: each ].
+	aTestResult skipped do: [ :each | self addSkipIfAbsent: each ]
+]
+
+{ #category : #'*TestRunner-Core' }
+TestResult >> addErrorIfAbsent: anError [
+
+	(errors includes: anError) ifFalse: [ self addError: anError ]
+]
+
+{ #category : #'*TestRunner-Core' }
+TestResult >> addFailureIfAbsent: aFailure [
+
+	(failures includes: aFailure) ifFalse: [ self addFailure: aFailure ]
+]
+
+{ #category : #'*TestRunner-Core' }
+TestResult >> addPassIfAbsent: aPassed [
+
+	(passed includes: aPassed) ifFalse: [ self addPass: aPassed ]
+]
+
+{ #category : #'*TestRunner-Core' }
+TestResult >> addSkipIfAbsent: aSkip [
+
+	(skipped includes: aSkip) ifFalse: [ self addSkip: aSkip ]
 ]
 
 { #category : #'*TestRunner-Core' }
