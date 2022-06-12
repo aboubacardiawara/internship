@@ -138,7 +138,7 @@ BasicTestRunner >> run [
 	"run all the suite then return the result"
 
 	self setUp.
-	[ self runSuite ] ensure: [ self tearDown ]
+	[ self runAll ] ensure: [ self tearDown ]
 ]
 
 { #category : #running }
@@ -146,13 +146,35 @@ BasicTestRunner >> run: aClass [
 
 	self testSuiteFromClass: aClass.
 	self run.
-	^ result
+	^ self result
+]
+
+{ #category : #running }
+BasicTestRunner >> runAll [
+
+	CurrentExecutionEnvironment runTestsBy: [ 
+		suite tests do: [ :aTestCase | 
+			self updateResultWith: (self runCase: aTestCase) ] ]
 ]
 
 { #category : #accessing }
 BasicTestRunner >> runCase: aTestCase [
 
-	^ self executionMode executeCase: aTestCase
+	| aResult |
+	aResult := TestResult new.
+	[ 
+	[ 
+	aTestCase announce: TestCaseStarted withResult: aResult.
+	aTestCase runCaseManaged.
+	aTestCase announce: TestCaseEnded withResult: aResult.
+	aResult addPass: aTestCase ]
+		on:
+			aResult class failure , aResult class skip , aResult class warning
+			, aResult class error
+		do: [ :ex | ex sunitAnnounce: aTestCase toResult: aResult ] ] 
+		ensure: [ 
+		aTestCase classForTestResource resetResources: aTestCase resources ].
+	^ aResult
 ]
 
 { #category : #counting }
@@ -185,9 +207,11 @@ BasicTestRunner >> runFailures [
 ]
 
 { #category : #running }
-BasicTestRunner >> runSuite [
+BasicTestRunner >> runSuite: aTestSuite [
 
-	result := self executionMode executeSuite: suite
+	suite := aTestSuite.
+	self runAll.
+	^ result
 ]
 
 { #category : #processing }
@@ -241,7 +265,9 @@ BasicTestRunner >> tearDown [
 { #category : #tests }
 BasicTestRunner >> testSuiteFromClass: aClass [
 
-	aClass isTestCase ifTrue: [ suite := aClass suite ]
+	aClass isTestCase ifFalse: [ ^ self ].
+	aClass isAbstract ifTrue: [ ^ self ].
+	suite := aClass suite
 ]
 
 { #category : #counting }

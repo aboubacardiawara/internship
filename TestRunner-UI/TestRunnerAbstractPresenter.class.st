@@ -114,7 +114,7 @@ TestRunnerAbstractPresenter >> defaultLayout [
 { #category : #'buttons-presenters-initialization' }
 TestRunnerAbstractPresenter >> defaultRunnerClass [
 
-	^ TestRunnerDecorator
+	^ TestRunner2
 ]
 
 { #category : #'presenters-connection' }

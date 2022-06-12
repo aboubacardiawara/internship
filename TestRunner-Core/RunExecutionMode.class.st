@@ -16,8 +16,5 @@ RunExecutionMode class >> executeCase: aTestCase [
 { #category : #execution }
 RunExecutionMode class >> executeSuite: aTestSuite [
 
-	| result |
-	result := self defaultTestResultClass new.
-	aTestSuite run: result.
-	^ result
+	^ aTestSuite run
 ]

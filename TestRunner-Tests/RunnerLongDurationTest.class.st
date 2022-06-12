@@ -11,7 +11,7 @@ Class {
 RunnerLongDurationTest >> setUp [
 
 	super setUp.
-	runner := TestRunnerDecorator new suitePreparator:
+	runner := TestRunner2 new suitePreparator:
 		          ShuffleSuitePreparator
 ]
 

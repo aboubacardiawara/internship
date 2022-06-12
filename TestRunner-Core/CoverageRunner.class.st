@@ -118,7 +118,7 @@ CoverageRunner >> run [
 { #category : #running }
 CoverageRunner >> runSuite: aTestSuite [
 
-	self runner runCase: aTestSuite
+	self runner runSuite: aTestSuite
 ]
 
 { #category : #running }

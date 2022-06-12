@@ -13,7 +13,7 @@ I am a more advenced TestRunner. I can run several tests (from a collection, fro
 - runFailures
 "
 Class {
-	#name : #TestRunnerDecorator,
+	#name : #TestRunner2,
 	#superclass : #Object,
 	#instVars : [
 		'suites',
@@ -28,7 +28,7 @@ Class {
 }
 
 { #category : #running }
-TestRunnerDecorator class >> example [
+TestRunner2 class >> example [
 	<script>
 	self new 
 	suitePreparator: ShuffleSuitePreparator;
@@ -37,13 +37,13 @@ TestRunnerDecorator class >> example [
 ]
 
 { #category : #running }
-TestRunnerDecorator class >> run: aTestCase [
+TestRunner2 class >> run: aTestCase [
 	^ self new
 		run: aTestCase
 ]
 
 { #category : #processing }
-TestRunnerDecorator >> accumulateResult [
+TestRunner2 >> accumulateResult [
 
 	"activate the results accumulation behavior"
 
@@ -51,31 +51,31 @@ TestRunnerDecorator >> accumulateResult [
 ]
 
 { #category : #accessing }
-TestRunnerDecorator >> debugFailure: failure [
+TestRunner2 >> debugFailure: failure [
 
 	self runner debugFailure: failure
 ]
 
 { #category : #accessing }
-TestRunnerDecorator >> defaultExecutionEnvironmentClass [
+TestRunner2 >> defaultExecutionEnvironmentClass [
 
 	^ self runner defaultExecutionEnvironmentClass
 ]
 
 { #category : #accessing }
-TestRunnerDecorator >> defaultRunner [
+TestRunner2 >> defaultRunner [
 
 	^ BasicTestRunner new
 ]
 
 { #category : #running }
-TestRunnerDecorator >> defaultTestResultClass [
+TestRunner2 >> defaultTestResultClass [
 
 	^ TestResult
 ]
 
 { #category : #accessing }
-TestRunnerDecorator >> doNotAccumulateResult [
+TestRunner2 >> doNotAccumulateResult [
 
 	"activate the results accumulation behavior"
 
@@ -83,19 +83,19 @@ TestRunnerDecorator >> doNotAccumulateResult [
 ]
 
 { #category : #accessing }
-TestRunnerDecorator >> errorCount [
+TestRunner2 >> errorCount [
 
 	^ result errorCount
 ]
 
 { #category : #accessing }
-TestRunnerDecorator >> failureCount [
+TestRunner2 >> failureCount [
 
 	^ self result failureCount
 ]
 
 { #category : #testing }
-TestRunnerDecorator >> hasTestsToRun [
+TestRunner2 >> hasTestsToRun [
 
 	"check either the runner has test to run or not.
 	If any test has not been added, there nothing to run"
@@ -109,20 +109,20 @@ TestRunnerDecorator >> hasTestsToRun [
 ]
 
 { #category : #initialization }
-TestRunnerDecorator >> initialize [
+TestRunner2 >> initialize [
 
 	super initialize.
 	self doNotAccumulateResult
 ]
 
 { #category : #accessing }
-TestRunnerDecorator >> passedCount [
+TestRunner2 >> passedCount [
 
 	^ self result passedCount
 ]
 
 { #category : #running }
-TestRunnerDecorator >> resetResult [
+TestRunner2 >> resetResult [
 
 	"reset the runner result"
 
@@ -130,19 +130,19 @@ TestRunnerDecorator >> resetResult [
 ]
 
 { #category : #accessing }
-TestRunnerDecorator >> result [
+TestRunner2 >> result [
 
 	^ result ifNil: [ result := self defaultTestResultClass new]
 ]
 
 { #category : #getter }
-TestRunnerDecorator >> resultDescription [
+TestRunner2 >> resultDescription [
 
 	^ result asString
 ]
 
 { #category : #running }
-TestRunnerDecorator >> run: aTestCase [
+TestRunner2 >> run: aTestCase [
 
 	currentTest := aTestCase.
 	self shouldAccumulate ifFalse: [ self resetResult ].
@@ -152,7 +152,7 @@ TestRunnerDecorator >> run: aTestCase [
 ]
 
 { #category : #running }
-TestRunnerDecorator >> runAll: aCollectionOfTestCases [
+TestRunner2 >> runAll: aCollectionOfTestCases [
 
 	self accumulateResult.
 	aCollectionOfTestCases do: [ :class | 
@@ -161,13 +161,13 @@ TestRunnerDecorator >> runAll: aCollectionOfTestCases [
 ]
 
 { #category : #accessing }
-TestRunnerDecorator >> runCount [
+TestRunner2 >> runCount [
 
 	^ self result runCount
 ]
 
 { #category : #running }
-TestRunnerDecorator >> runFailure: aTestCase [
+TestRunner2 >> runFailure: aTestCase [
 
 	| rerunningResult |
 	rerunningResult := self runner runCase: aTestCase.
@@ -176,37 +176,37 @@ TestRunnerDecorator >> runFailure: aTestCase [
 ]
 
 { #category : #running }
-TestRunnerDecorator >> runFailures [
+TestRunner2 >> runFailures [
 
 	result failures do: [ :testCase | self runFailure: testCase ]
 ]
 
 { #category : #runninh }
-TestRunnerDecorator >> runPackage: aRPackage [
+TestRunner2 >> runPackage: aRPackage [
 
 	self runAll:
 		(aRPackage definedClasses reject: [ :class | class isAbstract ])
 ]
 
 { #category : #running }
-TestRunnerDecorator >> runPackages: aCollection [
+TestRunner2 >> runPackages: aCollection [
 
 	aCollection do: [ :package | self runPackage: package ]
 ]
 
 { #category : #accessing }
-TestRunnerDecorator >> runner [
+TestRunner2 >> runner [
 	 ^ runner ifNil: [ runner := self defaultRunner ]
 ]
 
 { #category : #accessing }
-TestRunnerDecorator >> runner: aRunner [
+TestRunner2 >> runner: aRunner [
 
 	runner := aRunner
 ]
 
 { #category : #processing }
-TestRunnerDecorator >> setUp [
+TestRunner2 >> setUp [
 
 	"we would like to process suites before execution (e.g shufling the tests, ...). It can be useful 
 	for tests dependancy detection"
@@ -215,74 +215,74 @@ TestRunnerDecorator >> setUp [
 ]
 
 { #category : #tests }
-TestRunnerDecorator >> shouldAccumulate [
+TestRunner2 >> shouldAccumulate [
 
 	^ shouldAccumulate
 ]
 
 { #category : #asserting }
-TestRunnerDecorator >> shouldAccumulate: aBoolean [
+TestRunner2 >> shouldAccumulate: aBoolean [
 
 	shouldAccumulate := aBoolean
 ]
 
 { #category : #accessing }
-TestRunnerDecorator >> someTestCausesError [
+TestRunner2 >> someTestCausesError [
 
 	^ result hasErrors
 ]
 
 { #category : #accessing }
-TestRunnerDecorator >> someTestFailed [
+TestRunner2 >> someTestFailed [
 
 	^ self result hasFailures
 ]
 
 { #category : #accessing }
-TestRunnerDecorator >> suitePreparator [
+TestRunner2 >> suitePreparator [
 
 	^ suitePreparator ifNil: [ 
 		  suitePreparator := self defaultSuitePreparator ]
 ]
 
 { #category : #adding }
-TestRunnerDecorator >> suitePreparator: aSuitePreparator [
+TestRunner2 >> suitePreparator: aSuitePreparator [
 
 	suitePreparator := aSuitePreparator
 ]
 
 { #category : #'instance creation' }
-TestRunnerDecorator >> suites [
+TestRunner2 >> suites [
 
 	^ suites ifNil: [ suites := OrderedCollection new ]
 ]
 
 { #category : #counting }
-TestRunnerDecorator >> suitesTotal [
+TestRunner2 >> suitesTotal [
 
 	^ suites size
 ]
 
 { #category : #running }
-TestRunnerDecorator >> switchToDebugMode [
+TestRunner2 >> switchToDebugMode [
 
 	self runner switchToDebugMode
 ]
 
 { #category : #running }
-TestRunnerDecorator >> switchToRunMode [
+TestRunner2 >> switchToRunMode [
 
 	self runner switchToRunMode
 ]
 
 { #category : #running }
-TestRunnerDecorator >> tearDown [
+TestRunner2 >> tearDown [
 
 	self resetSuites
 ]
 
 { #category : #tests }
-TestRunnerDecorator >> testSuiteFromClass: aClass [
+TestRunner2 >> testSuiteFromClass: aClass [
 
 	"build a suite from the giving class then add it to the internal collections of suites. 
 	The giving class should be a test case"
@@ -292,7 +292,7 @@ TestRunnerDecorator >> testSuiteFromClass: aClass [
 ]
 
 { #category : #tests }
-TestRunnerDecorator >> testSuitesFromClasses: aColOfTestCase [
+TestRunner2 >> testSuitesFromClasses: aColOfTestCase [
 
 	"build a collection of TestSuite and save it"
 
@@ -300,7 +300,7 @@ TestRunnerDecorator >> testSuitesFromClasses: aColOfTestCase [
 ]
 
 { #category : #accessing }
-TestRunnerDecorator >> testsCount [
+TestRunner2 >> testsCount [
 
 	"return the number of all tests methods from suites"
 
@@ -308,7 +308,7 @@ TestRunnerDecorator >> testsCount [
 ]
 
 { #category : #tests }
-TestRunnerDecorator >> updateResultWith: testResult [
+TestRunner2 >> updateResultWith: testResult [
 
 	"updtade the current test result then return it"
 
