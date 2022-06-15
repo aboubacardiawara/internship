@@ -21,9 +21,9 @@ BasicTestRunnerTest >> setUp [
 ]
 
 { #category : #tests }
-BasicTestRunnerTest >> testDefaultSuitePreparatorOfTheRunner [
+BasicTestRunnerTest >> testDefaultSuitePreparatorOfTheRunnerIsNotNil [
 
-	self assert: runner suitePreparator equals: ShuffleSuitePreparator
+	self assert: runner suitePreparator isNotNil
 ]
 
 { #category : #tests }

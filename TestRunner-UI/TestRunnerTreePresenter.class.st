@@ -60,7 +60,7 @@ TestRunnerTreePresenter >> initializeResultItemsPresenter [
 TestRunnerTreePresenter >> menu [
 
 	^ self newMenu
-		  title: 'Context menu example';
+		  title: 'Options';
 		  addGroup: [ :aGroup | 
 			  aGroup
 				  addItem: [ :anItem | 
