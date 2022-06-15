@@ -6,10 +6,14 @@ Class {
 
 { #category : #tests }
 GreenTest >> testPass [
-	self assert: true.
+
+	self skipOnPharoCITestingEnvironment.
+	self assert: true
 ]
 
 { #category : #tests }
 GreenTest >> testPassAgain [
-	self assert: true.
+
+	self skipOnPharoCITestingEnvironment.
+	self assert: true
 ]

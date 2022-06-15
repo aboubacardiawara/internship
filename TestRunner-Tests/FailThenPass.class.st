@@ -30,11 +30,13 @@ FailThenPass class >> reset [
 { #category : #tests }
 FailThenPass >> testFailAtFirstRunning [
 
+	self skipOnPharoCITestingEnvironment.
 	self assert: self class counter equals: 1
 ]
 
 { #category : #tests }
 FailThenPass >> testPass [
 
+	self skipOnPharoCITestingEnvironment.
 	self assert: true
 ]

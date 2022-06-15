@@ -16,12 +16,14 @@ MyClassCovered100Test >> setUp [
 
 { #category : #tests }
 MyClassCovered100Test >> testCoveredMethod [
-	
-	self assert: aMyClassCovered100 coveredMethod.
+
+	self skipOnPharoCITestingEnvironment.
+	self assert: aMyClassCovered100 coveredMethod
 ]
 
 { #category : #tests }
 MyClassCovered100Test >> testOtherCoveredMethod [
-	
+
+	self skipOnPharoCITestingEnvironment.
 	self assert: aMyClassCovered100 anotherCoveredMethod
 ]

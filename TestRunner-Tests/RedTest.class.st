@@ -6,15 +6,21 @@ Class {
 
 { #category : #tests }
 RedTest >> testFail [
-	self assert: false.
+
+	self skipOnPharoCITestingEnvironment.
+	self assert: false
 ]
 
 { #category : #tests }
 RedTest >> testPass [
-	self assert: true.
+
+	self skipOnPharoCITestingEnvironment.
+	self assert: true
 ]
 
 { #category : #tests }
 RedTest >> testWithError [
-	self assert: nil.
+
+	self skipOnPharoCITestingEnvironment.
+	self assert: nil
 ]

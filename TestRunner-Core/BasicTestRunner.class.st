@@ -68,7 +68,7 @@ BasicTestRunner >> defaultResultClass [
 { #category : #accessing }
 BasicTestRunner >> defaultSuitePreparatorClass [
 
-	^ ShuffleSuitePreparator
+	^ AnyEffectSuitePreparator
 ]
 
 { #category : #counting }

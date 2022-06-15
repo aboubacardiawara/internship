@@ -11,7 +11,9 @@ Class {
 		'runner',
 		'selectedClasses',
 		'resultItemsPresenter',
-		'resultDescriptionPresenter'
+		'resultDescriptionPresenter',
+		'suitePreparationModesPresenter',
+		'suitePreparationMode'
 	],
 	#category : #'TestRunner-UI'
 }
@@ -184,6 +186,7 @@ TestRunnerAbstractPresenter >> initializeActionBarPresenter [
 		                      expand: false;
 		                      add: self debugerOn1stFailureButtonPresenters
 		                      expand: false;
+		                      add: self suitePreparationModesPresenter;
 		                      yourself
 ]
 
@@ -246,7 +249,9 @@ TestRunnerAbstractPresenter >> initializeResultPresenter [
 { #category : #'buttons-presenters-initialization' }
 TestRunnerAbstractPresenter >> initializeRunner [
 
-	self runner: self defaultRunnerClass new accumulateResult
+	self runner:
+		(self defaultRunnerClass new accumulateResult suitePreparator:
+			 self suitePreparator)
 ]
 
 { #category : #'presenters-initialization' }
@@ -359,6 +364,29 @@ TestRunnerAbstractPresenter >> selectedClasses: aCollectionOfClasses [
 	selectedClasses := aCollectionOfClasses
 ]
 
+{ #category : #'buttons-presenters-initialization' }
+TestRunnerAbstractPresenter >> suitePreparationModesPresenter [
+
+	^ SpDropListPresenter new
+		  help: 'Suite preparation mode';
+		  items: AbstractSuitePreparator subclasses;
+		  whenSelectedItemChangedDo: [ :aSuitePreparatorClass | 
+			  self updateTestRunnerSuiePreparatorWith: aSuitePreparatorClass.
+			  self inform: self runner suitePreparator name ]
+]
+
+{ #category : #accessing }
+TestRunnerAbstractPresenter >> suitePreparator [
+
+	^ suitePreparationMode ifNil: [ AnyEffectSuitePreparator ]
+]
+
+{ #category : #'buttons-presenters-initialization' }
+TestRunnerAbstractPresenter >> suitePreparator: aSuitePreparatorClass [
+
+	suitePreparationMode := aSuitePreparatorClass
+]
+
 { #category : #'presenters-initialization' }
 TestRunnerAbstractPresenter >> updateClassPresenter: aCollectionOfPackages [
 
@@ -378,6 +406,12 @@ TestRunnerAbstractPresenter >> updateResultPresenter [
 
 	self updateResultDescription.
 	self displayTestCases.
+]
+
+{ #category : #'buttons-presenters-initialization' }
+TestRunnerAbstractPresenter >> updateTestRunnerSuiePreparatorWith: aSuitePreparatorClass [
+
+	self suitePreparator: aSuitePreparatorClass
 ]
 
 { #category : #'presenters-initialization' }

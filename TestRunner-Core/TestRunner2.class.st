@@ -65,7 +65,13 @@ TestRunner2 >> defaultExecutionEnvironmentClass [
 { #category : #accessing }
 TestRunner2 >> defaultRunner [
 
-	^ BasicTestRunner new
+	^ BasicTestRunner new suitePreparator: self suitePreparator
+]
+
+{ #category : #'as yet unclassified' }
+TestRunner2 >> defaultSuitePreparator [
+
+	^ AnyEffectSuitePreparator
 ]
 
 { #category : #running }
@@ -178,7 +184,7 @@ TestRunner2 >> runFailure: aTestCase [
 { #category : #running }
 TestRunner2 >> runFailures [
 
-	result failures do: [ :testCase | self runFailure: testCase ]
+	self result failures do: [ :testCase | self runFailure: testCase ]
 ]
 
 { #category : #runninh }
@@ -254,7 +260,8 @@ TestRunner2 >> suitePreparator [
 { #category : #adding }
 TestRunner2 >> suitePreparator: aSuitePreparator [
 
-	suitePreparator := aSuitePreparator
+	suitePreparator := aSuitePreparator.
+	self runner suitePreparator: aSuitePreparator
 ]
 
 { #category : #'instance creation' }

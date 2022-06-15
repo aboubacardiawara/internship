@@ -16,6 +16,7 @@ MyClassCovered50Test >> setUp [
 
 { #category : #tests }
 MyClassCovered50Test >> testCoveredMethod [
-	
-	self assert: aMyClassCovered50 coveredMethod.
+
+	self skipOnPharoCITestingEnvironment.
+	self assert: aMyClassCovered50 coveredMethod
 ]

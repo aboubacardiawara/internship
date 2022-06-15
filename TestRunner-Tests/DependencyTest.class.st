@@ -40,6 +40,7 @@ DependencyTest >> resetData [
 { #category : #initialization }
 DependencyTest >> testDataIs10ThenIncrement [
 
+	self skipOnPharoCITestingEnvironment.
 	self resetData.
 	self assert: self class data equals: 10.
 	self class incrementData
@@ -48,6 +49,7 @@ DependencyTest >> testDataIs10ThenIncrement [
 { #category : #initialization }
 DependencyTest >> testDataIs11ThenIncrement [
 
+	self skipOnPharoCITestingEnvironment.
 	self assert: self class data equals: 11.
 	self class incrementData
 ]
@@ -55,6 +57,7 @@ DependencyTest >> testDataIs11ThenIncrement [
 { #category : #initialization }
 DependencyTest >> testDataIs12ThenIncrement [
 
+	self skipOnPharoCITestingEnvironment.
 	self assert: self class data equals: 12.
 	self class incrementData
 ]
@@ -62,6 +65,7 @@ DependencyTest >> testDataIs12ThenIncrement [
 { #category : #initialization }
 DependencyTest >> testDataIs13ThenIncrement [
 
+	self skipOnPharoCITestingEnvironment.
 	self assert: self class data equals: 13.
 	self class incrementData
 ]
@@ -69,6 +73,7 @@ DependencyTest >> testDataIs13ThenIncrement [
 { #category : #initialization }
 DependencyTest >> testDataIs14ThenIncrement [
 
+	self skipOnPharoCITestingEnvironment.
 	self assert: self class data equals: 14.
 	self class incrementData
 ]
@@ -76,5 +81,6 @@ DependencyTest >> testDataIs14ThenIncrement [
 { #category : #initialization }
 DependencyTest >> testDataIs15ThenIncrement [
 
-	self assert: self class data equals: 15.
+	self skipOnPharoCITestingEnvironment.
+	self assert: self class data equals: 15
 ]

@@ -7,6 +7,7 @@ Class {
 { #category : #tests }
 YellowTest >> testFail [
 
+	self skipOnPharoCITestingEnvironment.
 	self assert: false
 ]
 
