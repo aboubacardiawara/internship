@@ -194,6 +194,12 @@ TestRunner2 >> runPackages: aCollection [
 	aCollection do: [ :package | self runPackage: package ]
 ]
 
+{ #category : #running }
+TestRunner2 >> runSuite: aTestSuite [
+
+	self runner runSuite: aTestSuite
+]
+
 { #category : #accessing }
 TestRunner2 >> runner [
 	 ^ runner ifNil: [ runner := self defaultRunner ]
