@@ -160,21 +160,7 @@ BasicTestRunner >> runAll [
 { #category : #accessing }
 BasicTestRunner >> runCase: aTestCase [
 
-	| aResult |
-	aResult := TestResult new.
-	[ 
-	[ 
-	aTestCase announce: TestCaseStarted withResult: aResult.
-	aTestCase runCaseManaged.
-	aTestCase announce: TestCaseEnded withResult: aResult.
-	aResult addPass: aTestCase ]
-		on:
-			aResult class failure , aResult class skip , aResult class warning
-			, aResult class error
-		do: [ :ex | ex sunitAnnounce: aTestCase toResult: aResult ] ] 
-		ensure: [ 
-		aTestCase classForTestResource resetResources: aTestCase resources ].
-	^ aResult
+	^ self executionMode executeCase: aTestCase
 ]
 
 { #category : #counting }

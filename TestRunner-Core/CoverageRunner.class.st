@@ -66,7 +66,7 @@ CoverageRunner >> coverage [
 { #category : #adding }
 CoverageRunner >> defaultRunner [
 
-	^ BasicTestRunner new suitePreparator: AnyEffectSuitePreparator
+	^ TestRunner2 new
 ]
 
 { #category : #testing }

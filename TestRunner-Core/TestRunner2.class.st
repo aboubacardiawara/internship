@@ -142,11 +142,11 @@ TestRunner2 >> resultDescription [
 ]
 
 { #category : #running }
-TestRunner2 >> run: aTestCase [
+TestRunner2 >> run: aClass [
 
-	currentTest := aTestCase.
+	currentTest := aClass.
 	self shouldAccumulate ifFalse: [ self resetResult ].
-	currentResult := self runner run: aTestCase.
+	currentResult := self runner run: aClass.
 
 	^ result := self result + currentResult
 ]
